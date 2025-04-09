@@ -1,0 +1,18 @@
+# server ignore files
+/server/node_modules
+/server/.env
+/server/package-lock.json
+/server/logs
+/server/.gitignore
+
+# web ignore file
+/web/node_modules
+/web/package-lock.json
+/web/.gitignore
+
+# app ignore file
+/app/node_modules
+/app/.env
+/app/.expo
+/app/package-lock.json
+/app/.gitignore
