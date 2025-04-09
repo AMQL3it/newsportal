@@ -1,0 +1,79 @@
+:root {
+    --header-body-color: #36add1;
+}
+
+.layout {
+    display: flex;
+    flex-direction: column;
+    /* height: 100vh; */
+}
+
+.header {
+    display: flex;
+    flex-direction: column;
+    /* background-color: var(--header-body-color); */
+    height: 10vh;
+}
+
+.headertop {
+    display: flex;
+    padding: 5px 10px;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--header-body-color);
+    font-weight: 500;
+    color: #fff;
+}
+
+.headertop .date {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.headertop .addiconsection ul {
+    margin: 0;
+    list-style: none;
+    display: flex;
+    gap: 15px;
+}
+
+.headertop .addiconsection ul li {
+    cursor: pointer;
+}
+
+.headertop .addiconsection ul li a {
+    color: #fff;
+}
+
+.headerbody {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 10px;
+}
+
+.headerbody .logo {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.headerbody .logo img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid var(--header-body-color);
+}
+
+.headerbody .logo h1 span {
+    color: var(--header-body-color);
+}
+
+.navber {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--header-body-color);
+}
