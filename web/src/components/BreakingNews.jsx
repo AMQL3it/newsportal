@@ -3,20 +3,35 @@ import style from "../styles/BreakingNews.module.css";
 
 const BreakingNews = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [news, setNews] = useState([
+    // const [news, setNews] = useState([
+    //     {
+    //         title: "Sports",
+    //         headline: "Rasel ipsum dolor sit amet consectetur adipisicing elit.",
+    //     },
+    //     {
+    //         title: "Travels",
+    //         headline: "Anis ipsum dolor sit amet consectetur adipisicing elit.",
+    //     },
+    //     {
+    //         title: "Politics",
+    //         headline: "Atiq ipsum dolor sit amet consectetur adipisicing elit.",
+    //     },
+    // ]);
+
+    const news = [
         {
-            title: "Sports",
-            headline: "Rasel ipsum dolor sit amet consectetur adipisicing elit.",
+          title: "Sports",
+          headline: "Argentina wins Copa America in thrilling final match!",
         },
         {
-            title: "Travels",
-            headline: "Anis ipsum dolor sit amet consectetur adipisicing elit.",
+          title: "Travels",
+          headline: "Top 10 places to visit in 2025 revealed by Lonely Planet.",
         },
         {
-            title: "Politics",
-            headline: "Atiq ipsum dolor sit amet consectetur adipisicing elit.",
+          title: "Politics",
+          headline: "Government passes new budget reform bill for education.",
         },
-    ]);
+    ];
 
     const newsTitleColors = {
         Sports: "green",
@@ -34,11 +49,11 @@ const BreakingNews = () => {
     
     useEffect(() => {
         const timer = setInterval(() => {
-          handleNext();
+            handleNext();
         }, 5000);
     
         return () => clearInterval(timer); // cleanup on unmount
-    }, []);
+    });
     
     const currentNews = news[currentIndex];
 
