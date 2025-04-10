@@ -1,0 +1,48 @@
+.storyContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    margin: 10px;
+    /* border-radius: 5px; */
+}
+
+.titleLine {
+    padding: 10px;
+    border: 1px solid var(--header-body-color);
+    background-color: #e0e0e0;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.titleLine .title {
+    color: var(--header-body-hover-color);
+    font-weight: bold;
+}
+
+
+.arrow  ul {
+    margin: 0;
+    list-style: none;
+    display: flex;
+    gap: 5px;
+}
+
+.arrow ul li button {
+    cursor: pointer;
+    border: none;
+    background-color: transparent;
+    color: var(--header-body-color);
+}
+
+.arrow ul li a {
+    color: var(--header-body-color);
+}
+
+.story {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}

@@ -7,7 +7,6 @@ const CoverContainer = () => {
     return (
         <div className={style.coverContainer}>
             <BreakingNews />
-
             <CoverSection />
         </div>
     );

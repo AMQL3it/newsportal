@@ -24,6 +24,10 @@
   display: flex;
   overflow-x: auto;
   gap: 10px;
+
+  padding: 5px;
+  background-color: rgb(172, 176, 180);
+  border-radius: 5px;
 }
 
 .featureCard,
@@ -46,6 +50,8 @@
 }
 
 .bottomCard {
+  padding: 5px;
+  background-color: rgb(255, 255, 255);
   display: flex;
   /* align-items: center; */
   gap: 5px;
