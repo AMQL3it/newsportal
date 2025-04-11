@@ -1,9 +1,10 @@
-.storyContainer {
+.gallaryContainer {
     display: flex;
     flex-direction: column;
     gap: 5px;
 
     margin: 10px;
+    /* width: 70%; */
     /* border-radius: 5px; */
 }
 
@@ -22,41 +23,26 @@
     font-weight: bold;
 }
 
-.arrow  ul {
-    margin: 0;
-    list-style: none;
-    display: flex;
+.gallaryContent {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(auto, 1fr));
     gap: 5px;
 }
 
-.arrow ul li button {
-    cursor: pointer;
-    border: none;
-    background-color: transparent;
-    color: var(--header-body-color);
-}
-
-.arrow ul li a {
-    color: var(--header-body-color);
-}
-
-.storyContent {
+.imageCard {
     display: flex;
-    padding: 10px;
-    gap: 10px;
+    /* flex-direction: column; */
+    gap: 5px;
+
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
 }
 
-.storyCard {
-    height: 60vh;
-  position: relative;
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.storyCard img{
-  width: 100%;
-  height: 100%;
-  display: block;
+.imageCard img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .overlay {
@@ -101,8 +87,4 @@
     /* justify-content: center; */
     gap: 10px;
     opacity: 0.8;
-}
-
-.storySlider {
-    transition: transform 0.5s ease-in-out;
 }

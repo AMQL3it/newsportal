@@ -1,0 +1,74 @@
+.fcontainer {
+    background-color: #111; /* black background */
+    color: white;
+    padding: 40px 20px;
+    font-family: Arial, sans-serif;
+}
+
+.footer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 30px;
+}
+
+.fcontent {
+    flex: 1;
+    min-width: 200px;
+}
+
+.fcontent h2 {
+    margin-bottom: 15px;
+    font-size: 20px;
+    color: #ffcc00;
+}
+
+.fcontent ul {
+    list-style: none;
+    padding: 0;
+}
+
+.fcontent ul li {
+    margin-bottom: 8px;
+}
+
+.fcontent ul li a {
+    text-decoration: none;
+    color: white;
+    transition: color 0.3s;
+}
+
+.fcontent ul li a:hover {
+    color: #ffcc00;
+}
+
+table {
+    color: white;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 5px 10px;
+    text-align: left;
+}
+
+address {
+    line-height: 1.6;
+}
+
+.hr {
+    margin: 30px 0;
+    border: 1px solid #333;
+}
+
+.addLine {
+    text-align: center;
+    color: #aaa;
+    font-size: 14px;
+}
+
+.copyright {
+    text-align: center;
+    color: #aaa;
+    font-size: 14px;
+}

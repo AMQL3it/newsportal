@@ -20,8 +20,8 @@ const StoryContainer = () => {
     useEffect(() => {
         const handleResize = () => {
             const width = window.innerWidth;
-            if (width >= 1200) setCardsPerView(5);
-            else if (width >= 768) setCardsPerView(4);
+            if (width >= 1200) setCardsPerView(4);
+            else if (width >= 768) setCardsPerView(3);
             else setCardsPerView(2);
         };
 
@@ -49,15 +49,15 @@ const StoryContainer = () => {
 
     const handlePrev = () => {
         stopAutoSlide();
-        const newIndex = (currentIndex - cardsPerView + mockStories.length) % mockStories.length;
-        setCurrentIndex(newIndex);
+        // const newIndex = (currentIndex - cardsPerView + mockStories.length) % mockStories.length;
+        setCurrentIndex(currentIndex - 1 < 0 ? mockStories.length - 1 : currentIndex - 1);
         startAutoSlide();
     };
 
     const handleNext = () => {
         stopAutoSlide();
-        const newIndex = (currentIndex + cardsPerView) % mockStories.length;
-        setCurrentIndex(newIndex);
+        // const newIndex = (currentIndex + cardsPerView) % mockStories.length;
+        setCurrentIndex((currentIndex + 1) % mockStories.length);
         startAutoSlide();
     };
 
@@ -94,7 +94,7 @@ const StoryContainer = () => {
                         <div className={style.overlay}>
                             <div className={style.tags}>
                                 {story.tags.map((tag, idx) => (
-                                    <span key={idx} className={`${style.tag} ${style[tag.toLowerCase()]}`}>
+                                    <span key={idx} className={`${style.tag} ${[tag.toLowerCase()] == "gadget" ? style.green: style.red}`}>
                                         {tag}
                                     </span>
                                 ))}
