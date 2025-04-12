@@ -7,6 +7,7 @@ import YoutubeNewsContainer from "../components/YoutubeNewsContainer";
 import GallaryContainer from "../components/GallaryContainer";
 import ColumnContainer from "../components/ColumnContainer";
 import Footer from "../components/Footer";
+import NewsContainer from "../components/NewsContainer";
 
 const HomePage = () => {
     
@@ -18,6 +19,8 @@ const HomePage = () => {
             <YoutubeNewsContainer />
             <ColumnContainer />
             <GallaryContainer />
+
+            <NewsContainer />
 
             <Footer />
         </div>

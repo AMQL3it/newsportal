@@ -1,0 +1,108 @@
+.sidebarContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 30%;
+
+    margin: 10px;
+}
+
+.sidebarContainer .titleLine {
+    padding: 10px;
+    border: 1px solid var(--header-body-color);
+    background-color: #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sidebarContainer .titleLine .title {
+    color: var(--header-body-hover-color);
+    font-weight: bold;
+}
+
+.recenstpostSection {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.recenstpostSection .suggestionList {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    margin-top: 10px;
+}
+
+.recenstpostSection .suggestionList .suggestion {
+    display: flex;
+    color: var(--header-body-hover-color);
+    gap: 5px;
+}
+
+.recenstpostSection .suggestionList .suggestion a {
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--header-body-hover-color);
+}
+
+
+/* archiveSection */
+
+.archiveSection {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.archiveSection .archiveList {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    margin-top: 10px;
+}
+
+.archiveSection .archiveList .archive {
+    display: flex;
+    color: var(--header-body-hover-color);
+    gap: 5px;
+}
+
+.archiveSection .archiveList .archive a {
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--header-body-hover-color);
+}
+
+/* categorySection */
+
+.categorySection {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.categorySection .categoryList {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    margin-top: 10px;
+}
+
+.categorySection .categoryList .category {
+    display: flex;
+    color: var(--header-body-hover-color);
+    gap: 5px;
+}
+
+.categorySection .categoryList .category a {
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--header-body-hover-color);
+}
