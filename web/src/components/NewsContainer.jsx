@@ -1,8 +1,8 @@
 import React from "react";
 import style from "../styles/NewsContainer.module.css";
 import image from "../assets/background.png"
-import PostSuggetionContainer from "./PostSuggetionContainer";
-import Sidebar from "./Sidebar";
+// import PostSuggetionContainer from "./SuggestedNewsCard";
+import Sidebar from "./FeedSidebar";
 
 const NewsContainer = () => {
     return (
@@ -31,7 +31,7 @@ const NewsContainer = () => {
                         <button className={style.slideBtn}>Next</button>
                     </div>
 
-                    <PostSuggetionContainer />
+                    {/* <PostSuggetionContainer /> */}
                 </div>
             </div>
 

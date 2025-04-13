@@ -1,9 +1,9 @@
 import React from "react";
-import style from "../styles/Sidebar.module.css";
+import style from "./FeedSidebar.module.css";
 import { NavLink } from "react-router";
 import { FaAngleDoubleRight, FaArchive, FaFolder } from "react-icons/fa";
 
-const Sidebar = () => {
+const FeedSidebar = () => {
 
     const suggestionList = [
         {
@@ -107,4 +107,4 @@ const Sidebar = () => {
     );
 };
 
-export default Sidebar;
+export default FeedSidebar;

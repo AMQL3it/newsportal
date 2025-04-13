@@ -1,0 +1,9 @@
+.newsFeed {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    margin: 10px;
+    /* width: 70%; */
+    /* border-radius: 5px; */
+}

@@ -1,0 +1,18 @@
+.explorePage {
+    display: flex;
+    /* flex-direction: column; */
+    gap: 5px;
+    margin: 10px;
+    /* width: 100%; */
+}
+
+.explorePage .newsSection {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 70%;
+}
+
+.explorePage .sidebar {
+    width: 30%;
+}

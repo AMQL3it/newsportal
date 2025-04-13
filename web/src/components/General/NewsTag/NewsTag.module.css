@@ -1,0 +1,21 @@
+.tags {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 5px;
+}
+  
+.tag {
+    font-size: 12px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-weight: bold;
+    color: white;
+}
+  
+.green { background: green; }
+.red { background: red; }
+.orange { background: orange; }
+.pink { background: deeppink; }
+.yellow { background: goldenrod; }
+.blue { background: royalblue; }
+  

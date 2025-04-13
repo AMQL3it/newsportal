@@ -1,6 +1,8 @@
 import React from "react";
 import style from "../styles/ColumnContainer.module.css";
 import image from "../assets/background.png";
+import ContinueButton from "./ContinueButton";
+import getPreviewText from "../utils/getPreviewText";
 
 const ColumnContainer = () => {
     const dummyText1 = "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Asperiores neque, doloribus mollitia ipsum consequatur ut illum inventore sed modi tempore animi natus voluptate magni ducimus vel non iure repellat id? Quis aliquid nostrum dignissimos voluptatum. Sequi id nobis eum provident, at, consectetur debitis minus sed rerum eos beatae sunt dolor earum alias corporis, architecto ipsa nisi aliquid ratione vel nulla dicta illum. In officia molestias obcaecati velit. Fugiat temporibus commodi vel iure corporis, quaerat dolores assumenda culpa illo eligendi eum praesentium nulla blanditiis, autem error reprehenderit fuga voluptates ratione! Voluptates mollitia nulla voluptatibus, repudiandae iste debitis ipsa veritatis quasi iusto.";
@@ -16,23 +18,24 @@ const ColumnContainer = () => {
         image: image,
         description: dummyText1,
     }));
+    
 
-    const getPreviewText = (text, limit = 30) => {
-        const words = text.split(" ");
-        if (words.length <= limit) return text;
+    // const renderParagraph = (text, limit = 10) => {
+    //     const getPreviewText = () => {
+    //         const words = text.split(" ");
+    //         if (words.length <= limit) return text;
+    
+    //         return words.slice(0, limit).join(" ") + " ... ";
+    //     };
 
-        return words.slice(0, limit).join(" ") + " ... ";
-    };
-
-    const renderParagraph = (text) => {
-        const isLong = text.split(" ").length > 30;
-        return (
-            <p>
-                {getPreviewText(text)}
-                {isLong && <a href="#">Read more</a>}
-            </p>
-        );
-    };
+    //     const isLong = text.split(" ").length > 30;
+    //     return (
+    //         <p>
+    //             {getPreviewText(text)}
+    //             {isLong && <ContinueButton />}
+    //         </p>
+    //     );
+    // };
 
     return (
         <div className={style.columnContainer}>
@@ -49,7 +52,8 @@ const ColumnContainer = () => {
                                 <span>{item.date}</span>
                                 <span>{item.author}</span>
                             </div>
-                            {renderParagraph(item.description)}
+                            {getPreviewText(item.description)}
+                            {item.description.split(" ").length > 10 && <ContinueButton />}
                         </div>
                     </div>
                 ))}
