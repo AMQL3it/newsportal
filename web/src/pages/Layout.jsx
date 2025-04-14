@@ -1,5 +1,5 @@
 import React from "react";
-import style from "../styles/HomePage.module.css";
+import style from "../styles/Layout.module.css";
 import Header from "../components/Header";
 import { Outlet } from "react-router-dom";
 import Footer from "../components/Footer";

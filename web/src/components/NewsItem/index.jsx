@@ -4,8 +4,6 @@ import ContinueButton from "../ContinueButton";
 import getPreviewText from "../../utils/getPreviewText";
 import Meta from "../General/Meta";
 import NewsTag from "../General/NewsTag";
-import Divider from "../General/Divider";
-
 
 const NewsItem = ({ news, status }) => {
     
@@ -15,7 +13,7 @@ const NewsItem = ({ news, status }) => {
             <h3>{news.title}</h3>
             <NewsTag tags={['Tech', 'Politics', 'Food']} />
             <Meta date={news.date} author={news.author} />
-            <p>{status === "singleNews" ? news.description : getPreviewText(news.description, 30)}</p>
+            <p>{status === "singleNews" ? news.description : getPreviewText(news.description, 20)}</p>
 
             {(status !== "singleNews" && news.description.split(" ").length > 30) && <ContinueButton />}
 

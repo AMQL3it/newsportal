@@ -1,17 +1,17 @@
-import NewsItem from './NewsItem';
+import NewsItem from '../NewsItem';
 import styles from './NewsFeed.module.css';
 import Divider from '../General/Divider';
 
 const NewsFeed = ({status}) => {
     const newsList = [
-        // {
-        //     id: 1,
-        //     title: "Trending Gadget That Simply Change Your Lifestyle",
-        //     description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam, dolores.",
-        //     image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
-        //     date: "July 17, 2023",
-        //     author: "DemoAdmin"
-        // },
+        {
+            id: 1,
+            title: "Trending Gadget That Simply Change Your Lifestyle",
+            description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam, dolores.",
+            image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
+            date: "July 17, 2023",
+            author: "DemoAdmin"
+        },
         {
             id: 2,
             title: "Trending Gadget That Simply Change Your Lifestyle",
@@ -20,19 +20,19 @@ const NewsFeed = ({status}) => {
             date: "July 17, 2023",
             author: "DemoAdmin"
         },
-        // {
-        //     id: 3,
-        //     title: "Trending Gadget That Simply Change Your Lifestyle",
-        //     description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam, dolores.",
-        //     image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
-        //     date: "July 17, 2023",
-        //     author: "DemoAdmin"
-        // }
+        {
+            id: 3,
+            title: "Trending Gadget That Simply Change Your Lifestyle",
+            description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam, dolores.",
+            image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
+            date: "July 17, 2023",
+            author: "DemoAdmin"
+        }
     ]
   return (
     <div className={styles.newsFeed}>
       {newsList.map((news) => (
-        <NewsItem key={news.id} news={news} status={status} />
+        <NewsItem key={news.id} news={news} />
       ))}
       <Divider />
       

@@ -1,18 +1,31 @@
 .explorePage {
     display: flex;
-    /* flex-direction: column; */
     gap: 5px;
     margin: 10px;
-    /* width: 100%; */
+    width: 100%; 
 }
 
-.explorePage .newsSection {
+.newsSection {
     display: flex;
     flex-direction: column;
     gap: 5px;
-    width: 70%;
+    width: 70vw;
 }
 
-.explorePage .sidebar {
-    width: 30%;
+.sidebarSection {
+    width: 30vw;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+}
+
+@media screen and (max-width: 768px) {
+    .explorePage {
+        flex-direction: column;
+    }
+
+    .newsSection,.sidebarSection {
+        width: 100vw;
+        width: calc(100% - 20px);
+    }
 }

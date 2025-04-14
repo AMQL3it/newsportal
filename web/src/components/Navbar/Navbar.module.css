@@ -70,6 +70,7 @@
         display: none;
         flex-direction: column;
         width: 100%;
+        margin-top: 10px;
     }
 
     .show {
@@ -83,17 +84,13 @@
 
     .navbar ul {
         flex-direction: column;
-        width: calc(100% - 30px);
+        width: 100%;
     }
 
     .navbar ul li {
-        width: 100%;
+        width: calc(100% - 30px);
         border-left: none;
         border-top: 1px solid #fff;
-    }
-
-    .menuItems {
-        margin-left: 15px;
     }
     
     .searchbar {
