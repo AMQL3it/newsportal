@@ -145,3 +145,42 @@
 .arrow ul li a {
   color: var(--header-body-color);
 }
+
+@media screen and (max-width: 768px) {
+  .coverSection {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .coverSectionLeft,
+  .featureCard {
+    height: auto;
+  }
+
+  .gridCard {
+    height: auto;
+  }
+
+  .coverSectionBottom {
+    flex-direction: column;
+    overflow-x: unset;
+  }
+
+  .bottomCard {
+    /* flex-direction: column; */
+    height: auto;
+    align-items: center;
+    /* text-align: center; */
+  }
+
+  .bottomCard img {
+    width: 40%;
+    height: auto;
+  }
+
+  .cardInfo {
+    height: auto;
+    font-size: 10px;
+  }
+}
