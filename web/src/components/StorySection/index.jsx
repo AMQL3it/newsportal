@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import styles from "./StorySection.module.css";
 import StoryCard from "./StoryCard";
 import { stories as mockStories } from "./storyData";
-import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
-import TitleLine from "../General/TitleLine";
+// import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+// import TitleLine from "../General/TitleLine";
 
 const StorySection = () => {
   const [currentIndex, setCurrentIndex] = useState(0);

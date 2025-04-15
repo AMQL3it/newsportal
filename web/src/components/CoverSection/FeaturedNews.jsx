@@ -1,9 +1,9 @@
 import React from "react";
 import style from "./CoverSection.module.css";
-import image from "../../assets/background.png";
-import Meta from "../General/Meta";
-import NewsTag from "../General/NewsTag";
-import Overlay from "../General/Overlay";
+// import image from "../../assets/background.png";
+// import Meta from "../General/Meta";
+// import NewsTag from "../General/NewsTag";
+// import Overlay from "../General/Overlay";
 import StorySection from "../StorySection";
 
 const FeaturedNews = () => {

@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./StorySection.module.css";
-import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+// import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import Meta from "../General/Meta";
 
 const StoryCard = ({ story }) => {
