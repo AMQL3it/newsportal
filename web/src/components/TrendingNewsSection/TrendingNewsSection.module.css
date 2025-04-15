@@ -1,0 +1,21 @@
+.trendingNewsSection {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    margin: 10px;
+}
+
+.newsContent {
+    display: flex;
+    gap: 5px;
+}
+
+@media screen and (max-width: 768px) {
+    .newsContent {
+        flex-direction: column;
+    }
+    
+}
+
+

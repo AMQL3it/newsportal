@@ -4,6 +4,7 @@ import image from "../../assets/background.png";
 import Meta from "../General/Meta";
 import NewsTag from "../General/NewsTag";
 import Overlay from "../General/Overlay";
+import StorySection from "../StorySection";
 
 const FeaturedNews = () => {
   const handlePrev = () => {
@@ -17,7 +18,8 @@ const FeaturedNews = () => {
   return (
     <div className={style.coverSectionLeft}>
       <div className={style.featureCard}>
-        <img src={image} alt="featured" />
+        <StorySection />
+        {/* <img src={image} alt="featured" />
         <div className={style.arrow}>
           <ul>
             <li>
@@ -36,7 +38,7 @@ const FeaturedNews = () => {
           <NewsTag tags={["Tech", "Politics"]} />
           <h2 className={style.title}>Trending Gadget That Simply Change Your Lifestyle</h2>
           <Meta date="July 20, 2023" author="DemoAdmin" />
-        </Overlay>
+        </Overlay> */}
       </div>
     </div>
   );

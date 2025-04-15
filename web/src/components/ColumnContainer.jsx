@@ -1,7 +1,7 @@
 import React from "react";
 import style from "../styles/ColumnContainer.module.css";
 import image from "../assets/background.png";
-import ContinueButton from "./ContinueButton";
+import ContinueButton from "./General/ContinueButton";
 import getPreviewText from "../utils/getPreviewText";
 
 const ColumnContainer = () => {

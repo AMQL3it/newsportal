@@ -10,9 +10,9 @@ const suggestedTitles = [
   "Fighter Plane Crash During World War"
 ];
 
-const SuggestedNewsCards = () => {
+const SuggestedNewsCards = ({styleStatus="row"}) => {
   return (
-    <div className={style.coverSectionBottom}>
+    <div className={style.coverSectionBottom} style={styleStatus === "column" ? { flexDirection: "column" } : {}}>
       {suggestedTitles.map((title, i) => (
         <div key={i} className={style.bottomCard}>
           <img src={image} alt="bottom" />

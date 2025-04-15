@@ -1,13 +1,15 @@
 import React from "react";
-import style from "../styles/GallaryContainer.module.css";
-import image from "../assets/background.png"
+import style from "./GallarySection.module.css";
+import image from "../../assets/background.png"
+import Meta from "../General/Meta";
+import NewsTag from "../General/NewsTag";
+import Overlay from "../General/Overlay";
+import TitleLine from "../General/TitleLine";
 
-const GallaryContainer = () => {
+const GallarySection = () => {
     return (
         <div className={style.gallaryContainer}>
-            <div className={style.titleLine}>
-                <span className={style.title}>Gallery</span>
-            </div>
+            <TitleLine title="Gallary" />
             <div className={style.gallaryContent}>
                 {[
                     { tag: "Music", color: "orange", title: "Grand Live Concert In Germany" },
@@ -19,14 +21,11 @@ const GallaryContainer = () => {
                 ].map((item, i) => (
                     <div key={i} className={style.imageCard}>
                         <img src={image} alt="news" />
-                        <div className={style.overlay}>
-                            <span className={`${style.tag} ${style[item.color]}`}>{item.tag}</span>
-                            <p className={style.title}>{item.title}</p>
-                            <div className={style.metah}>
-                                <span>📅 July 20, 2023</span>
-                                <span>👤 DemoAdmin</span>
-                            </div>
-                        </div>
+                        <Overlay>
+                            <NewsTag tags={[item.tag]} />
+                            <span>{item.title}</span>
+                            <Meta date="July 20, 2023" author="DemoAdmin" />
+                        </Overlay>
                     </div>
                 ))}
             </div>
@@ -34,4 +33,4 @@ const GallaryContainer = () => {
     );
 }
 
-export default GallaryContainer;
+export default GallarySection;

@@ -1,6 +1,6 @@
 import React from "react";
 import style from "./NewsItem.module.css";
-import ContinueButton from "../ContinueButton";
+import ContinueButton from "../General/ContinueButton";
 import getPreviewText from "../../utils/getPreviewText";
 import Meta from "../General/Meta";
 import NewsTag from "../General/NewsTag";

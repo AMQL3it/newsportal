@@ -2,19 +2,17 @@ import BreakingNews from "../../components/BreakingNews";
 import ColumnContainer from "../../components/ColumnContainer";
 import CoverSection from "../../components/CoverSection/CoverSection";
 
-import GallaryContainer from "../../components/GallaryContainer";
-import StoryContainer from "../../components/StoryContainer";
-import YoutubeNewsContainer from "../../components/YoutubeNewsContainer";
+import GallarySection from "../../components/GallarySection";
+import StorySection from "../../components/StorySection";
+import TrendingNewsSection from "../../components/TrendingNewsSection";
 
 const HomePage = () => {
     return (
         <>
             <BreakingNews />
             <CoverSection />
-            <StoryContainer />
-            <YoutubeNewsContainer />
-            <ColumnContainer />
-            <GallaryContainer />
+            <TrendingNewsSection />
+            <GallarySection />
         </>
     );
 }
