@@ -7,16 +7,16 @@
   /* margin-bottom: 20px; */
 }
 
-.coverSectionLeft {
+/* .coverSectionLeft {
   grid-row: 1 / 2;
   max-height: 50vh;
-}
+} */
 
 .coverSectionRight {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 10px;
-  max-height: 50vh;
+  max-height: 60vh;
 }
 
 .coverSectionBottom {

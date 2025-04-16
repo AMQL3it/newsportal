@@ -3,11 +3,13 @@ import style from "./CoverSection.module.css";
 import FeaturedNews from "./FeaturedNews";
 import GridNewsCards from "./GridNewsCards";
 import SuggestedNewsCards from "./SuggestedNewsCards";
+import StorySection from "../StorySection";
 
 const CoverSection = () => {
   return (
     <div className={style.coverSection}>
-      <FeaturedNews />
+      {/* <FeaturedNews /> */}
+      <StorySection />
       <GridNewsCards />
       <SuggestedNewsCards />
     </div>
