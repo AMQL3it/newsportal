@@ -1,0 +1,43 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 12345
+      MYSQL_DATABASE: news_portal
+      MYSQL_USER: root
+      MYSQL_PASSWORD: 12345
+    ports:
+      - "3306:3306"
+    volumes:
+      - newsportal-db:/var/lib/mysql
+
+  server:
+    build:
+      context: ./server
+    container_name: newsportal-backend
+    restart: always
+    ports:
+      - "5000:5000"
+    env_file:
+      - .env
+    depends_on:
+      - db
+    volumes:
+      - ./server:/app
+
+  web:
+    build:
+      context: ./web
+    container_name: newsportal-frontend
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - server
+    volumes:
+      - ./web:/app
+
+volumes:
+  newsportal-db:
