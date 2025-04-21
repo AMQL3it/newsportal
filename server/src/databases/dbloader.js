@@ -21,7 +21,7 @@ const setupAssociations = require("./associations");
 // { alter: true }
 const DBLoader = async () => {
     try {
-      await setupAssociations(Models);
+      // await setupAssociations(Models);
       for (const modelName in Models) {
         await Models[modelName].sync();
         logger.warning(`${modelName} table created successfully.`);

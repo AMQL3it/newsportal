@@ -1,5 +1,6 @@
 
 const api = {
+    "role": require("./role"),
     // "features": require("./features"),
 }
 

@@ -15,8 +15,9 @@ const app_name = process.env.APP_NAME || 'Newspaper';
 
 const server = createServer();
 server.listen(port, () => {
+  // Database connection
+  DB.DBconnection();
   logger.info(`${app_name} - app listening to port: ${port}`);
 })
-// Database connection
-DB.DBconnection();
+
 
