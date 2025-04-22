@@ -1,7 +1,7 @@
 const roleRepository = require("./repository");
 
 const roleService = {
-  // Create a new Area
+  // Create a new Role
   async create(data) {
     try {
       if (!data.name) {
@@ -10,7 +10,7 @@ const roleService = {
       const role = await roleRepository.create(data);
       return role;
     } catch (error) {
-      console.error("Error in createArea:", error.message);
+      console.error("Error in createRole:", error.message);
       throw error;
     }
   },
@@ -26,7 +26,7 @@ const roleService = {
     }
   },
 
-  // Get Area by ID
+  // Get Role by ID
   async getById(id) {
     try {
       if (!id) {
@@ -51,27 +51,27 @@ const roleService = {
     }
   },
 
-  // Update Area by ID
+  // Update Role by ID
   async update(id, data) {
     try {
       if (!id) {
-        throw new Error("Area ID is required to update the Area");
+        throw new Error("Role ID is required to update the Role");
       }
       if (!data) {
-        throw new Error("Update data is required to update the Area");
+        throw new Error("Update data is required to update the Role");
       }
-      const updatedArea = await rolesRepository.update(id, data);
-      if (!updatedArea) {
-        throw new Error(`Area with ID ${id} not found for update`);
+      const updatedRole = await rolesRepository.update(id, data);
+      if (!updatedRole) {
+        throw new Error(`Role with ID ${id} not found for update`);
       }
-      return updatedArea;
+      return updatedRole;
     } catch (error) {
-      console.error("Error in updateArea:", error.message);
+      console.error("Error in updateRole:", error.message);
       throw error;
     }
   },
 
-  // Delete Area by ID
+  // Delete Role by ID
   async deleteById(id) {
     try {
       if (!id) {

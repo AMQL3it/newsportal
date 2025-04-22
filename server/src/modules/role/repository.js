@@ -4,8 +4,8 @@ const roleRepository = {
   // Create a new Role
   async create(data) {
     try {
-      const newArea = await Role.create(data);
-      return newArea;
+      const role = await Role.create(data);
+      return role;
     } catch (error) {
       console.error("Error creating Role:", error.message);
       throw error;

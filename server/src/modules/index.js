@@ -1,6 +1,13 @@
 
 const api = {
     "role": require("./role"),
+    "users": require("./user"),
+    "categories": require("./category"),
+    "tags": require("./tag"),
+    "posts": require("./post"),
+    "comments": require("./comment"),
+    "adscategories": require("./adscategory"),
+    "advertisements": require("./advertisement"),
     // "features": require("./features"),
 }
 
