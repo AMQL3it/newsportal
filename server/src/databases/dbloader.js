@@ -6,7 +6,7 @@ const DBconnection = async () => {
       await sequelize.authenticate();
       // console.log('DB connection successfully.');
       logger.info('DB connection successfully.');
-      DBLoader();
+      // DBLoader();
       return sequelize; 
     } catch (error) {
       // console.error('Unable to connect to the database:',error);

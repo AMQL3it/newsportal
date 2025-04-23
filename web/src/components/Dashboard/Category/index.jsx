@@ -5,12 +5,14 @@ import Pagination from "../../General/Pagination";
 import TitleLine from "../../General/TitleLine";
 import AddButton from "../../General/AddButton";
 import Modal from "../../General/Modal"; // new modal component
+import apiService from "../../../services/apiService";
+import { IoIosCheckmarkCircleOutline, IoIosCloseCircleOutline } from "react-icons/io";
 
 const Category = () => {
   const { id } = useParams();
   const [categories, setCategories] = useState([]);
   const [editingId, setEditingId] = useState(null);
-  const [editData, setEditData] = useState({ name: "", color: ""});
+  const [editData, setEditData] = useState({ name: "", slug: "", description: "", layout: "", color: "", is_active: true });
 
   const [isModalOpen, setIsModalOpen] = useState(false); // modal state
   const [newCategory, setNewCategory] = useState({ name: "", color: ""});
@@ -20,29 +22,33 @@ const Category = () => {
   const totalPages = Math.ceil(categories.length / categoriesPerPage);
 
   useEffect(() => {
-    const dummy = [
-      { id: 1, name: "Politics", color: "blue" },
-      { id: 2, name: "Sports", color: "red" },
-      { id: 3, name: "Business", color: "green" },
-      { id: 4, name: "Gadget", color: "yellow" },
-      { id: 5, name: "Tech", color: "orange" },
-      { id: 6, name: "Entertainment", color: "pink" },
-      { id: 7, name: "Health", color: "blue" },
-      { id: 8, name: "Travel", color: "green" },
-      { id: 9, name: "Fashion", color: "red" },
-      { id: 10, name: "Lifestyle", color: "yellow" },
-      { id: 11, name: "Music", color: "orange" },
-      { id: 12, name: "Food", color: "pink" },
-      { id: 13, name: "Science", color: "blue" },
-    ];
-    setCategories(dummy);
+    // Dummy fallback data (for design/testing)
+   
+    getCategories(); // pass dummy as fallback
   }, []);
+  
+  
+  // ✅ Fixed async function with await + fallback
+  const getCategories = async () => {
+    try {
+      const data = await apiService.getAll("categories"); // 🔥 await added
+      console.log(data);
+      setCategories(data.data); // ✅ use actual API data
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      // setCategories(fallback); // 🛠 fallback to dummy if API fails
+    }
+  };
 
   const handleEdit = (cat) => {
     setEditingId(cat.id);
     setEditData({
       name: cat.name,
-      color: cat.color
+      slug: cat.slug,
+      description: cat.description,
+      layout: cat.layout,
+      color: cat.color,
+      is_active: cat.is_active
     });
   };
 
@@ -51,11 +57,15 @@ const Category = () => {
     setEditData({ ...editData, [name]: value });
   };
 
-  const handleSave = (id) => {
-    setCategories((prev) =>
-      prev.map((c) => (c.id === id ? { ...c, ...editData } : c))
-    );
-    setEditingId(null);
+  const handleSave = async (id) => {
+    try {
+      const data = await apiService.put("categories", id, editData, { "Content-Type": "application/json" });
+      console.log(data);
+      getCategories();
+      setEditingId(null);
+    } catch (error) {
+      console.error("Error updating category:", error);
+    }
   };
 
   const handleDelete = async (id) => {
@@ -104,6 +114,8 @@ const Category = () => {
           <tr>
             <th>ID</th>
             <th>Name</th>
+            <th>Description</th>
+            <th>Layout</th>
             <th>Color</th>
             <th>Actions</th>
           </tr>
@@ -111,7 +123,13 @@ const Category = () => {
         <tbody>
           {displayedCategories.map((cat) => (
             <tr key={cat.id}>
-              <td>{cat.id}</td>
+              <td>
+                {editingId === cat.id ? (
+                  <input type="number" name="is_active" value={editData.is_active} onChange={handleChange} />
+                ) : (
+                  cat.is_active ? <IoIosCheckmarkCircleOutline style={{ color: "green" }} /> : <IoIosCloseCircleOutline style={{ color: "red" }} />
+                )}  
+              </td>
               <td>
                 {editingId === cat.id ? (
                   <input name="name" value={editData.name} onChange={handleChange} />
@@ -119,9 +137,26 @@ const Category = () => {
                   cat.name
                 )}
               </td>
+
               <td>
                 {editingId === cat.id ? (
-                  <input type="number" name="color" value={editData.color} onChange={handleChange} />
+                  <input name="description" value={editData.description} onChange={handleChange} />
+                ) : (
+                  cat.description
+                )}
+              </td>
+
+              <td>
+                {editingId === cat.id ? (
+                  <input name="layout" value={editData.layout} onChange={handleChange} />
+                ) : (
+                  cat.layout
+                )}
+              </td>
+
+              <td>
+                {editingId === cat.id ? (
+                  <input name="color" value={editData.color} onChange={handleChange} />
                 ) : (
                   cat.color
                 )}
