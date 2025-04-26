@@ -1,128 +1,65 @@
 const postService = require("./service");
-const logger = require("../../common/logger");
 
 const postController = {
-  // Create a new Post
   async create(req, res) {
     try {
-      // const postData = req.body;
+      if (req.file) {
+        req.body.image = req.file.filename; // image নামের field add করলাম
+      }
+      console.log(req.body.image);
+      console.log(req.body);
       const post = await postService.create(req.body);
-      logger.info("New post created successfully.");
-      res.status(201).json({
-        status: "success",
-        message: "New post created successfully.",
-        data: post,
-      });
+      res.status(201).json({ status: "success", data: post });
     } catch (error) {
-      logger.error(`Error creating post: ${error.message}`);
-      res.status(500).json({
-        status: "error",
-        message: "Failed to create post.",
-        error: error.message,
-      });
+      res.status(500).json({ status: "error", message: error.message });
     }
   },
 
-  // Get all Posts
   async getAll(req, res) {
     try {
-      const posts = await postService.getAll();
+      // const page = parseInt(req.query.page) || 1;
+      // const limit = parseInt(req.query.limit) || 10;
+      // const offset = (page - 1) * limit;
+  
+      const result = await postService.getAll();
       res.status(200).json({
         status: "success",
-        message: "Posts retrieved successfully.",
-        data: posts,
+        data: result.data,
+        total: result.total
       });
     } catch (error) {
-      logger.error(`Error fetching posts: ${error.message}`);
-      res.status(500).json({
-        status: "error",
-        message: "Failed to retrieve posts.",
-        error: error.message,
-      });
+      console.error("Error in getAllCategories:", error);
+      res.status(500).json({ error: "Internal Server Error" });
     }
   },
 
-  // Get Post by ID
   async getById(req, res) {
     try {
-      const { id } = req.params;
-      const post = await postService.getById(id);
-      if (post) {
-        res.status(200).json({
-          status: "success",
-          message: "Post retrieved successfully.",
-          data: post,
-        });
-      } else {
-        res.status(404).json({
-          status: "error",
-          message: `No post found with ID: ${id}`,
-        });
-      }
+      const post = await postService.getById(req.params.id);
+      if (!post) return res.status(404).json({ status: "error", message: "Post not found" });
+      res.status(200).json({ status: "success", data: post });
     } catch (error) {
-      logger.error(`Error fetching post by ID: ${error.message}`);
-      res.status(500).json({
-        status: "error",
-        message: "Failed to retrieve post.",
-        error: error.message,
-      });
+      res.status(500).json({ status: "error", message: error.message });
     }
   },
 
-  // Update Post by ID
   async update(req, res) {
     try {
-      const { id } = req.params;
-      const postData = req.body;
-      const updatedPost = await postService.update(id, postData);
-
-      if (updatedPost) {
-        logger.info("Post updated successfully.");
-        res.status(200).json({
-          status: "success",
-          message: "Post updated successfully.",
-          data: updatedPost,
-        });
-      } else {
-        res.status(404).json({
-          status: "error",
-          message: `No post found with ID: ${id}`,
-        });
-      }
+      const post = await postService.update(req.params.id, req.body);
+      if (!post) return res.status(404).json({ status: "error", message: "Post not found" });
+      res.status(200).json({ status: "success", data: post });
     } catch (error) {
-      logger.error(`Error updating post: ${error.message}`);
-      res.status(500).json({
-        status: "error",
-        message: "Failed to update post.",
-        error: error.message,
-      });
+      res.status(500).json({ status: "error", message: error.message });
     }
   },
 
-  // Delete Post by ID
   async delete(req, res) {
     try {
-      const { id } = req.params;
-      const deletedPost = await postService.deleteById(id);
-
-      if (deletedPost) {
-        res.status(200).json({
-          status: "success",
-          message: "Post deleted successfully.",
-        });
-      } else {
-        res.status(404).json({
-          status: "error",
-          message: `No post found with ID: ${id}`,
-        });
-      }
+      const result = await postService.deleteById(req.params.id);
+      if (!result) return res.status(404).json({ status: "error", message: "Post not found" });
+      res.status(200).json({ status: "success", message: "Post deleted successfully" });
     } catch (error) {
-      logger.error(`Error deleting post: ${error.message}`);
-      res.status(500).json({
-        status: "error",
-        message: "Failed to delete post.",
-        error: error.message,
-      });
+      res.status(500).json({ status: "error", message: error.message });
     }
   },
 };

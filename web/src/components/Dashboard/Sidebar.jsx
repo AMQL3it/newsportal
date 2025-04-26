@@ -7,8 +7,9 @@ const Sidebar = () => {
 
   const menuItems = [
     { name: "Dashboard", icon: "tachometer", to: "" },
-    { name: "Category", icon: "map", to: "categories" },
     { name: "Posts", icon: "building", to: "posts" },
+    { name: "Category", icon: "map", to: "categories" },
+    { name: "Tags", icon: "building", to: "tags" },
     { name: "Advertisement", icon: "users", to: "advertisements" },
     { name: "Comments", icon: "map", to: "comments" },
     { name: "Users", icon: "shopping-cart", to: "users" },

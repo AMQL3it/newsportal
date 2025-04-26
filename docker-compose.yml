@@ -6,7 +6,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: 12345
       MYSQL_DATABASE: news_portal
-      MYSQL_USER: root
+      MYSQL_USER: app
       MYSQL_PASSWORD: 12345
     ports:
       - "3306:3306"
