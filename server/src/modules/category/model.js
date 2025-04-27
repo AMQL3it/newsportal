@@ -9,11 +9,7 @@ const Category = sequelize.define(
     parent_id: { type: DataTypes.INTEGER, defaultValue: null },
     description: { type: DataTypes.TEXT },
     icon: { type: DataTypes.STRING },
-    image: { type: DataTypes.STRING },
-    color: { type: DataTypes.STRING },
     layout: { type: DataTypes.STRING },
-    seo_score: { type: DataTypes.INTEGER },
-    readable_score: { type: DataTypes.INTEGER },
     is_active: { type: DataTypes.BOOLEAN, defaultValue: true },
   },
   {

@@ -1,8 +1,19 @@
 const postRepository = require("./repository");
+const { calculateSeoScore, calculateReadableScore } = require('../../utils/seoCalculator');
 
 const postService = {
-  async create(data) {
-    return await postRepository.create(data);
+  async create(req) {
+    if(req.file){
+      req.body.image = req.file.path;
+    }
+
+    const seo_score = calculateSeoScore(req.body.title, req.body.content);
+    const readable_score = calculateReadableScore(req.body.content);
+
+    req.body.seo_score = seo_score;
+    req.body.readable_score = readable_score;
+
+    return await postRepository.create(req.body);
   },
 
   async getAll() {
@@ -15,6 +26,10 @@ const postService = {
 
   async update(id, data) {
     return await postRepository.update(id, data);
+  },
+
+  async updateState(id, data) {
+    return await postRepository.updateState(id, data);
   },
 
   async deleteById(id) {

@@ -6,7 +6,7 @@ const DBconnection = async () => {
       await sequelize.authenticate();
       // console.log('DB connection successfully.');
       logger.info('DB connection successfully.');
-      // DBLoader();
+      DBLoader();
       return sequelize; 
     } catch (error) {
       // console.error('Unable to connect to the database:',error);
@@ -23,6 +23,7 @@ const DBLoader = async () => {
     try {
       await setupAssociations(Models);
       for (const modelName in Models) {
+        // await Models[modelName].sync({ alter: true });
         await Models[modelName].sync();
         logger.warning(`${modelName} model created successfully.`);
       }

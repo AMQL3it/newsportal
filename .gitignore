@@ -3,6 +3,7 @@
 /server/.env
 /server/package-lock.json
 /server/logs
+/server/uploads
 /server/.gitignore
 
 # web ignore file

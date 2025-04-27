@@ -1,14 +1,11 @@
 const postService = require("./service");
+const loggin = require("../../common/logger");
 
 const postController = {
   async create(req, res) {
     try {
-      if (req.file) {
-        req.body.image = req.file.filename; // image নামের field add করলাম
-      }
-      console.log(req.body.image);
-      console.log(req.body);
-      const post = await postService.create(req.body);
+      const post = await postService.create(req);
+      loggin.info("New post created successfully.");
       res.status(201).json({ status: "success", data: post });
     } catch (error) {
       res.status(500).json({ status: "error", message: error.message });
@@ -28,7 +25,7 @@ const postController = {
         total: result.total
       });
     } catch (error) {
-      console.error("Error in getAllCategories:", error);
+      console.error("Error in getAll:", error);
       res.status(500).json({ error: "Internal Server Error" });
     }
   },
@@ -46,6 +43,16 @@ const postController = {
   async update(req, res) {
     try {
       const post = await postService.update(req.params.id, req.body);
+      if (!post) return res.status(404).json({ status: "error", message: "Post not found" });
+      res.status(200).json({ status: "success", data: post });
+    } catch (error) {
+      res.status(500).json({ status: "error", message: error.message });
+    }
+  },
+
+  async updateState(req, res) {
+    try {
+      const post = await postService.updateState(req.params.id, req.body);
       if (!post) return res.status(404).json({ status: "error", message: "Post not found" });
       res.status(200).json({ status: "success", data: post });
     } catch (error) {
