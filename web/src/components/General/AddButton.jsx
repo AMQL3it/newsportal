@@ -25,7 +25,7 @@ const ContinueButton = ({onClick}) => {
             onMouseLeave={() => setHover(false)}
             onClick={onClick}
         >
-            <FaPlus /> Add New
+            <FaPlus title="Add New"/>
         </button>
     );
 };

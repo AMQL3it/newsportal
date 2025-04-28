@@ -43,7 +43,7 @@ const apiService = {
   },
 
   // 🔹 POST: create new data → POST /news
-  post: async (endpoint, data, config = {}) => {
+  create: async (endpoint, data, config = {}) => {
     const res = await axios.post(`${BASE_URL}/${endpoint}`, data, {
       ...getAuthHeaders(),
       ...config
@@ -52,7 +52,7 @@ const apiService = {
   },
 
   // 🔹 PUT: full update → PUT /news/12
-  put: async (endpoint, id, data, config = {}) => {
+  update: async (endpoint, id, data, config = {}) => {
     const res = await axios.put(`${BASE_URL}/${endpoint}/${id}`, data, {
       ...getAuthHeaders(),
       ...config

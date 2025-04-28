@@ -8,7 +8,7 @@ const Dashboard = () => {
     <div style={styles.container}>
       <Sidebar />
       <div style={styles.body}>
-        <div style={styles.header}>Header Section</div>
+        {/* <div style={styles.header}>Header Section</div> */}
         <div style={styles.content}>
           {/* Your content goes here */}
           <Outlet />
