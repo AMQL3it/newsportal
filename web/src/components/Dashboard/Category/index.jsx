@@ -1,84 +1,128 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import styles from "./Category.module.css";
 import Pagination from "../../General/Pagination";
 import TitleLine from "../../General/TitleLine";
 import AddButton from "../../General/AddButton";
-import Modal from "../../General/Modal"; // new modal component
-import apiService from "../../../services/apiService";
-import { IoIosCheckmarkCircleOutline, IoIosCloseCircleOutline } from "react-icons/io";
+import SweetAlert from "../../../utils/SweetAlert";
+import EditForm from "./EditForm";
+import ViewModal from "./ViewModal";
+import categoryService from "../../../services/categoryService";
 
 const Category = () => {
-  const { id } = useParams();
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategorys] = useState([]);
   const [editingId, setEditingId] = useState(null);
-  const [editData, setEditData] = useState({ name: "", slug: "", description: "", layout: "", color: "", is_active: true });
-
-  const [isModalOpen, setIsModalOpen] = useState(false); // modal state
-  const [newCategory, setNewCategory] = useState({ name: "", color: ""});
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const categoriesPerPage = 5;
-  const totalPages = Math.ceil(categories.length / categoriesPerPage);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [formData, setFormData] = useState({ name: "", description: "", layout: "", icon: "" });
+  const tableHead = ["ID", "Name", "Description", "Layout", "Response", "Activity"];
 
   useEffect(() => {
-    // Dummy fallback data (for design/testing)
-   
-    getCategories(); // pass dummy as fallback
+    getAllCategories();
   }, []);
-  
-  
-  // ✅ Fixed async function with await + fallback
-  const getCategories = async () => {
+
+  const getAllCategories = async () => {
     try {
-      const data = await apiService.getAll("categories"); // 🔥 await added
-      console.log(data);
-      setCategories(data.data); // ✅ use actual API data
+      const result = await categoryService.getAll();
+      console.log(result.data);
+      
+      const formattedCategorys = result.data.map(categorie => ({
+        id: categorie.id,
+        name: `${categorie.name} (${categorie.slug})`,
+        description: categorie.description || "No description",
+        layout: categorie.layout || "default",
+        icon: categorie.icon || "default",
+        response: categorie.is_active ? "Enable" : "Disable",
+      }));
+      
+      setCategorys(formattedCategorys);
     } catch (error) {
       console.error("Error fetching categories:", error);
-      // setCategories(fallback); // 🛠 fallback to dummy if API fails
     }
   };
 
-  const handleEdit = (cat) => {
-    setEditingId(cat.id);
-    setEditData({
-      name: cat.name,
-      slug: cat.slug,
-      description: cat.description,
-      layout: cat.layout,
-      color: cat.color,
-      is_active: cat.is_active
-    });
+  const onAdd = () => {
+    setEditingId(null);
+    setFormData({ name: "", description: "", layout: "", icon: "" });
+    setIsModalOpen(true);
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setEditData({ ...editData, [name]: value });
-  };
-
-  const handleSave = async (id) => {
-    try {
-      const data = await apiService.put("categories", id, editData, { "Content-Type": "application/json" });
-      console.log(data);
-      getCategories();
-      setEditingId(null);
-    } catch (error) {
-      console.error("Error updating category:", error);
+  const onEdit = (id) => {
+    const categorieToEdit = categories.find(categorie => categorie.id === id);
+    if (categorieToEdit) {
+      setFormData({
+        name: categorieToEdit.name.split(' (')[0], // remove slug part
+        description: categorieToEdit.description !== "No description" ? categorieToEdit.description : "",
+        layout: categorieToEdit.layout !== "default" ? categorieToEdit.layout : "",
+        icon: categorieToEdit.icon !== "default" ? categorieToEdit.icon : "",
+        tags: [],
+      });
+      setEditingId(id);
+      setIsModalOpen(true);
     }
   };
 
-  const handleDelete = async (id) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete?");
-    if (confirmDelete) {
+  const onDelete = async (id) => {
+    const deleteConfirmed = await SweetAlert.deleteAlert();
+
+    if (deleteConfirmed) {
       try {
-        // await fetch(`/api/categories/${id}`, { method: "DELETE" });
-        setCategories((prev) => prev.filter((c) => c.id !== id));
+        await categoryService.delete(id);
+        getAllCategories();
+        SweetAlert.successAlert("Category deleted successfully!");
       } catch (error) {
-        console.error("Error deleting category:", error);
+        console.error("Error deleting categorie:", error);
+        SweetAlert.errorAlert("Failed to delete categorie!");
       }
     }
   };
+
+  const [cid, setCid] = useState(null);
+  const onView = async (id) => {
+    setCid(id);
+    setIsViewModalOpen(true);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+  
+    try {
+      const formDataCopy = { ...formData }; // formData কপি নিচ্ছি
+  
+      // ✅ name থেকে slug বানানো
+      if (formDataCopy.name) {
+        formDataCopy.slug = formDataCopy.name
+          .toLowerCase()
+          .replace(/\s+/g, "_")    // এক বা একাধিক space কে _ দিয়ে বদলাও
+          .replace(/[^\w_]+/g, ""); // অক্ষর আর _ ছাড়া সব রিমুভ করো
+      }
+  
+      if (editingId) {
+        await categoryService.update(editingId, formDataCopy);
+        SweetAlert.successAlert("Category updated successfully!");
+      } else {
+        await categoryService.create(formDataCopy);
+        SweetAlert.successAlert("Category added successfully!");
+      }
+  
+      setIsModalOpen(false);
+      getAllCategories();
+    } catch (error) {
+      console.error("Error saving categorie:", error);
+      SweetAlert.errorAlert("Failed to save categorie!");
+    }
+  };
+
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const displayPerPage = 5;
+  const totalPages = Math.ceil(categories.length / displayPerPage);
+  const startIndex = (currentPage - 1) * displayPerPage;
+  const displayedCategories = categories.slice(startIndex, startIndex + displayPerPage);
 
   const handlePageChange = (newPage) => {
     if (newPage > 0 && newPage <= totalPages) {
@@ -86,92 +130,49 @@ const Category = () => {
     }
   };
 
-  const handleAddCategory = () => {
-    const newId = categories.length ? Math.max(...categories.map(c => c.id)) + 1 : 1;
-    const newCat = { id: newId, ...newCategory };
-    setCategories([...categories, newCat]);
-    setNewCategory({ name: "", color: ""});
-    setIsModalOpen(false);
-  };
-
-  const handleNewInput = (e) => {
-    const { name, value } = e.target;
-    setNewCategory({ ...newCategory, [name]: value });
-  };
-
-  // Paginated categories
-  const startIndex = (currentPage - 1) * categoriesPerPage;
-  const displayedCategories = categories.slice(startIndex, startIndex + categoriesPerPage);
-
   return (
-    <div className={styles.container}>
-      <TitleLine title="Categories">
-        <AddButton onClick={() => setIsModalOpen(true)} />
+    <>
+      <TitleLine title="Categorys">
+        <AddButton onClick={onAdd} />
       </TitleLine>
 
       <table className={styles.table}>
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Layout</th>
-            <th>Color</th>
-            <th>Actions</th>
+            {tableHead.map((head, index) => (
+              <th key={index}>{head}</th>
+            ))}
           </tr>
         </thead>
         <tbody>
-          {displayedCategories.map((cat) => (
-            <tr key={cat.id}>
-              <td>
-                {editingId === cat.id ? (
-                  <input type="number" name="is_active" value={editData.is_active} onChange={handleChange} />
-                ) : (
-                  cat.is_active ? <IoIosCheckmarkCircleOutline style={{ color: "green" }} /> : <IoIosCloseCircleOutline style={{ color: "red" }} />
-                )}  
-              </td>
-              <td>
-                {editingId === cat.id ? (
-                  <input name="name" value={editData.name} onChange={handleChange} />
-                ) : (
-                  cat.name
-                )}
-              </td>
-
-              <td>
-                {editingId === cat.id ? (
-                  <input name="description" value={editData.description} onChange={handleChange} />
-                ) : (
-                  cat.description
-                )}
-              </td>
-
-              <td>
-                {editingId === cat.id ? (
-                  <input name="layout" value={editData.layout} onChange={handleChange} />
-                ) : (
-                  cat.layout
-                )}
-              </td>
-
-              <td>
-                {editingId === cat.id ? (
-                  <input name="color" value={editData.color} onChange={handleChange} />
-                ) : (
-                  cat.color
-                )}
-              </td>
-              
-              <td>
-                {editingId === cat.id ? (
-                  <i className="fa fa-save" title="Save" onClick={() => handleSave(cat.id)} style={{ marginRight: "10px", cursor: "pointer" }}></i>
-                ) : (
-                  <i className="fa fa-edit" title="Edit" onClick={() => handleEdit(cat)} style={{ marginRight: "10px", cursor: "pointer" }}></i>
-                )}
-                <i className="fa fa-trash" title="Delete" onClick={() => handleDelete(cat.id)} style={{ color: "crimson", cursor: "pointer" }}></i>
+          {displayedCategories.length > 0 ? (
+            displayedCategories.map((row, index) => (
+              <tr key={index}>
+                <td>{row.id}</td>
+                <td>{row.name}</td>
+                <td>{row.description}</td>
+                <td>{row.layout}</td>
+                <td>{row.response}</td>
+                <td>
+                  <button className={styles.viewBtn} onClick={() => onView(row.id)}>
+                    <i className="fa fa-eye" title="View"></i>
+                  </button>
+                  <button className={styles.editBtn} onClick={() => onEdit(row.id)}>
+                    <i className="fa fa-edit" title="Edit"></i>
+                  </button>
+                  <button className={styles.deleteBtn} onClick={() => onDelete(row.id)}>
+                    <i className="fa fa-trash" title="Delete"></i>
+                  </button>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan={tableHead.length} style={{ textAlign: "center" }}>
+                No data found
               </td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
 
@@ -181,20 +182,27 @@ const Category = () => {
         onPageChange={handlePageChange}
       />
 
-      {/* Modal for adding category */}
+      {/* Modal */}
       {isModalOpen && (
-        <Modal onClose={() => setIsModalOpen(false)} title="Add Category">
-          <div className={styles.modalForm} style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-            
-            <input name="name" value={newCategory.name} onChange={handleNewInput} placeholder="Category Name" style={{ width: "100%", padding: "5px", borderRadius: "5px", border: "1px solid #ccc", boxShadow: "0 2px 4px hsla(0, 0.00%, 0.00%, 0.30)", outline: "none", fontSize: "16px" }}/>
-            
-            <input type="number" name="color" value={newCategory.color} onChange={handleNewInput} placeholder="Category Color" style={{ width: "100%", padding: "5px", borderRadius: "5px", border: "1px solid #ccc", boxShadow: "0 2px 4px hsla(0, 0.00%, 0.00%, 0.30)", outline: "none", fontSize: "16px" }} />
-            
-            <button onClick={handleAddCategory} style={{ width: "fit-content", alignSelf: "center", backgroundColor: "var(--header-body-color)", color: "floralwhite", border: "none", padding: "5px 10px", borderRadius: "5px", cursor: "pointer", display: "flex", alignItems: "center", gap: "5px", transition: "all 1s ease"}}>Submit</button>
-          </div>
-        </Modal>
+        <EditForm
+          title="Category"
+          formData={formData}
+          handleInputChange={handleInputChange}
+          handleSubmit={handleSubmit}
+          setIsModalOpen={setIsModalOpen}
+          editingId={editingId}
+        />
       )}
-    </div>
+
+      {/* Modal */}
+
+      {isViewModalOpen && (
+        <ViewModal
+          cid={cid}
+          onClose={() => setIsViewModalOpen(false)}
+        />
+      )}
+    </>
   );
 };
 

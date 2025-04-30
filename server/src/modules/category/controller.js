@@ -57,6 +57,26 @@ const categoryController = {
       res.status(500).json({ status: "error", message: error.message });
     }
   },
+
+  async addTag(req, res) {
+    try {
+      const result = await categoryService.addTag(req.params.id, req.body.tag_id);
+      if (!result) return res.status(404).json({ status: "error", message: "Category not found" });
+      res.status(200).json({ status: "success", message: "Category deleted successfully" });
+    } catch (error) {
+      res.status(500).json({ status: "error", message: error.message });
+    }
+  },
+
+  async removeTag(req, res) {
+    try {
+      const result = await categoryService.removeTag(req.params.id, req.params.tagId);
+      if (!result) return res.status(404).json({ status: "error", message: "Category not found" });
+      res.status(200).json({ status: "success", message: "Category deleted successfully" });
+    } catch (error) {
+      res.status(500).json({ status: "error", message: error.message });
+    }
+  },
 };
 
 module.exports = categoryController;

@@ -61,8 +61,8 @@ const apiService = {
   },
 
   // 🔹 PATCH: partial update → PATCH /news/12
-  patch: async (endpoint, id, data, config = {}) => {
-    const res = await axios.patch(`${BASE_URL}/${endpoint}/${id}`, data, {
+  patch: async (endpoint, id, extra = "", data, config = {}) => {
+    const res = await axios.patch(`${BASE_URL}/${endpoint}/${id}/${extra}`, data, {
       ...getAuthHeaders(),
       ...config
     });
@@ -70,8 +70,8 @@ const apiService = {
   },
 
   // 🔹 DELETE: delete by ID → DELETE /news/12
-  deleteById: async (endpoint, id, config = {}) => {
-    const res = await axios.delete(`${BASE_URL}/${endpoint}/${id}`, {
+  deleteById: async (endpoint, id, extra = "", config = {}) => {
+    const res = await axios.delete(`${BASE_URL}/${endpoint}/${id}/${extra}`, {
       ...getAuthHeaders(),
       ...config
     });

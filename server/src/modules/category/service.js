@@ -20,6 +20,14 @@ const categoryService = {
   async deleteById(id) {
     return await categoryRepository.delete(id);
   },
+
+  async addTag(categoryId, tagIds) {
+    return await categoryRepository.addTag(categoryId, tagIds);
+  },
+
+  async removeTag(categoryId, tagId) {
+    return await categoryRepository.removeTag(categoryId, tagId);
+  },
 };
 
 module.exports = categoryService;

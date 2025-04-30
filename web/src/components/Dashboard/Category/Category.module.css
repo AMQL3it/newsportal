@@ -1,30 +1,122 @@
-.container {
-    padding: 20px;
-}
-  
+
+
 .table {
     width: 100%;
     border-collapse: collapse;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-    color: black;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    color: #333;
+    font-size: 16px;
+    background-color: #fff;
+    /* border-radius: 8px; */
+    overflow: hidden;
+    margin-top: 10px;
+}
+  
+/* Table header */
+.table thead {
+    background-color: #067a7e; /* Indigo-600 */
+    color: white;
 }
   
 .table th,
 .table td {
-    padding: 10px;
+    padding: 12px 16px;
     text-align: center;
     border: 1px solid #ddd;
 }
   
-.table tbody tr:nth-child(even) {
+  .table td {
+    padding: 6px 8px;
+  }
+  /* Zebra striping */
+  .table tbody tr:nth-child(even) {
     background-color: #f9f9f9;
-}
+  }
   
-.table tbody tr:nth-child(odd) {
+  .table tbody tr:nth-child(odd) {
     background-color: #ffffff;
-}
+  }
   
-.table tbody tr:hover {
-    background-color: #eef2ff;
-}
+  /* Hover effect */
+  .table tbody tr:hover {
+    background-color: #eef2ff; /* light indigo */
+    transition: background-color 0.3s;
+  }
   
+  /* Action Buttons */
+  .editBtn,
+  .viewBtn,
+  .deleteBtn {
+    padding: 6px 12px;
+    margin: 0 4px;
+    border: none;
+    border-radius: 50%;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.5s ease-in-out;
+  }
+
+  .viewBtn {
+    background-color: #4caf50; /* Sky-400 */
+    color: white;
+  }
+  
+  .viewBtn:hover {
+    background-color: #34a838; /* Sky-500 */
+  }
+  
+  /* Edit Button Style */
+  .editBtn {
+    background-color: #38bdf8; /* Sky-400 */
+    color: white;
+  }
+  
+  .editBtn:hover {
+    background-color: #0ea5e9; /* Sky-500 */
+  }
+  
+  /* Delete Button Style */
+  .deleteBtn {
+    background-color: #f87171; /* Red-400 */
+    color: white;
+  }
+  
+  .deleteBtn:hover {
+    background-color: #ef4444; /* Red-500 */
+  }
+  
+  /* Responsive for small screen */
+  @media screen and (max-width: 768px) {
+    .table {
+      font-size: 14px;
+    }
+  
+    .table th,
+    .table td {
+      padding: 8px 10px;
+    }
+  }
+  
+/* Modal css */
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.inputSection {
+    padding: 5px;
+    display: flex; 
+    flex-direction: column; 
+    font-weight: bold;
+}
+
+.inputSection input,
+.inputSection textarea {
+    padding: 8px;
+    outline: none;
+    border: 1px solid rgb(185, 185, 185);
+    font-size: 14px;
+    margin-top: 5px;
+}
+

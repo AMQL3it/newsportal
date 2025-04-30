@@ -8,4 +8,7 @@ router.get("/:id", categoryController.getById);
 router.put("/:id", categoryController.update);
 router.delete("/:id", categoryController.delete);
 
+router.patch("/:id/tag", categoryController.addTag);
+router.delete("/:id/tag/:tagId", categoryController.removeTag);
+
 module.exports = router;
