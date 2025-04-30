@@ -97,26 +97,14 @@
     }
   }
   
-/* Modal css */
-.form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.inputSection {
-    padding: 5px;
-    display: flex; 
-    flex-direction: column; 
-    font-weight: bold;
-}
-
-.inputSection input,
-.inputSection textarea {
-    padding: 8px;
-    outline: none;
-    border: 1px solid rgb(185, 185, 185);
-    font-size: 14px;
-    margin-top: 5px;
-}
+  @media screen and (max-width: 480px) {
+    .table {
+      font-size: 12px;
+    }
+  
+    .table th,
+    .table td {
+      padding: 6px 8px;
+    }
+  }
 

@@ -4,12 +4,11 @@ import styles from "./Tag.module.css";
 import Pagination from "../../General/Pagination";
 import TitleLine from "../../General/TitleLine";
 import AddButton from "../../General/AddButton";
-import Modal from "../../General/Modal";
-import apiService from "../../../services/apiService";
 import SweetAlert from "../../../utils/SweetAlert";
+import EditForm from "./EditForm";
+import tagService from "../../../services/tagService";
 
 const Tag = () => {
-  const { id } = useParams();
   const [tags, setTags] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -22,7 +21,7 @@ const Tag = () => {
 
   const getAllTags = async () => {
     try {
-      const result = await apiService.getAll("tags");
+      const result = await tagService.getAll("tags");
       const formattedTags = result.data.map(tag => ({
         id: tag.id,
         name: `${tag.name} (${tag.slug})`,
@@ -58,7 +57,7 @@ const Tag = () => {
 
     if (deleteConfirmed) {
       try {
-        await apiService.deleteById("tags", id);
+        await tagService.delete(id);
         getAllTags();
         SweetAlert.successAlert("Tag deleted successfully!");
       } catch (error) {
@@ -68,9 +67,9 @@ const Tag = () => {
     }
   };
 
-  const onView = async (id) => {
-    alert(`View button pressed for ID: ${id}`);
-  };
+  // const onView = async (id) => {
+  //   alert(`View button pressed for ID: ${id}`);
+  // };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -92,10 +91,10 @@ const Tag = () => {
       }
   
       if (editingId) {
-        await apiService.update("tags", editingId, formDataCopy);
+        await tagService.update(editingId, formDataCopy);
         SweetAlert.successAlert("Tag updated successfully!");
       } else {
-        await apiService.create("tags", formDataCopy);
+        await tagService.create(formDataCopy);
         SweetAlert.successAlert("Tag added successfully!");
       }
   
@@ -143,9 +142,9 @@ const Tag = () => {
                 <td>{row.description}</td>
                 <td>{row.response}</td>
                 <td>
-                  <button className={styles.viewBtn} onClick={() => onView(row.id)}>
+                  {/* <button className={styles.viewBtn} onClick={() => onView(row.id)}>
                     <i className="fa fa-eye" title="View"></i>
-                  </button>
+                  </button> */}
                   <button className={styles.editBtn} onClick={() => onEdit(row.id)}>
                     <i className="fa fa-edit" title="Edit"></i>
                   </button>
@@ -173,43 +172,14 @@ const Tag = () => {
 
       {/* Modal */}
       {isModalOpen && (
-        <Modal onClose={() => setIsModalOpen(false)} title={editingId ? "Edit Tag" : "Add New Tag"}>
-          <form onSubmit={handleSubmit} className={styles.form}>
-            <div className={styles.inputSection}>
-              <label>Name: </label>
-              <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  placeholder="Enter tag name"
-                  required
-                />
-            </div>
-
-            <div className={styles.inputSection}>
-              <label >
-                Description:
-              </label>
-              <textarea
-                  name="description"
-                  value={formData.description}
-                  onChange={handleInputChange}
-                  placeholder="Enter tag description"
-                  rows="3"
-                />
-            </div>
-            
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
-              <button type="submit" className={styles.viewBtn} style={{borderRadius: "5px"}}>
-                {editingId ? "Update" : "Add"}
-              </button>
-              <button type="button" className={styles.deleteBtn} onClick={() => setIsModalOpen(false)} style={{ backgroundColor: "gray", borderRadius: "5px" }}>
-                Cancel
-              </button>
-            </div>
-          </form>
-        </Modal>
+        <EditForm
+          title="Tag"
+          formData={formData}
+          handleInputChange={handleInputChange}
+          handleSubmit={handleSubmit}
+          setIsModalOpen={setIsModalOpen}
+          editingId={editingId}
+        />
       )}
     </>
   );
