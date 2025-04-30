@@ -1,12 +1,13 @@
-import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { NavLink, useLocation } from "react-router-dom";
 import logo from "../../assets/logo.png";
 
 const Sidebar = () => {
-  const [active, setActive] = useState("Dashboard");
+  const location = useLocation();
+  const [active, setActive] = useState("");
 
   const menuItems = [
-    { name: "Dashboard", icon: "tachometer", to: "" },
+    { name: "Dashboard", icon: "tachometer", to: "dashboard" },
     { name: "Posts", icon: "building", to: "posts" },
     { name: "Category", icon: "map", to: "categories" },
     { name: "Tags", icon: "building", to: "tags" },
@@ -14,10 +15,15 @@ const Sidebar = () => {
     { name: "Comments", icon: "map", to: "comments" },
     { name: "Users", icon: "shopping-cart", to: "users" },
     { name: "Analytics & Reports", icon: "truck", to: "analytics" },
-  
     { name: "Settings", icon: "cog", bottom: true },
     { name: "Profile", icon: "user", bottom: true },
   ];
+
+  useEffect(() => {
+    const currentPath = location.pathname.split("/").filter(Boolean).pop();
+    
+    setActive(currentPath || ""); // fallback for root path
+  }, [location]);
 
   return (
     <div style={styles.sidebar}>
@@ -28,45 +34,43 @@ const Sidebar = () => {
         </div>
         <h2 style={styles.companyName}>AMQL3it</h2>
       </div>
-      
+
       {/* Menu Items */}
       <div style={styles.menuContainer}>
-        {menuItems.map((item, index) => (
-          !item.bottom && (
-            <button
+        {menuItems.map((item, index) =>
+          !item.bottom ? (
+            <NavLink
+              to={item.to}
               key={index}
               style={{
                 ...styles.menuButton,
-                ...(active === item.name ? styles.activeButton : styles.hoverButton),
+                ...(active === item.to ? styles.activeButton : styles.hoverButton),
               }}
-              onClick={() => setActive(item.name)}
             >
-              <NavLink to={item.to} style={{ textDecoration: "none", color: "white" }}>
-                <i className={`fa fa-${item.icon}`} style={{ marginRight: "8px" }}></i>
-                {item.name}
-              </NavLink>
-            </button>
-          )
-        ))}
+              <i className={`fa fa-${item.icon}`} style={{ marginRight: "8px" }}></i>
+              {item.name}
+            </NavLink>
+          ) : null
+        )}
       </div>
-      
+
       {/* Bottom Menu Items */}
       <div style={styles.bottomMenu}>
-        {menuItems.map((item, index) => (
-          item.bottom && (
+        {menuItems.map((item, index) =>
+          item.bottom ? (
             <button
               key={index}
               style={{
                 ...styles.menuButton,
-                ...(active === item.name ? styles.activeButton : styles.hoverButton),
+                ...(active === item.to ? styles.activeButton : styles.hoverButton),
               }}
-              onClick={() => setActive(item.name)}
+              onClick={() => setActive(item.to)}
             >
               <i className={`fa fa-${item.icon}`}></i>
               {item.name}
             </button>
-          )
-        ))}
+          ) : null
+        )}
       </div>
     </div>
   );
@@ -115,6 +119,8 @@ const styles = {
     background: "none",
     cursor: "pointer",
     transition: "background 0.3s",
+    color: "white",
+    textDecoration: "none",
   },
   activeButton: {
     backgroundColor: "#4caf50",
@@ -122,7 +128,6 @@ const styles = {
   },
   hoverButton: {
     backgroundColor: "rgba(137, 137, 137, 0.3)",
-    color: "white",
   },
   bottomMenu: {
     borderTop: "1px solid #ccc",

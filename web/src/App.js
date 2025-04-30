@@ -28,6 +28,8 @@ function App() {
           <Route path="tags" element={<Tags />} />
           <Route path="posts" element={<Post />} />
           <Route path="users" element={<User />} />
+
+          <Route path="*" element={<div>404</div>} />
         </Route>
           
         
