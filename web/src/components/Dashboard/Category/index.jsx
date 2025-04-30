@@ -23,7 +23,6 @@ const Category = () => {
   const getAllCategories = async () => {
     try {
       const result = await categoryService.getAll();
-      console.log(result.data);
       
       const formattedCategorys = result.data.map(categorie => ({
         id: categorie.id,

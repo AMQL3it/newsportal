@@ -10,7 +10,7 @@ const ViewModal = ({
 }) => {
     const [category, setCategory ] = useState([]);
     const [selectedTags, setSelectedTags] = useState([]); 
-    const [allTags, setAllTags] = useState([]); I
+    const [allTags, setAllTags] = useState([]); 
     const [selectedTagId, setSelectedTagId] = useState(""); 
 
     useEffect(() => {
@@ -27,7 +27,6 @@ const ViewModal = ({
     // 👉 API Call to fetch category by id
     const fetchCategoryById = async (cid) => {
         const res = await categoryService.getById(cid);
-        console.log(res.data);
         
         setCategory(res.data);
         setSelectedTags(res.data.tags);
