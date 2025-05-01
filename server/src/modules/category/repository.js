@@ -9,6 +9,14 @@ const categoryRepository = {
   async getAll() {
     const { count, rows } = await Category.findAndCountAll({
       order: [["id", "ASC"]],
+      include: [
+        {
+          model: Tag,
+          as: "tags", // association name
+          through: { attributes: [] }, // category_tag table data exclude
+          attributes: ["id", "name", "slug", "is_active"],
+        },
+      ],
     });
     return { data: rows, total: count };
   },

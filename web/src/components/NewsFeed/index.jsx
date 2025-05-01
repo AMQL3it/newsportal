@@ -1,8 +1,13 @@
+
 import NewsItem from '../NewsItem';
 import styles from './NewsFeed.module.css';
 import Divider from '../General/Divider';
+import postService from '../../services/postService';
+import { useEffect, useState } from 'react';
+
 
 const NewsFeed = ({status}) => {
+  const [posts, setPosts] = useState([]);
     const newsList = [
         {
             id: 1,
@@ -29,9 +34,37 @@ const NewsFeed = ({status}) => {
             author: "DemoAdmin"
         }
     ]
+
+    useEffect(() => {
+      getAllPosts();
+    }, []);
+  
+    const getAllPosts = async () => {
+      try {
+        const result = await postService.getAll("posts");
+        console.log(result.data);
+        
+        const formattedPosts = result.data.map(post => ({
+          id: post.id,
+          title: post.title,
+          auther: post.auther,
+          content: post.content,
+          image: post.image,
+          is_active: post.is_active,
+          seo_score: post.seo_score,
+          readable_score: post.readable_score,
+          layout: post.layout,
+          category_id: post.category_id,
+          tag_ids: post.tag_ids,
+        }));
+        setPosts(formattedPosts);
+      } catch (error) {
+        console.error("Error fetching posts:", error);
+      }
+    };
   return (
     <div className={styles.newsFeed}>
-      {newsList.map((news) => (
+      {posts.map((news) => (
         <NewsItem key={news.id} news={news} />
       ))}
       <Divider />

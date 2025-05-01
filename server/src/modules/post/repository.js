@@ -1,40 +1,84 @@
 const Post = require("./model");
 const PostStat = require("./postStat");
+const Category = require("../category/model");
+const Tag = require("../tag/model");
+const sequelize = require("../../databases/config");
 
 const postRepository = {
-  // ✅ Create Post + Create empty stats
+  // ✅ Create Post + Create empty stats + set Tags (transactional)
   async create(data) {
-    const post = await Post.create(data);
-    await PostStat.create({ post_id: post.id }); // নতুন পোস্ট হলে স্ট্যাট ও বানাবো
-    return post;
+    const transaction = await sequelize.transaction();
+
+    try {
+      // Step 1: Create the Post
+      const post = await Post.create(data, { transaction });
+
+      // Step 2: Create corresponding PostStat
+      await PostStat.create({ post_id: post.id }, { transaction });
+
+      // Step 3: Set tags if provided
+      if (data.tagIds && Array.isArray(data.tagIds)) {
+        await post.setTags(data.tagIds, { transaction });
+      }
+
+      await transaction.commit();
+      return post;
+    } catch (error) {
+      console.error("Create Post failed:", error);
+      await transaction.rollback();
+      throw error;
+    }
   },
 
-  // ✅ Get all Posts + Stats
+  // ✅ Get all Posts + Stats + Tags + Category
   async getAll() {
     const { count, rows } = await Post.findAndCountAll({
       include: [
-        { model: PostStat, as: "stats" }
+        { model: PostStat, as: "stats" },
+        { model: Tag, as: "tags" },
+        // { model: Category, as: "category" },
       ],
       order: [["id", "ASC"]],
     });
     return { data: rows, total: count };
   },
 
-  // ✅ Get one Post by ID + Stats
+  // ✅ Get one Post by ID + Stats + Tags + Category
   async getById(id) {
     return await Post.findByPk(id, {
       include: [
-        { model: PostStat, as: "stats" }
+        { model: PostStat, as: "stats" },
+        { model: Tag, as: "tags" },
+        // { model: Category, as: "category" },
       ]
     });
   },
 
-  // ✅ Update Post Main Data
+  // ✅ Update Post Main Data + Tag syncing
   async update(id, data) {
-    const post = await Post.findByPk(id);
-    if (!post) return null;
-    await post.update(data);
-    return post;
+    const transaction = await sequelize.transaction();
+    try {
+      const post = await Post.findByPk(id, { transaction });
+      if (!post) {
+        await transaction.rollback();
+        return null;
+      }
+
+      // Update post data
+      await post.update(data, { transaction });
+
+      // Update tags if provided
+      if (data.tagIds && Array.isArray(data.tagIds)) {
+        await post.setTags(data.tagIds, { transaction });
+      }
+
+      await transaction.commit();
+      return post;
+    } catch (error) {
+      console.error("Update Post failed:", error);
+      await transaction.rollback();
+      throw error;
+    }
   },
 
   // ✅ Update Post State (views, likes etc.)
@@ -45,13 +89,25 @@ const postRepository = {
     return postStat;
   },
 
-  // ✅ Delete Post + related Stat (cascade already works but manual safe)
+  // ✅ Delete Post + related Stat
   async delete(id) {
-    const post = await Post.findByPk(id);
-    if (!post) return null;
-    await PostStat.destroy({ where: { post_id: id } }); // first delete stat
-    await post.destroy(); // then delete post
-    return true;
+    const transaction = await sequelize.transaction();
+    try {
+      const post = await Post.findByPk(id, { transaction });
+      if (!post) {
+        await transaction.rollback();
+        return null;
+      }
+
+      await PostStat.destroy({ where: { post_id: id }, transaction });
+      await post.destroy({ transaction });
+      await transaction.commit();
+      return true;
+    } catch (error) {
+      console.error("Delete Post failed:", error);
+      await transaction.rollback();
+      throw error;
+    }
   },
 };
 

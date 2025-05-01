@@ -19,10 +19,9 @@ const createServer = () => {
     app.use(bodyParser.urlencoded({ extended: true }));
   
     // Set static folder
-    app.use(express.static(path.join(__dirname, "public")));
+    // app.use(express.static(path.join(__dirname, "../uploads")));
+    app.use("/uploads", express.static(path.join(__dirname, "../../uploads")));
 
-    // app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-  
     // Parse cookies
     // app.use(cookieParser(process.env.COOKIE_SECRET));
   

@@ -7,6 +7,7 @@ const setupAssociations = (Models) => {
       CategoryTag,
       Post,
       PostStat,
+      PostTag,
       Comment,
       Adscategory,
       Advertisement,
@@ -19,6 +20,10 @@ const setupAssociations = (Models) => {
     // ✅ Post - PostStat (One to One)
     Post.hasOne(PostStat, { foreignKey: "post_id", as: "stats", onDelete: "CASCADE" });
     PostStat.belongsTo(Post, { foreignKey: "post_id", as: "post" });
+
+    // ✅ Many-to-Many Association (Post - Tag)
+    Post.belongsToMany(Tag, { through: PostTag, foreignKey: "post_id", as: "tags" });
+    Tag.belongsToMany(Post, { through: PostTag, foreignKey: "tag_id", as: "posts" });
   
     // Post - User (Many to One)
     User.hasMany(Post, { foreignKey: "user_id" });

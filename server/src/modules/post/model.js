@@ -20,6 +20,7 @@ const Post = sequelize.define(
   }
 );
 
+
 // ✅ Post - PostStat (One to One)
 // Post.hasOne(PostStat, { foreignKey: "post_id", as: "stats", onDelete: "CASCADE" });
 // PostStat.belongsTo(Post, { foreignKey: "post_id", as: "post" });

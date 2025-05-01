@@ -11,7 +11,7 @@ const EditForm = ({
 }) => {
 
     return (
-        <Modal onClose={() => setIsModalOpen(false)} title={editingId ? `Edit ${title}` : `Add ${title}`}>
+        <Modal onClose={() => setIsModalOpen(false)} onSubmit={handleSubmit} status="form" title={editingId ? `Edit ${title}` : `Add ${title}`}>
             <form onSubmit={handleSubmit} style={styleObj.form}>
                 
                 <div style={styleObj.inputSection}>
@@ -52,19 +52,6 @@ const EditForm = ({
                     <option value="grid">Grid</option>
                     <option value="list">List</option>
                 </select>
-                </div>
-
-                <div style={styleObj.buttonSection}>
-                <button type="submit" style={styleObj.submitBtn}>
-                    {editingId ? "Update" : "Add"}
-                </button>
-                <button
-                    type="button"
-                    onClick={() => setIsModalOpen(false)}
-                    style={styleObj.cancelBtn}
-                >
-                    Cancel
-                </button>
                 </div>
             </form>
         </Modal>
