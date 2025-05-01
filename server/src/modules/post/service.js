@@ -5,7 +5,7 @@ const path = require("path");
 
 const postService = {
   async create(req) {
-  
+    const filePath = req.file?.path; 
     try {
       if(req.file){
         req.body.image = req.file.path;
@@ -16,17 +16,11 @@ const postService = {
   
       req.body.seo_score = seo_score;
       req.body.readable_score = readable_score;
-  
+
       return await postRepository.create(req.body);
     } catch (error) {
-      
-      if(req.file){
-        const filePath = req.file.path;
-        fs.unlink(filePath, (err) => {
-          if (err) {
-            console.error("Error deleting file:", err);
-          }
-        });
+      if (filePath && fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
       }
       throw error;
     }
@@ -49,7 +43,14 @@ const postService = {
   },
 
   async deleteById(id) {
-    return await postRepository.delete(id);
+    const post = await postRepository.delete(id);
+    if (post) {
+      const filePath = post.image;
+      if (filePath && fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
+    }
+    return true;
   },
 };
 

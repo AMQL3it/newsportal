@@ -1,11 +1,9 @@
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
-const logger = require("../../common/logger");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    logger.info(req.body.folder);
     let folderName = req.body.folder || "others";
     const uploadPath = `./uploads/${folderName}/`;
 

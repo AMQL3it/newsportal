@@ -17,8 +17,9 @@ const postRepository = {
       await PostStat.create({ post_id: post.id }, { transaction });
 
       // Step 3: Set tags if provided
-      if (data.tagIds && Array.isArray(data.tagIds)) {
-        await post.setTags(data.tagIds, { transaction });
+      if (data.tag_ids) {
+        let tag_ids = typeof data.tag_ids === "string" ? JSON.parse(data.tag_ids) : data.tag_ids;
+        await post.setTags(tag_ids, { transaction });
       }
 
       await transaction.commit();
@@ -36,9 +37,13 @@ const postRepository = {
       include: [
         { model: PostStat, as: "stats" },
         { model: Tag, as: "tags" },
-        // { model: Category, as: "category" },
+        {
+          model: Category,
+          as: "category",
+          attributes: ["id", "name"] // শুধু name চাইলে
+        },
       ],
-      order: [["id", "ASC"]],
+      order: [["id", "DESC"]],
     });
     return { data: rows, total: count };
   },
@@ -102,7 +107,7 @@ const postRepository = {
       await PostStat.destroy({ where: { post_id: id }, transaction });
       await post.destroy({ transaction });
       await transaction.commit();
-      return true;
+      return post;
     } catch (error) {
       console.error("Delete Post failed:", error);
       await transaction.rollback();

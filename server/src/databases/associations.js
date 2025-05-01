@@ -36,8 +36,13 @@ const setupAssociations = (Models) => {
     Tag.belongsToMany(Category, { through: CategoryTag, foreignKey: "tag_id", otherKey: "category_id", as: "categories" });
   
     // Post - Category (Many to One)
-    Category.hasMany(Post, { foreignKey: "category_id" });
-    Post.belongsTo(Category, { foreignKey: "category_id" });
+    // Category.hasMany(Post, { foreignKey: "category_id" });
+    // Post.belongsTo(Category, { foreignKey: "category_id" });
+    // Post Model এর মধ্যে
+    Post.belongsTo(Category, { as: "category", foreignKey: "category_id" });
+
+    // Category Model এর মধ্যে
+    Category.hasMany(Post, { foreignKey: "category_id", as: "posts" });
   
     // Post - Tag (Many to Many)
     Post.belongsToMany(Tag, { through: "PostTags", foreignKey: "post_id" });
