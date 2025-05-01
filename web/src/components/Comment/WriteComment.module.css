@@ -1,0 +1,30 @@
+.writeComment {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.writeComment textarea {
+    resize: none;
+    min-height: 80px;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin-bottom: 10px;
+}
+
+.writeComment button {
+    align-self: flex-end;
+    padding: 6px 12px;
+    font-size: 14px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.writeComment button:hover {
+    background-color: #0056b3;
+}

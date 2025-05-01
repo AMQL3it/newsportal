@@ -7,7 +7,7 @@ const Post = sequelize.define(
   "Post", {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     title: { type: DataTypes.STRING, allowNull: false },
-    auther: { type: DataTypes.STRING, allowNull: false },
+    author: { type: DataTypes.STRING, allowNull: false },
     content: { type: DataTypes.TEXT, allowNull: false },
     image: { type: DataTypes.STRING },
     is_active: { type: DataTypes.BOOLEAN, defaultValue: true },

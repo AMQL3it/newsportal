@@ -7,7 +7,6 @@ import { useEffect, useState } from 'react';
 
 
 const NewsFeed = ({status}) => {
-  const [posts, setPosts] = useState([]);
     const newsList = [
         {
             id: 1,
@@ -35,33 +34,28 @@ const NewsFeed = ({status}) => {
         }
     ]
 
-    useEffect(() => {
-      getAllPosts();
-    }, []);
-  
-    const getAllPosts = async () => {
-      try {
-        const result = await postService.getAll("posts");
-        console.log(result.data);
-        
-        const formattedPosts = result.data.map(post => ({
-          id: post.id,
-          title: post.title,
-          auther: post.auther,
-          content: post.content,
-          image: post.image,
-          is_active: post.is_active,
-          seo_score: post.seo_score,
-          readable_score: post.readable_score,
-          layout: post.layout,
-          category_id: post.category_id,
-          tag_ids: post.tag_ids,
-        }));
-        setPosts(formattedPosts);
-      } catch (error) {
-        console.error("Error fetching posts:", error);
-      }
-    };
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+
+  const fetchPosts = async () => {
+    try {
+      const result = await postService.getAll();
+      
+      const formatted = result.data.map(p => ({
+        ...p,
+        tag_ids: p.tags.map(t => t.id) || [],
+      }));
+      console.log(formatted);
+      
+      
+      setPosts(formatted);
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+    }
+  };
   return (
     <div className={styles.newsFeed}>
       {posts.map((news) => (

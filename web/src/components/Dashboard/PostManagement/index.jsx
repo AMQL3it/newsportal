@@ -14,7 +14,7 @@ const PostManagement = () => {
 
   const [formData, setFormData] = useState({
     title: "",
-    auther: "",
+    author: "",
     content: "",
     image: "",
     is_active: true,
@@ -37,9 +37,6 @@ const PostManagement = () => {
         tag_ids: p.tags.map(t => t.id) || [],
       }));
 
-      // console.log(formatted);
-      
-      
       setPosts(formatted);
     } catch (error) {
       console.error("Error fetching posts:", error);
@@ -50,7 +47,7 @@ const PostManagement = () => {
     setEditingId(null);
     setFormData({
       title: "",
-      auther: "",
+      author: "",
       content: "",
       image: "",
       is_active: true,
@@ -67,7 +64,7 @@ const PostManagement = () => {
     if (post) {
       setFormData({
         title: post.title,
-        auther: post.auther,
+        author: post.author,
         content: post.content,
         image: post.image,
         is_active: post.is_active,
@@ -101,7 +98,7 @@ const PostManagement = () => {
     try {
       const sendData = new FormData();
       sendData.append("title", formData.title);
-      sendData.append("auther", formData.auther);
+      sendData.append("author", formData.author);
       sendData.append("content", formData.content);
       sendData.append("is_active", formData.is_active);
       sendData.append("layout", formData.layout);
@@ -163,7 +160,7 @@ const PostManagement = () => {
             <tr key={idx}>
               <td>{p.id}</td>
               <td>{p.title}</td>
-              <td>{p.auther}</td>
+              <td>{p.author}</td>
               <td>{p.content?.slice(0, 50)}...</td>
               <td>
                 {p.image ? (

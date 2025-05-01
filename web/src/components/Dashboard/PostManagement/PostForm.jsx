@@ -73,7 +73,7 @@ const PostForm = ({
 
         <div style={style.group}>
           <label>Author:</label>
-          <input type="text" name="auther" value={formData.auther} onChange={handleChange} required />
+          <input type="text" name="author" value={formData.author} onChange={handleChange} required />
         </div>
 
         <div style={style.group}>
