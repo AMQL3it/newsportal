@@ -5,10 +5,10 @@ const User = sequelize.define(
   "User", {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     name: { type: DataTypes.STRING, allowNull: false },
-    email: { type: DataTypes.STRING, allowNull: false, unique: true },
+    email: { type: DataTypes.STRING, unique: true },
     phone: { type: DataTypes.STRING, allowNull: false },
     password: { type: DataTypes.STRING, allowNull: false },
-    token: { type: DataTypes.STRING }
+    role: { type: DataTypes.ENUM("admin", "moderator", "user"), allowNull: false, defaultValue: "user" },
   },
   {
     tableName: "users",

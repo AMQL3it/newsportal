@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 // Internal Imports
 const initRoutes = require('../modules');
 const Error = require('../common/errorHandler');
+const authRoute = require('../modules/auth');
 
 const createServer = () => {
     const app = express();
@@ -24,7 +25,9 @@ const createServer = () => {
 
     // Parse cookies
     // app.use(cookieParser(process.env.COOKIE_SECRET));
-  
+    
+    // login route
+    app.use('/auth', authRoute);
     // Routing setup - Initialize routes
     initRoutes(app);
   

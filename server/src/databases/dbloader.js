@@ -23,7 +23,7 @@ const DBLoader = async () => {
     try {
       await setupAssociations(Models);
       for (const modelName in Models) {
-        await Models[modelName].sync({ alter: true });
+        // await Models[modelName].sync({ alter: true });
         // await Models[modelName].sync();
         logger.warning(`${modelName} model created successfully.`);
       }
