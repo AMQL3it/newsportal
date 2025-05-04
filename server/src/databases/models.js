@@ -2,6 +2,7 @@ const Models = {
     Role: require("../modules/role/model"),
     User: require("../modules/user/model"),
     UserToken: require("../modules/user/UserToken"),
+    Verification: require("../modules/auth/Verification"),
     Category: require("../modules/category/model"),
     Tag: require("../modules/tag/model"),
     CategoryTag: require("../modules/junctions/CategoryTag"),

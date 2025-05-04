@@ -1,60 +1,54 @@
-const bcrypt = require("bcrypt");
+const otpService = require("./otpService"); // adjust path
 const UserToken = require("../user/UserToken");
 const User = require("../user/model");
 const { generateToken } = require("../../utils/jwt");
 
 const authService = {
-    async login(data) {
-        const { email, password } = data.body;
-        const user = await User.findOne({ where: { email } });
+  async sendLoginOTP(req) {
+    const { phone } = req.body;
+    const user = await User.findOne({ where: { phone } });
+    if (!user) throw new Error("User not found");
 
-        if (!user || !(await bcrypt.compare(password, user.password))) {
-            return res.status(401).json({ message: "Invalid credentials" });
-        }
+    return await otpService.sendCode(phone);
+  },
 
-        const payload = {
-            user_id: user.id,
-            name: user.name,
-            role: user.role,
-        };
+  async verifyLoginOTP(req) {
+    const { phone, code } = req.body;
+    const user = await User.findOne({ where: { phone } });
+    if (!user) throw new Error("User not found");
 
-        const token = generateToken(payload);
+    await otpService.verifyCode(phone, code);
 
-        // Set HTTP Only Cookie
-        // res.cookie(process.env.COOKIE_NAME, token, {
-        //     httpOnly: true,
-        //     secure: true,
-        //     signed: true,
-        //     maxAge: parseInt(process.env.JWT_EXPIRY) * 1000,
-        //     sameSite: "lax",
-        // });
+    const payload = {
+      user_id: user.id,
+      name: user.name,
+      role: user.role,
+    };
+    const token = generateToken(payload);
 
-        // Optional: Log the token into DB
-        await UserToken.create({
-            user_id: user.id,
-            token,
-            login_time: new Date(),
-            ip_address: data.ip,
-            device_info: data.headers['user-agent'],
-        });
+    await UserToken.create({
+      user_id: user.id,
+      token,
+      login_time: new Date(),
+      ip_address: req.ip,
+      device_info: req.headers['user-agent'],
+    });
 
-        const rdata = {
-            token,
-            user_id: user.id,
-            name: user.name,
-            email: user.email,
-            phone: user.phone,
-            role: user.role,
-        };
-        return rdata;
-    },
+    return {
+      token,
+      user_id: user.id,
+      name: user.name,
+      email: user.email,
+      phone: user.phone,
+      role: user.role,
+    };
+  },
 
-    async logout(token) {
-        // const token = data.signedCookies[process.env.COOKIE_NAME];
-        if (!token) return false;
-        await UserToken.destroy({ where: { token } });
-        return true;
-    },
+  async logout(token) {
+    if (!token) return false;
+    await UserToken.destroy({ where: { token } });
+    return true;
+  }
 };
 
 module.exports = authService;

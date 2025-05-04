@@ -8,6 +8,8 @@ const bodyParser = require('body-parser');
 const initRoutes = require('../modules');
 const Error = require('../common/errorHandler');
 const authRoute = require('../modules/auth');
+const smsRoutes = require("../modules/sms");
+
 
 const createServer = () => {
     const app = express();
@@ -28,6 +30,10 @@ const createServer = () => {
     
     // login route
     app.use('/auth', authRoute);
+
+    // sms route
+    app.use('/sms', smsRoutes);
+    
     // Routing setup - Initialize routes
     initRoutes(app);
   

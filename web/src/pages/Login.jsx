@@ -7,13 +7,29 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (username && password) {
-      // Simulate login success and redirect to home
-      navigate("/varification");
-    } else {
-      alert("Please fill in both fields.");
+    try {
+      if (username && password) {
+        // Simulate login success and redirect to home
+        const response = await fetch("http://localhost:5000/auth/otp/send", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ phone:username, password }),
+        });
+        const data = await response.json();
+        console.log(data);
+        if(data.data.success){
+          navigate("/varification", { state: { phone: username } });
+        }
+      } else {
+        alert("Please fill in both fields.");
+      }
+      
+    } catch (error) {
+      console.error("Error logging in:", error);
     }
   };
 

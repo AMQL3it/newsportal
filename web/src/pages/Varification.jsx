@@ -1,18 +1,38 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useLocation } from 'react-router-dom';
 import logo from "../assets/Two_factor_authentication.gif";
 
 const Varification = () => {
+  const location = useLocation();
+  const phone = location.state?.phone;
   const [ucode, setUcode] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (ucode) {
-      // Simulate login success and redirect to home
-      navigate("/dashboard");
-    } else {
-      alert("Please fill in both fields.");
+
+    try {
+      
+      if (ucode) {
+        const response = await fetch("http://localhost:5000/auth/otp/verify", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ phone, code:ucode }),
+        });
+        const data = await response.json();
+        console.log(data);
+        localStorage.setItem("token", data.token); 
+        navigate("/dashboard");
+      } else {
+        alert("Please fill in both fields.");
+      }
+      
+    } catch (error) {
+      console.error("Error logging in:", error);
+      
     }
   };
 
