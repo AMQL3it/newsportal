@@ -1,36 +1,68 @@
-const User = require("./model");
+const User = require("./models/User");
+const Role = require("../role/model");
 
 const userRepository = {
   async create(data) {
-    return await User.create(data);
+    try {
+      return await User.create(data);
+    } catch (error) {
+      throw new Error(`Repository Error (create): ${error.message}`);
+    }
   },
 
   async getAll() {
-    // const offset = (page - 1) * limit;
-    const { count, rows } = await User.findAndCountAll({
-      // offset,
-      // limit: parseInt(limit),
-      order: [["id", "ASC"]],
-    });
-    return { data: rows, total: count };
+    try {
+      const { count, rows } = await User.findAndCountAll({
+        order: [["id", "ASC"]],
+        include: [
+          {
+            model: Role,
+            // as: "role",
+            attributes: ["id", "name"],
+          },
+        ],
+      });
+      return { data: rows, total: count };
+    } catch (error) {
+      throw new Error(`Repository Error (getAll): ${error.message}`);
+    }
   },
 
   async getById(id) {
-    return await User.findByPk(id);
+    try {
+      return await User.findByPk(id);
+    } catch (error) {
+      throw new Error(`Repository Error (getById): ${error.message}`);
+    }
+  },
+
+  async getByQuery(query) {
+    try {
+      return await User.findOne({ where: query });
+    } catch (error) {
+      throw new Error(`Repository Error (getByQuery): ${error.message}`);
+    }
   },
 
   async update(id, data) {
-    const user = await User.findByPk(id);
-    if (!user) return null;
-    await user.update(data);
-    return user;
+    try {
+      const user = await User.findByPk(id);
+      if (!user) throw new Error("User not found");
+      return await user.update(data);
+    } catch (error) {
+      throw new Error(`Repository Error (update): ${error.message}`);
+    }
   },
 
   async delete(id) {
-    const user = await User.findByPk(id);
-    if (!user) return null;
-    await user.destroy();
-    return true;
+    try {
+      const user = await User.findByPk(id);
+      if (!user) throw new Error("User not found");
+      await user.destroy();
+      return true;
+    } catch (error) {
+      throw new Error(`Repository Error (delete): ${error.message}`);
+    }
   },
 };
 

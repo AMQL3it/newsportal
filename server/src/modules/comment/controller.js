@@ -1,5 +1,5 @@
 const commentService = require("./service");
-const logger = require("../../common/logger");
+const logger = require("../../utils/logger");
 
 const commentController = {
   // Create a new Comment

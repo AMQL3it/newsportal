@@ -1,9 +1,14 @@
 const { DataTypes } = require("sequelize");
-const sequelize = require("../../databases/config");
+const { sequelize } = require("../../../config");
 
 const UserToken = sequelize.define(
-  "UserToken", {
-    token_id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  "UserToken",
+  {
+    token_id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
     user_id: { type: DataTypes.INTEGER },
     token: { type: DataTypes.TEXT },
     login_time: { type: DataTypes.DATE },
@@ -12,7 +17,7 @@ const UserToken = sequelize.define(
   },
   {
     tableName: "user_tokens",
-    timestamps: false
+    timestamps: true,
   }
 );
 

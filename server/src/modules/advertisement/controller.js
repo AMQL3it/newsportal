@@ -1,5 +1,5 @@
 const advertisementService = require("./service");
-const logger = require("../../common/logger");
+const logger = require("../../utils/logger");
 
 const advertisementController = {
   // Create a new Advertisement
@@ -74,7 +74,10 @@ const advertisementController = {
     try {
       const { id } = req.params;
       const advertisementData = req.body;
-      const updatedAdvertisement = await advertisementService.update(id, advertisementData);
+      const updatedAdvertisement = await advertisementService.update(
+        id,
+        advertisementData
+      );
 
       if (updatedAdvertisement) {
         logger.info("Advertisement updated successfully.");

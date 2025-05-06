@@ -1,6 +1,6 @@
 const otpService = require("./otpService"); // adjust path
-const UserToken = require("../user/UserToken");
-const User = require("../user/model");
+const UserToken = require("../user/models/UserToken");
+const User = require("../user/models/User");
 const { generateToken } = require("../../utils/jwt");
 
 const authService = {
@@ -31,7 +31,7 @@ const authService = {
       token,
       login_time: new Date(),
       ip_address: req.ip,
-      device_info: req.headers['user-agent'],
+      device_info: req.headers["user-agent"],
     });
 
     return {
@@ -48,7 +48,7 @@ const authService = {
     if (!token) return false;
     await UserToken.destroy({ where: { token } });
     return true;
-  }
+  },
 };
 
 module.exports = authService;

@@ -1,5 +1,5 @@
 const adscategoryService = require("./service");
-const logger = require("../../common/logger");
+const logger = require("../../utils/logger");
 
 const adscategoryController = {
   // Create a new Tag
