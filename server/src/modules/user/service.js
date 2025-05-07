@@ -6,6 +6,7 @@ const userService = {
     try {
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(data.password, salt);
+
       return await userRepository.create({ ...data, password: hashedPassword });
     } catch (error) {
       throw new Error(`Service Error (create): ${error.message}`);

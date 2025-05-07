@@ -17,7 +17,6 @@ const UserToken = sequelize.define(
   },
   {
     tableName: "user_tokens",
-    timestamps: true,
   }
 );
 

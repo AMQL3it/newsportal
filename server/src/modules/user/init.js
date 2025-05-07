@@ -16,9 +16,8 @@ async function initUserModule() {
 
     const user = await userService.create(data);
     logger.info(`✅ User created: ${user.name}`);
-    console.log("✅ Superadmin created");
   } else {
-    console.log("ℹ️ Superadmin already exists");
+    logger.warning(`ℹ️ Superadmin already exists`);
   }
 }
 

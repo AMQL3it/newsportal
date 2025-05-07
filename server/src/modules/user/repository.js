@@ -13,6 +13,7 @@ const userRepository = {
   async getAll() {
     try {
       const { count, rows } = await User.findAndCountAll({
+        attributes: { exclude: ["password"] },
         order: [["id", "ASC"]],
         include: [
           {
