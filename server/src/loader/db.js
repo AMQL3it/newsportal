@@ -1,5 +1,5 @@
 const logger = require("../utils/logger");
-const sequelize = require("../databases/config");
+const { sequelize } = require("../config");
 
 const dbconnection = async () => {
   try {

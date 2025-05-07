@@ -28,10 +28,10 @@ const createServer = () => {
   // app.use(cookieParser(process.env.COOKIE_SECRET));
 
   // login route
-  app.use("/auth", authRoute);
+  // app.use("/auth", authRoute);
 
-  // sms route
-  app.use("/sms", smsRoutes);
+  // // sms route
+  // app.use("/sms", smsRoutes);
 
   // Routing setup - Initialize routes
   initRoutes(app);
