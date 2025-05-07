@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // Base URL from .env file or fallback
-const BASE_URL = "http://localhost:5000";
+const BASE_URL = "http://localhost:5000/api";
 
 // Get the stored token from localStorage (after login)
 // const getToken = () => localStorage.getItem("token");
@@ -10,7 +10,7 @@ const BASE_URL = "http://localhost:5000";
 const getAuthHeaders = () => ({
   headers: {
     // Authorization: `Bearer ${getToken()}`
-  }
+  },
 });
 
 const apiService = {
@@ -18,7 +18,7 @@ const apiService = {
   getAll: async (endpoint, config = {}) => {
     const res = await axios.get(`${BASE_URL}/${endpoint}`, {
       ...getAuthHeaders(),
-      ...config
+      ...config,
     });
     return res.data;
   },
@@ -27,7 +27,7 @@ const apiService = {
   getById: async (endpoint, id, config = {}) => {
     const res = await axios.get(`${BASE_URL}/${endpoint}/${id}`, {
       ...getAuthHeaders(),
-      ...config
+      ...config,
     });
     return res.data;
   },
@@ -37,7 +37,7 @@ const apiService = {
     const queryString = new URLSearchParams(queryObj).toString();
     const res = await axios.get(`${BASE_URL}/${endpoint}?${queryString}`, {
       ...getAuthHeaders(),
-      ...config
+      ...config,
     });
     return res.data;
   },
@@ -46,7 +46,7 @@ const apiService = {
   create: async (endpoint, data, config = {}) => {
     const res = await axios.post(`${BASE_URL}/${endpoint}`, data, {
       ...getAuthHeaders(),
-      ...config
+      ...config,
     });
     return res.data;
   },
@@ -55,17 +55,21 @@ const apiService = {
   update: async (endpoint, id, data, config = {}) => {
     const res = await axios.put(`${BASE_URL}/${endpoint}/${id}`, data, {
       ...getAuthHeaders(),
-      ...config
+      ...config,
     });
     return res.data;
   },
 
   // 🔹 PATCH: partial update → PATCH /news/12
   patch: async (endpoint, id, extra = "", data, config = {}) => {
-    const res = await axios.patch(`${BASE_URL}/${endpoint}/${id}/${extra}`, data, {
-      ...getAuthHeaders(),
-      ...config
-    });
+    const res = await axios.patch(
+      `${BASE_URL}/${endpoint}/${id}/${extra}`,
+      data,
+      {
+        ...getAuthHeaders(),
+        ...config,
+      }
+    );
     return res.data;
   },
 
@@ -73,10 +77,10 @@ const apiService = {
   deleteById: async (endpoint, id, extra = "", config = {}) => {
     const res = await axios.delete(`${BASE_URL}/${endpoint}/${id}/${extra}`, {
       ...getAuthHeaders(),
-      ...config
+      ...config,
     });
     return res.data;
-  }
+  },
 };
 
 export default apiService;

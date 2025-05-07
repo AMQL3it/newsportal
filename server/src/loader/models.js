@@ -2,6 +2,7 @@
 const Role = require("../modules/role/model");
 const User = require("../modules/user/models/User");
 const UserToken = require("../modules/user/models/UserToken");
+const Verification = require("../modules/auth/model");
 // const Role = require("./role/model");
 // const Category = require("./category/model");
 // const Tag = require("./tag/model");
@@ -21,6 +22,10 @@ User.belongsTo(Role, { foreignKey: "role_id" });
 User.hasMany(UserToken, { foreignKey: "user_id" });
 UserToken.belongsTo(User, { foreignKey: "user_id" });
 
+// User - Verification (Many to One)
+User.hasMany(Verification, { foreignKey: "user_id" });
+Verification.belongsTo(User, { foreignKey: "user_id" });
+
 // Category.hasMany(Post);
 // Post.belongsTo(Category);
 
@@ -38,6 +43,8 @@ module.exports = {
   //   sequelize,
   Role,
   User,
+  UserToken,
+  Verification,
   //   Role,
   //   Category,
   //   Tag,

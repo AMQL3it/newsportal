@@ -17,17 +17,16 @@ const Login = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ phone:username, password }),
+          body: JSON.stringify({ phone: username, password }),
         });
         const data = await response.json();
         console.log(data);
-        if(data.data.success){
+        if (data.data.success) {
           navigate("/varification", { state: { phone: username } });
         }
       } else {
         alert("Please fill in both fields.");
       }
-      
     } catch (error) {
       console.error("Error logging in:", error);
     }
@@ -35,29 +34,29 @@ const Login = () => {
 
   return (
     <div style={styles.container}>
-        <img src={logo} alt="Logo" style={styles.logo} />
-        <div style={styles.content}>
-            <h3>Sign in</h3>
-            <form onSubmit={handleSubmit} style={styles.form}>
-                <input
-                type="text"
-                placeholder="Username or email address"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                style={styles.input}
-                />
-                <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                style={styles.input}
-                />
-                <button type="submit" style={styles.button}>
-                Sign in
-                </button>
-            </form>
-        </div>
+      <img src={logo} alt="Logo" style={styles.logo} />
+      <div style={styles.content}>
+        <h3>Sign in</h3>
+        <form onSubmit={handleSubmit} style={styles.form}>
+          <input
+            type="text"
+            placeholder="Username or email address"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            style={styles.input}
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            style={styles.input}
+          />
+          <button type="submit" style={styles.button}>
+            Sign in
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

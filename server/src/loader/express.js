@@ -7,8 +7,8 @@ const bodyParser = require("body-parser");
 // Internal Imports
 const initRoutes = require("../modules");
 const Error = require("../common/errorHandler");
-const authRoute = require("../modules/auth");
-const smsRoutes = require("../modules/sms");
+// const authRoute = require("../modules/auth");
+// const smsRoutes = require("../modules/sms");
 
 const createServer = () => {
   const app = express();
