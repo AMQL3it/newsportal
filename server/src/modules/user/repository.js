@@ -1,5 +1,7 @@
-const User = require("./models/User");
+const { Op } = require("sequelize");
 const Role = require("../role/model");
+const User = require("./models/User");
+const UserToken = require("./models/UserToken");
 
 const userRepository = {
   async create(data) {
@@ -63,6 +65,38 @@ const userRepository = {
       return true;
     } catch (error) {
       throw new Error(`Repository Error (delete): ${error.message}`);
+    }
+  },
+
+  async findByIdentifier(identifier) {
+    try {
+      return await User.findOne({
+        where: {
+          [Op.or]: [
+            { phone: identifier },
+            { email: identifier },
+            { name: identifier },
+          ],
+        },
+      });
+    } catch (error) {
+      throw new Error(`Repository Error (findByIdentifier): ${error.message}`);
+    }
+  },
+
+  async tokenCreate(data) {
+    try {
+      return await UserToken.create(data);
+    } catch (error) {
+      throw new Error(`Repository Error (tokenCreate): ${error.message}`);
+    }
+  },
+
+  async tokenDestroy(token) {
+    try {
+      return await UserToken.destroy({ where: { token } });
+    } catch (error) {
+      throw new Error(`Repository Error (tokenDestroy): ${error.message}`);
     }
   },
 };

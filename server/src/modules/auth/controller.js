@@ -1,23 +1,35 @@
 const authService = require("./service");
 
 const authController = {
-  async login(req, res) {
+  async otpSend(req, res) {
     try {
-      const auth = await authService.login(req);
-      res.status(201).json({ status: "success", data: auth });
-    } catch (error) {
-      res.status(500).json({ status: "error", message: error.message });
+      console.log("Sending OTP... sendloginotp");
+
+      const result = await authService.sendLoginOTP(req);
+      res.status(200).json(result);
+    } catch (err) {
+      res.status(400).json({ error: err.message });
+    }
+  },
+
+  async otpVerify(req, res) {
+    try {
+      const result = await authService.verifyLoginOTP(req);
+      res.status(200).json(result);
+    } catch (err) {
+      res.status(400).json({ error: err.message });
     }
   },
 
   async logout(req, res) {
     try {
-      const auth = await authService.logout(req.body.token);
-      res.status(201).json({ status: "success", data: auth });
-    } catch (error) {
-      res.status(500).json({ status: "error", message: error.message });
+      const token = req.headers.authorization?.split(" ")[1];
+      const success = await authService.logout(token);
+      res.status(200).json({ success });
+    } catch (err) {
+      res.status(400).json({ error: err.message });
     }
-  }
+  },
 };
 
 module.exports = authController;

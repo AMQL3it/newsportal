@@ -56,6 +56,30 @@ const userService = {
       throw new Error(`Service Error (deleteById): ${error.message}`);
     }
   },
+
+  async findByIdentifier(identifier) {
+    try {
+      return await userRepository.findByIdentifier(identifier);
+    } catch (error) {
+      throw new Error(`Service Error (findByIdentifier): ${error.message}`);
+    }
+  },
+
+  async tokenCreate(data) {
+    try {
+      return await userRepository.tokenCreate(data);
+    } catch (error) {
+      throw new Error(`Service Error (tokenCreate): ${error.message}`);
+    }
+  },
+
+  async tokenDestroy(token) {
+    try {
+      return await userRepository.tokenDestroy(token);
+    } catch (error) {
+      throw new Error(`Service Error (tokenDestroy): ${error.message}`);
+    }
+  },
 };
 
 module.exports = userService;

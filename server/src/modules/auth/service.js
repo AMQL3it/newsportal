@@ -1,23 +1,22 @@
 const otpService = require("./otpService"); // adjust path
-const UserToken = require("../user/models/UserToken");
-const User = require("../user/models/User");
 const { generateToken } = require("../../utils/jwt");
+const userService = require("../user/service");
 
 const authService = {
   async sendLoginOTP(req) {
-    const { phone } = req.body;
-    const user = await User.findOne({ where: { phone } });
+    const { identifier } = req.body; // client থেকে আসবে যেকোনো একটি
+    const user = await userService.findByIdentifier(identifier);
     if (!user) throw new Error("User not found");
 
-    return await otpService.sendCode(phone);
+    return await otpService.sendCode(user);
   },
 
   async verifyLoginOTP(req) {
     const { phone, code } = req.body;
-    const user = await User.findOne({ where: { phone } });
+    const user = await userService.getByQuery({ phone });
     if (!user) throw new Error("User not found");
 
-    await otpService.verifyCode(phone, code);
+    await otpService.verifyCode(user.id, code);
 
     const payload = {
       user_id: user.id,
@@ -26,7 +25,7 @@ const authService = {
     };
     const token = generateToken(payload);
 
-    await UserToken.create({
+    await userService.tokenCreate({
       user_id: user.id,
       token,
       login_time: new Date(),
@@ -46,8 +45,8 @@ const authService = {
 
   async logout(token) {
     if (!token) return false;
-    await UserToken.destroy({ where: { token } });
-    return true;
+
+    return await userService.tokenDestroy(token);
   },
 };
 
