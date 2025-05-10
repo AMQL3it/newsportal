@@ -12,11 +12,12 @@ const authService = {
   },
 
   async verifyLoginOTP(req) {
-    const { phone, code } = req.body;
-    const user = await userService.getByQuery({ phone });
+    const { identifier, code } = req.body;
+    const user = await await userService.findByIdentifier(identifier);
     if (!user) throw new Error("User not found");
 
-    await otpService.verifyCode(user.id, code);
+    const result = await otpService.verifyCode(user.id, code);
+    if (!result.success) return result;
 
     const payload = {
       user_id: user.id,
@@ -34,12 +35,9 @@ const authService = {
     });
 
     return {
+      success: true,
       token,
-      user_id: user.id,
-      name: user.name,
-      email: user.email,
-      phone: user.phone,
-      role: user.role,
+      message: result.message,
     };
   },
 

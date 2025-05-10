@@ -3,10 +3,11 @@ const authService = require("./service");
 const authController = {
   async otpSend(req, res) {
     try {
-      console.log("Sending OTP... sendloginotp");
-
       const result = await authService.sendLoginOTP(req);
-      res.status(200).json(result);
+      res.status(200).json({
+        success: result.success,
+        message: result.message,
+      });
     } catch (err) {
       res.status(400).json({ error: err.message });
     }
@@ -15,7 +16,11 @@ const authController = {
   async otpVerify(req, res) {
     try {
       const result = await authService.verifyLoginOTP(req);
-      res.status(200).json(result);
+      res.status(200).json({
+        success: result.success,
+        // data: result,
+        message: result.message,
+      });
     } catch (err) {
       res.status(400).json({ error: err.message });
     }

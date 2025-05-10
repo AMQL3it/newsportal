@@ -18,7 +18,10 @@ const smsService = {
       // });
 
       console.log(message);
-      return { success: true, data: message };
+      return {
+        success: true,
+        message: "SMS sent successfully",
+      };
 
       // return response.data;
     } catch (error) {

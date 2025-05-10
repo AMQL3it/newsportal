@@ -1,7 +1,7 @@
 // services/otpService.js
 const { Op } = require("sequelize");
 const Verification = require("./model");
-const smsService = require("../sms/service"); // আপনার SMS পাঠানোর হেল্পার
+const smsService = require("../../utils/smsService"); // আপনার SMS পাঠানোর হেল্পার
 
 const otpService = {
   async sendCode(user) {
@@ -13,16 +13,22 @@ const otpService = {
       where: { user_id, createdAt: { [Op.gt]: oneHourAgo } },
     });
 
-    if (existingCount >= 5)
-      throw new Error("Too many OTP requests. Try after 1 hour");
+    // if (existingCount >= 5)
+    //   return {
+    //     success: false,
+    //     message: "Too many OTP requests. Try after 1 hour",
+    //   };
 
-    const last = await Verification.findOne({
-      where: { user_id },
-      order: [["createdAt", "DESC"]],
-    });
-    if (last && new Date() - last.createdAt < 60000) {
-      throw new Error("Please wait 1 minute before requesting another code.");
-    }
+    // const last = await Verification.findOne({
+    //   where: { user_id },
+    //   order: [["createdAt", "DESC"]],
+    // });
+    // if (last && new Date() - last.createdAt < 60000) {
+    //   return {
+    //     success: false,
+    //     message: "Please wait 1 minute before requesting another code.",
+    //   };
+    // }
 
     const code = Math.floor(100000 + Math.random() * 900000).toString();
     const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
@@ -30,9 +36,7 @@ const otpService = {
     await Verification.create({ user_id, code, expiresAt });
 
     const message = `Your verification code is: ${code}`;
-    const otpmessage = await smsService.sendBulkSMS(phone, message); // implement this if not yet
-
-    return { message: "OTP sent successfully", data: otpmessage };
+    return await smsService.sendBulkSMS(phone, message);
   },
 
   async verifyCode(user_id, code) {
@@ -41,19 +45,22 @@ const otpService = {
       order: [["createdAt", "DESC"]],
     });
 
-    if (!record) throw new Error("No active code. Request again.");
-    if (new Date() > record.expiresAt) throw new Error("Code expired.");
-    if (record.attempts >= 3) throw new Error("Too many failed attempts.");
+    if (!record) return { success: false, message: "No active code." }; //throw new Error("No active code. Request again.");
+    if (new Date() > record.expiresAt)
+      return { success: false, message: "Code expired." }; //throw new Error("Code expired.");
+    if (record.attempts >= 3)
+      return { success: false, message: "Too many failed attempts." }; //throw new Error("Too many failed attempts.");
 
     if (record.code !== code) {
       record.attempts += 1;
       await record.save();
-      throw new Error("Invalid code.");
+
+      return { success: false, message: "Invalid code." }; //throw new Error("Invalid code.");
     }
 
     record.isVerified = true;
     await record.save();
-    return true;
+    return { success: true, message: "Code verified successfully." };
   },
 };
 
