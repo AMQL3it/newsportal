@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
-import styles from "./Post.module.css";
+import { useEffect, useState } from "react";
+import { FaEdit, FaTrashAlt } from "react-icons/fa";
+import postService from "../../../services/postService";
+import SweetAlert from "../../../utils/SweetAlert";
+import AddButton from "../../General/AddButton";
 import Pagination from "../../General/Pagination";
 import TitleLine from "../../General/TitleLine";
-import AddButton from "../../General/AddButton";
-import SweetAlert from "../../../utils/SweetAlert";
-import postService from "../../../services/postService";
+import styles from "./Post.module.css";
 import PostForm from "./PostForm";
 
 const PostManagement = () => {
@@ -31,15 +32,16 @@ const PostManagement = () => {
   const fetchPosts = async () => {
     try {
       const result = await postService.getAll();
-      
-      const formatted = result.data.map(p => ({
+
+      const formatted = result.data.map((p) => ({
         ...p,
-        tag_ids: p.tags.map(t => t.id) || [],
+        tag_ids: p.tags.map((t) => t.id) || [],
       }));
 
       setPosts(formatted);
     } catch (error) {
       console.error("Error fetching posts:", error);
+      setPosts([]);
     }
   };
 
@@ -60,7 +62,7 @@ const PostManagement = () => {
   };
 
   const handleEdit = (id) => {
-    const post = posts.find(p => p.id === id);
+    const post = posts.find((p) => p.id === id);
     if (post) {
       setFormData({
         title: post.title,
@@ -70,7 +72,7 @@ const PostManagement = () => {
         is_active: post.is_active,
         layout: post.layout,
         category_id: post.category_id,
-        tag_ids: post.tags.map(t => t.id) || [],
+        tag_ids: post.tags.map((t) => t.id) || [],
         folder: "posts",
       });
       setEditingId(id);
@@ -113,13 +115,12 @@ const PostManagement = () => {
 
       // sendData.append("tag_ids", formData.tag_ids);
 
-
       if (editingId) {
         await postService.update(editingId, sendData);
         SweetAlert.successAlert("Post updated!");
       } else {
         await postService.create(sendData, {
-          headers: { "Content-Type": "multipart/form-data" }
+          headers: { "Content-Type": "multipart/form-data" },
         });
         SweetAlert.successAlert("Post added!");
       }
@@ -136,7 +137,10 @@ const PostManagement = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const perPage = 5;
   const totalPages = Math.ceil(posts.length / perPage);
-  const displayedPosts = posts.slice((currentPage - 1) * perPage, currentPage * perPage);
+  const displayedPosts = posts.slice(
+    (currentPage - 1) * perPage,
+    currentPage * perPage
+  );
 
   return (
     <>
@@ -156,33 +160,56 @@ const PostManagement = () => {
           </tr>
         </thead>
         <tbody>
-          {displayedPosts.length ? displayedPosts.map((p, idx) => (
-            <tr key={idx}>
-              <td>{p.id}</td>
-              <td>{p.title}</td>
-              <td>{p.author}</td>
-              <td>{p.content?.slice(0, 50)}...</td>
-              <td>
-                {p.image ? (
-                  <img src={`http://localhost:5000/${p.image}`} width={80} height={80} alt="cover" />
-                ) : "No Image"}
-              </td>
-              <td>
-                <button className={styles.editBtn} onClick={() => handleEdit(p.id)}>
-                  <i className="fa fa-edit" />
-                </button>
-                <button className={styles.deleteBtn} onClick={() => handleDelete(p.id)}>
-                  <i className="fa fa-trash" />
-                </button>
+          {displayedPosts.length ? (
+            displayedPosts.map((p, idx) => (
+              <tr key={idx}>
+                <td>{p.id}</td>
+                <td>{p.title}</td>
+                <td>{p.author}</td>
+                <td>{p.content?.slice(0, 50)}...</td>
+                <td>
+                  {p.image ? (
+                    <img
+                      src={`http://localhost:5000/${p.image}`}
+                      width={80}
+                      height={80}
+                      alt="cover"
+                    />
+                  ) : (
+                    "No Image"
+                  )}
+                </td>
+                <td>
+                  <button
+                    className={styles.editBtn}
+                    onClick={() => handleEdit(p.id)}
+                  >
+                    <FaEdit title="Edit" />
+                  </button>
+                  <button
+                    className={styles.deleteBtn}
+                    onClick={() => handleDelete(p.id)}
+                  >
+                    <FaTrashAlt title="Delete" />
+                  </button>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="6" style={{ textAlign: "center" }}>
+                No data found
               </td>
             </tr>
-          )) : (
-            <tr><td colSpan="6" style={{ textAlign: "center" }}>No data found</td></tr>
           )}
         </tbody>
       </table>
 
-      <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+      />
 
       {isModalOpen && (
         <PostForm

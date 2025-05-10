@@ -4,12 +4,12 @@ import axios from "axios";
 const BASE_URL = "http://localhost:5000/api";
 
 // Get the stored token from localStorage (after login)
-// const getToken = () => localStorage.getItem("token");
+const getToken = () => localStorage.getItem("token");
 
 // Create a dynamic Axios instance with Authorization header
 const getAuthHeaders = () => ({
   headers: {
-    // Authorization: `Bearer ${getToken()}`
+    Authorization: `Bearer ${getToken()}`,
   },
 });
 
@@ -17,7 +17,7 @@ const apiService = {
   // 🔹 GET all items from endpoint: GET /news
   getAll: async (endpoint, config = {}) => {
     const res = await axios.get(`${BASE_URL}/${endpoint}`, {
-      ...getAuthHeaders(),
+      // ...getAuthHeaders(),
       ...config,
     });
     return res.data;
@@ -26,7 +26,7 @@ const apiService = {
   // 🔹 GET single item by ID: GET /news/12
   getById: async (endpoint, id, config = {}) => {
     const res = await axios.get(`${BASE_URL}/${endpoint}/${id}`, {
-      ...getAuthHeaders(),
+      // ...getAuthHeaders(),
       ...config,
     });
     return res.data;
@@ -36,7 +36,7 @@ const apiService = {
   getByQuery: async (endpoint, queryObj = {}, config = {}) => {
     const queryString = new URLSearchParams(queryObj).toString();
     const res = await axios.get(`${BASE_URL}/${endpoint}?${queryString}`, {
-      ...getAuthHeaders(),
+      // ...getAuthHeaders(),
       ...config,
     });
     return res.data;

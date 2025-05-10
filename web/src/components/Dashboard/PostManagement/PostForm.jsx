@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import Modal from "../../General/Modal";
+import { useEffect, useState } from "react";
 import categoryService from "../../../services/categoryService";
+import Modal from "../../General/Modal";
 
 const PostForm = ({
   title,
@@ -8,7 +8,7 @@ const PostForm = ({
   setFormData,
   handleSubmit,
   setIsModalOpen,
-  editingId,
+  // editingId,
 }) => {
   const [categories, setCategories] = useState([]);
   const [tags, setTags] = useState([]);
@@ -17,14 +17,14 @@ const PostForm = ({
 
   useEffect(() => {
     loadCategories();
-  }, []);
+  });
 
   const loadCategories = async () => {
     const res = await categoryService.getAll();
     setCategories(res.data);
 
     if (formData.category_id) {
-      const selected = res.data.find(c => c.id === formData.category_id);
+      const selected = res.data.find((c) => c.id === formData.category_id);
       setTags(selected?.tags || []);
     }
   };
@@ -33,7 +33,7 @@ const PostForm = ({
     const { name, value } = e.target;
     if (name === "category_id") {
       const id = parseInt(value);
-      const selected = categories.find(c => c.id === id);
+      const selected = categories.find((c) => c.id === id);
       setTags(selected?.tags || []);
       setFormData({ ...formData, category_id: id, tag_ids: [] });
     } else {
@@ -52,9 +52,9 @@ const PostForm = ({
   const handleTagToggle = (tagId) => {
     const exists = formData.tag_ids.includes(tagId);
     const updated = exists
-      ? formData.tag_ids.filter(id => id !== tagId)
+      ? formData.tag_ids.filter((id) => id !== tagId)
       : [...formData.tag_ids, tagId];
-      
+
     setFormData({ ...formData, tag_ids: updated });
   };
 
@@ -65,56 +65,111 @@ const PostForm = ({
       onClose={() => setIsModalOpen(false)}
       onSubmit={handleSubmit}
     >
-      <form style={style.form}>
-        <div style={style.group}>
-          <label>Title:</label>
-          <input type="text" name="title" value={formData.title} onChange={handleChange} required />
+      <form className="flex flex-col gap-4">
+        {/* Title */}
+        <div className="flex flex-col gap-1">
+          <label className="font-medium">Title:</label>
+          <input
+            type="text"
+            name="title"
+            value={formData.title}
+            onChange={handleChange}
+            required
+            className="border rounded px-3 py-2 text-sm"
+          />
         </div>
 
-        <div style={style.group}>
-          <label>Author:</label>
-          <input type="text" name="author" value={formData.author} onChange={handleChange} required />
+        {/* Author */}
+        <div className="flex flex-col gap-1">
+          <label className="font-medium">Author:</label>
+          <input
+            type="text"
+            name="author"
+            value={formData.author}
+            onChange={handleChange}
+            required
+            className="border rounded px-3 py-2 text-sm"
+          />
         </div>
 
-        <div style={style.group}>
-          <label>Content:</label>
-          <textarea name="content" rows={4} value={formData.content} onChange={handleChange} required />
+        {/* Content */}
+        <div className="flex flex-col gap-1">
+          <label className="font-medium">Content:</label>
+          <textarea
+            name="content"
+            rows={4}
+            value={formData.content}
+            onChange={handleChange}
+            required
+            className="border rounded px-3 py-2 text-sm"
+          />
         </div>
 
-        <div style={style.group}>
-          <label>Cover Image:</label>
-          <input type="file" accept="image/*" onChange={handleFileChange} />
-          {preview && <img src={preview} alt="preview" height={80} />}
+        {/* Image */}
+        <div className="flex flex-col gap-1">
+          <label className="font-medium">Cover Image:</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            className="text-sm"
+          />
+          {preview && (
+            <img src={preview} alt="preview" className="h-20 mt-2 rounded" />
+          )}
         </div>
 
-        <div style={style.group}>
-          <label>Layout:</label>
-          <select name="layout" value={formData.layout} onChange={handleChange} required>
+        {/* Layout */}
+        <div className="flex flex-col gap-1">
+          <label className="font-medium">Layout:</label>
+          <select
+            name="layout"
+            value={formData.layout}
+            onChange={handleChange}
+            required
+            className="border rounded px-3 py-2 text-sm"
+          >
             <option value="">Select layout</option>
-            {layouts.map((l, i) => <option key={i} value={l}>{l}</option>)}
+            {layouts.map((l, i) => (
+              <option key={i} value={l}>
+                {l}
+              </option>
+            ))}
           </select>
         </div>
 
-        <div style={style.group}>
-          <label>Category:</label>
-          <select name="category_id" value={formData.category_id || ''} onChange={handleChange} required>
+        {/* Category */}
+        <div className="flex flex-col gap-1">
+          <label className="font-medium">Category:</label>
+          <select
+            name="category_id"
+            value={formData.category_id || ""}
+            onChange={handleChange}
+            required
+            className="border rounded px-3 py-2 text-sm"
+          >
             <option value="">Select category</option>
-            {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+            {categories.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
+            ))}
           </select>
         </div>
 
+        {/* Tags */}
         {tags.length > 0 && (
-          <div style={style.group}>
-            <label>Tags:</label>
-            <div style={style.tagGrid}>
-              {tags.map(tag => (
-                <label key={tag.id} style={style.tagItem}>
+          <div className="flex flex-col gap-1">
+            <label className="font-medium">Tags:</label>
+            <div className="grid grid-cols-2 gap-3">
+              {tags.map((tag) => (
+                <label key={tag.id} className="flex items-center gap-2">
                   <input
                     type="checkbox"
                     checked={formData.tag_ids.includes(tag.id)}
                     onChange={() => handleTagToggle(tag.id)}
                   />
-                  {tag.name}
+                  <span className="text-sm">{tag.name}</span>
                 </label>
               ))}
             </div>
@@ -123,13 +178,6 @@ const PostForm = ({
       </form>
     </Modal>
   );
-};
-
-const style = {
-  form: { display: "flex", flexDirection: "column", gap: 15 },
-  group: { display: "flex", flexDirection: "column", gap: 5 },
-  tagGrid: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 },
-  tagItem: { display: "flex", alignItems: "center", gap: 5 },
 };
 
 export default PostForm;
