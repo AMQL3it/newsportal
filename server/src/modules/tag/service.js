@@ -13,6 +13,10 @@ const tagService = {
     return await tagRepository.getById(id);
   },
 
+  async getByQuery(query) {
+    return await tagRepository.getByQuery(query);
+  },
+
   async update(id, data) {
     return await tagRepository.update(id, data);
   },

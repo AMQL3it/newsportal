@@ -19,6 +19,10 @@ const tagRepository = {
     return await Tag.findByPk(id);
   },
 
+  async getByQuery(query) {
+    return await Tag.findOne({ where: query });
+  },
+
   async update(id, data) {
     const tag = await Tag.findByPk(id);
     if (!tag) return null;

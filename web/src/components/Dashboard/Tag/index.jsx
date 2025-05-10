@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import styles from "./Tag.module.css";
+import { useEffect, useState } from "react";
+import { FaEdit, FaTrashAlt } from "react-icons/fa";
+import tagService from "../../../services/tagService";
+import SweetAlert from "../../../utils/SweetAlert";
+import AddButton from "../../General/AddButton";
 import Pagination from "../../General/Pagination";
 import TitleLine from "../../General/TitleLine";
-import AddButton from "../../General/AddButton";
-import SweetAlert from "../../../utils/SweetAlert";
 import EditForm from "./EditForm";
-import tagService from "../../../services/tagService";
+import styles from "./Tag.module.css";
 
 const Tag = () => {
   const [tags, setTags] = useState([]);
@@ -22,7 +22,7 @@ const Tag = () => {
   const getAllTags = async () => {
     try {
       const result = await tagService.getAll("tags");
-      const formattedTags = result.data.map(tag => ({
+      const formattedTags = result.data.map((tag) => ({
         id: tag.id,
         name: `${tag.name} (${tag.slug})`,
         description: tag.description || "No description",
@@ -41,11 +41,14 @@ const Tag = () => {
   };
 
   const onEdit = (id) => {
-    const tagToEdit = tags.find(tag => tag.id === id);
+    const tagToEdit = tags.find((tag) => tag.id === id);
     if (tagToEdit) {
       setFormData({
-        name: tagToEdit.name.split(' (')[0], // remove slug part
-        description: tagToEdit.description !== "No description" ? tagToEdit.description : "",
+        name: tagToEdit.name.split(" (")[0], // remove slug part
+        description:
+          tagToEdit.description !== "No description"
+            ? tagToEdit.description
+            : "",
       });
       setEditingId(id);
       setIsModalOpen(true);
@@ -73,23 +76,23 @@ const Tag = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     try {
       const formDataCopy = { ...formData }; // formData কপি নিচ্ছি
-  
+
       // ✅ name থেকে slug বানানো
       if (formDataCopy.name) {
         formDataCopy.slug = formDataCopy.name
           .toLowerCase()
-          .replace(/\s+/g, "_")    // এক বা একাধিক space কে _ দিয়ে বদলাও
+          .replace(/\s+/g, "_") // এক বা একাধিক space কে _ দিয়ে বদলাও
           .replace(/[^\w_]+/g, ""); // অক্ষর আর _ ছাড়া সব রিমুভ করো
       }
-  
+
       if (editingId) {
         await tagService.update(editingId, formDataCopy);
         SweetAlert.successAlert("Tag updated successfully!");
@@ -97,7 +100,7 @@ const Tag = () => {
         await tagService.create(formDataCopy);
         SweetAlert.successAlert("Tag added successfully!");
       }
-  
+
       setIsModalOpen(false);
       getAllTags();
     } catch (error) {
@@ -145,11 +148,17 @@ const Tag = () => {
                   {/* <button className={styles.viewBtn} onClick={() => onView(row.id)}>
                     <i className="fa fa-eye" title="View"></i>
                   </button> */}
-                  <button className={styles.editBtn} onClick={() => onEdit(row.id)}>
-                    <i className="fa fa-edit" title="Edit"></i>
+                  <button
+                    className={styles.editBtn}
+                    onClick={() => onEdit(row.id)}
+                  >
+                    <FaEdit />
                   </button>
-                  <button className={styles.deleteBtn} onClick={() => onDelete(row.id)}>
-                    <i className="fa fa-trash" title="Delete"></i>
+                  <button
+                    className={styles.deleteBtn}
+                    onClick={() => onDelete(row.id)}
+                  >
+                    <FaTrashAlt />
                   </button>
                 </td>
               </tr>
