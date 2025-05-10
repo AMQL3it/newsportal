@@ -33,7 +33,7 @@ services:
     container_name: newsportal-frontend
     restart: always
     ports:
-      - "3000:3000"
+      - "5173:5173"
     depends_on:
       - server
     volumes:
