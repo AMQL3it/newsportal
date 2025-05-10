@@ -1,9 +1,9 @@
 const api = {
   users: require("./user"),
   auth: require("./auth"),
-  // categories: require("./category"),
-  // tags: require("./tag"),
-  // posts: require("./post"),
+  categories: require("./category"),
+  tags: require("./tag"),
+  posts: require("./post"),
   // comments: require("./comment"),
   // adscategories: require("./adscategory"),
   // advertisements: require("./advertisement"),

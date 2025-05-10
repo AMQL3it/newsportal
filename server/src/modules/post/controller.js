@@ -6,7 +6,13 @@ const postController = {
     try {
       const post = await postService.create(req);
       loggin.info("New post created successfully.");
-      res.status(201).json({ status: "success", data: post });
+      res
+        .status(201)
+        .json({
+          status: "success",
+          message: "Post created successfully.",
+          data: post,
+        });
     } catch (error) {
       res.status(500).json({ status: "error", message: error.message });
     }
@@ -19,6 +25,7 @@ const postController = {
       // const offset = (page - 1) * limit;
 
       const result = await postService.getAll();
+
       res.status(200).json({
         status: "success",
         data: result.data,
@@ -26,7 +33,9 @@ const postController = {
       });
     } catch (error) {
       console.error("Error in getAll:", error);
-      res.status(500).json({ error: "Internal Server Error" });
+      res
+        .status(500)
+        .json({ error: "Internal Server Error", data: [], total: 0 });
     }
   },
 
@@ -39,7 +48,9 @@ const postController = {
           .json({ status: "error", message: "Post not found" });
       res.status(200).json({ status: "success", data: post });
     } catch (error) {
-      res.status(500).json({ status: "error", message: error.message });
+      res
+        .status(500)
+        .json({ status: "error", message: error.message, data: {} });
     }
   },
 

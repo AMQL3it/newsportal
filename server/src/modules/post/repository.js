@@ -1,8 +1,8 @@
-const Post = require("./model");
-const PostStat = require("./postStat");
+const Post = require("./models/Post");
+const PostState = require("./models/PostState");
 const Category = require("../category/model");
 const Tag = require("../tag/model");
-const sequelize = require("../../databases/config");
+const { sequelize } = require("../../config");
 
 const postRepository = {
   // ✅ Create Post + Create empty stats + set Tags (transactional)
@@ -14,11 +14,14 @@ const postRepository = {
       const post = await Post.create(data, { transaction });
 
       // Step 2: Create corresponding PostStat
-      await PostStat.create({ post_id: post.id }, { transaction });
+      await PostState.create({ post_id: post.id }, { transaction });
 
       // Step 3: Set tags if provided
       if (data.tag_ids) {
-        let tag_ids = typeof data.tag_ids === "string" ? JSON.parse(data.tag_ids) : data.tag_ids;
+        let tag_ids =
+          typeof data.tag_ids === "string"
+            ? JSON.parse(data.tag_ids)
+            : data.tag_ids;
         await post.setTags(tag_ids, { transaction });
       }
 
@@ -35,16 +38,17 @@ const postRepository = {
   async getAll() {
     const { count, rows } = await Post.findAndCountAll({
       include: [
-        { model: PostStat, as: "stats" },
-        { model: Tag, as: "tags" },
+        { model: PostState, as: "state" }, // যদি associations.js-এ `as: "state"` থাকে
+        { model: Tag, as: "tags" }, // correct alias
         {
           model: Category,
           as: "category",
-          attributes: ["id", "name"] // শুধু name চাইলে
+          attributes: ["id", "name"], // শুধুমাত্র id, name আনছে
         },
       ],
       order: [["id", "DESC"]],
     });
+
     return { data: rows, total: count };
   },
 
@@ -52,10 +56,10 @@ const postRepository = {
   async getById(id) {
     return await Post.findByPk(id, {
       include: [
-        { model: PostStat, as: "stats" },
+        { model: PostState, as: "post_states" },
         { model: Tag, as: "tags" },
         // { model: Category, as: "category" },
-      ]
+      ],
     });
   },
 
@@ -88,10 +92,10 @@ const postRepository = {
 
   // ✅ Update Post State (views, likes etc.)
   async updateState(post_id, data) {
-    const postStat = await PostStat.findOne({ where: { post_id } });
-    if (!postStat) return null;
-    await postStat.update(data);
-    return postStat;
+    const postState = await PostState.findOne({ where: { post_id } });
+    if (!postState) return null;
+    await postState.update(data);
+    return postState;
   },
 
   // ✅ Delete Post + related Stat
@@ -104,7 +108,7 @@ const postRepository = {
         return null;
       }
 
-      await PostStat.destroy({ where: { post_id: id }, transaction });
+      await PostState.destroy({ where: { post_id: id }, transaction });
       await post.destroy({ transaction });
       await transaction.commit();
       return post;

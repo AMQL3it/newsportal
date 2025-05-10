@@ -3,54 +3,92 @@ const Role = require("../modules/role/model");
 const User = require("../modules/user/models/User");
 const UserToken = require("../modules/user/models/UserToken");
 const Verification = require("../modules/auth/model");
-// const Role = require("./role/model");
-// const Category = require("./category/model");
-// const Tag = require("./tag/model");
-// const Post = require("./post/model");
-// const Comment = require("./comment/model");
-// const Advertisement = require("./advertisement/model");
-// const AdsCategory = require("./adscategory/model");
-// const PostTag = require("./junctions/PostTag");
 
-// Associations
+const Tag = require("../modules/tag/model");
+const Category = require("../modules/category/model");
+const CategoryTag = require("../modules/junctions/CategoryTag");
 
-// User - Role (Many to One)
-Role.hasMany(User, { foreignKey: "role_id" });
-User.belongsTo(Role, { foreignKey: "role_id" });
+const Post = require("../modules/post/models/Post");
+const PostState = require("../modules/post/models/PostState");
+const PostTag = require("../modules/junctions/PostTag");
 
-// User - UserToken (Many to One)
-User.hasMany(UserToken, { foreignKey: "user_id" });
-UserToken.belongsTo(User, { foreignKey: "user_id" });
+// ==================== Associations ====================
 
-// User - Verification (Many to One)
-User.hasMany(Verification, { foreignKey: "user_id" });
-Verification.belongsTo(User, { foreignKey: "user_id" });
+// Role - User (One to Many)
+Role.hasMany(User, { foreignKey: "role_id", as: "users" });
+User.belongsTo(Role, { foreignKey: "role_id", as: "role" });
 
-// Category.hasMany(Post);
-// Post.belongsTo(Category);
+// User - UserToken (One to Many)
+User.hasMany(UserToken, { foreignKey: "user_id", as: "tokens" });
+UserToken.belongsTo(User, { foreignKey: "user_id", as: "user" });
 
-// Post.belongsToMany(Tag, { through: PostTag });
-// Tag.belongsToMany(Post, { through: PostTag });
+// User - Verification (One to Many)
+User.hasMany(Verification, { foreignKey: "user_id", as: "verifications" });
+Verification.belongsTo(User, { foreignKey: "user_id", as: "user" });
 
-// Post.hasMany(Comment);
-// Comment.belongsTo(Post);
+// Category - Tag (Many to Many)
+Category.belongsToMany(Tag, {
+  through: CategoryTag,
+  foreignKey: "category_id",
+  otherKey: "tag_id",
+  as: "tags",
+});
 
-// User.hasMany(Comment);
-// Comment.belongsTo(User);
+Tag.belongsToMany(Category, {
+  through: CategoryTag,
+  foreignKey: "tag_id",
+  otherKey: "category_id",
+  as: "categories",
+});
 
-// Export everything
+// Post - PostState (One to One)
+Post.hasOne(PostState, {
+  foreignKey: "post_id",
+  as: "state",
+  onDelete: "CASCADE",
+});
+PostState.belongsTo(Post, {
+  foreignKey: "post_id",
+  as: "post",
+});
+
+// Post - Category (Many to One)
+Post.belongsTo(Category, {
+  foreignKey: "category_id",
+  as: "category",
+});
+Category.hasMany(Post, {
+  foreignKey: "category_id",
+  as: "posts",
+});
+
+// Post - Tag (Many to Many)
+Post.belongsToMany(Tag, {
+  through: PostTag,
+  foreignKey: "post_id",
+  otherKey: "tag_id",
+  as: "tags",
+});
+
+Tag.belongsToMany(Post, {
+  through: PostTag,
+  foreignKey: "tag_id",
+  otherKey: "post_id",
+  as: "posts",
+});
+
+// ==================== Export all models ====================
 module.exports = {
-  //   sequelize,
   Role,
   User,
   UserToken,
   Verification,
-  //   Role,
-  //   Category,
-  //   Tag,
-  //   Post,
-  //   Comment,
-  //   Advertisement,
-  //   AdsCategory,
-  //   PostTag,
+
+  Tag,
+  Category,
+  CategoryTag,
+
+  Post,
+  PostState,
+  PostTag,
 };

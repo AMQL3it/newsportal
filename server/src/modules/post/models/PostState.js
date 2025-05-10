@@ -1,8 +1,9 @@
 const { DataTypes } = require("sequelize");
-const sequelize = require("../../databases/config");
+const { sequelize } = require("../../../config");
 
-const PostStat = sequelize.define(
-  "PostStat", {
+const PostState = sequelize.define(
+  "PostStat",
+  {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     post_id: { type: DataTypes.INTEGER, allowNull: false },
     views: { type: DataTypes.INTEGER, defaultValue: 0 },
@@ -11,8 +12,8 @@ const PostStat = sequelize.define(
     shares: { type: DataTypes.INTEGER, defaultValue: 0 },
   },
   {
-    tableName: "post_stats",
+    tableName: "post_states",
   }
 );
 
-module.exports = PostStat;
+module.exports = PostState;

@@ -20,7 +20,7 @@ const userRepository = {
         include: [
           {
             model: Role,
-            // as: "role",
+            as: "role",
             attributes: ["id", "name"],
           },
         ],

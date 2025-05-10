@@ -1,10 +1,9 @@
 const { DataTypes } = require("sequelize");
-const sequelize = require("../../databases/config");
-
-// const PostStat = require("./postStat");
+const { sequelize } = require("../../../config");
 
 const Post = sequelize.define(
-  "Post", {
+  "Post",
+  {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     title: { type: DataTypes.STRING, allowNull: false },
     author: { type: DataTypes.STRING, allowNull: false },
@@ -19,11 +18,5 @@ const Post = sequelize.define(
     tableName: "posts",
   }
 );
-
-
-// ✅ Post - PostStat (One to One)
-// Post.hasOne(PostStat, { foreignKey: "post_id", as: "stats", onDelete: "CASCADE" });
-// PostStat.belongsTo(Post, { foreignKey: "post_id", as: "post" });
-
 
 module.exports = Post;

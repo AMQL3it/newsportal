@@ -1,5 +1,5 @@
 const { DataTypes } = require("sequelize");
-const sequelize = require("../../databases/config");
+const { sequelize } = require("../../config");
 
 const PostTag = sequelize.define(
   "PostTag",
