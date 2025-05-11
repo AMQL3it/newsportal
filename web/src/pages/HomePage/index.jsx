@@ -1,7 +1,8 @@
 // import BreakingNews from "../../components/BreakingNews";
 // import CoverSection from "../../components/CoverSection/CoverSection";
 
-// import GallarySection from "../../components/GallarySection";
+import FoodDisplay from "../../components/FoodDisplay";
+import GallaryDisplay from "../../components/GallaryDisplay";
 import YoutubeDisplay from "../../components/YoutubeDisplay";
 
 const HomePage = () => {
@@ -11,7 +12,8 @@ const HomePage = () => {
       {/* <BreakingNews /> */}
       {/* <CoverSection /> */}
       <YoutubeDisplay />
-      {/* <GallarySection /> */}
+      <FoodDisplay />
+      <GallaryDisplay />
     </>
   );
 };
