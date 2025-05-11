@@ -3,6 +3,7 @@ import { FaComment, FaEye, FaHeart } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import commentService from "../../services/commentService";
 import postService from "../../services/postService";
+import getPreviewText from "../../utils/getPreviewText";
 import ContinueButton from "../General/ContinueButton";
 import Meta from "../General/Meta";
 import NewsTag from "../General/NewsTag";
@@ -26,12 +27,6 @@ const YoutubeDisplay = () => {
     } catch (err) {
       console.error("Failed to fetch posts", err);
     }
-  };
-
-  const getPreviewText = (content, limit = 30) => {
-    const words = content.split(" ");
-    if (words.length <= limit) return content;
-    return words.slice(0, limit).join(" ") + "...";
   };
 
   const handleContinue = async (id, views) => {
@@ -85,7 +80,7 @@ const YoutubeDisplay = () => {
                 </div>
               </div>
               <p className="text-sm text-gray-700 leading-relaxed">
-                {getPreviewText(activePost.content)}
+                {getPreviewText(activePost.content, 30)}
               </p>
               {activePost.content.split(" ").length > 30 && (
                 <div className="mt-2">
