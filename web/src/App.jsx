@@ -3,10 +3,12 @@ import Category from "./components/Dashboard/Category";
 import PostManagement from "./components/Dashboard/PostManagement";
 import Tags from "./components/Dashboard/Tag";
 import User from "./components/Dashboard/User";
+import NewsCard from "./components/NewsCard";
+import NewsFeed from "./components/NewsFeed";
 import Dashboard from "./pages/Dashboard";
-// import ExplorePage from "./pages/ExplorePage";
-// import HomePage from "./pages/HomePage";
-// import Layout from "./pages/Layout";
+import ExplorePage from "./pages/ExplorePage";
+import HomePage from "./pages/HomePage";
+import Layout from "./pages/Layout";
 import Login from "./pages/Login";
 import Varification from "./pages/Varification";
 // import CategoryPage from './pages/CategoryPage';
@@ -16,10 +18,16 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* <Route path="/" element={<Layout />}>
+        <Route path="/" element={<Layout />}>
           <Route exect path="" element={<HomePage />} />
-          <Route exect path="newsfeed" element={<ExplorePage />} />
-        </Route> */}
+          <Route path="newsfeed" element={<ExplorePage />}>
+            <Route index element={<NewsFeed />} />
+            <Route path="news/:newsId" element={<NewsCard />} />
+          </Route>
+
+          {/* <Route exect path="news/:newsId" element={<NewsCard />} /> */}
+          <Route path="*" element={<div>404</div>} />
+        </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/varification" element={<Varification />} />
         <Route path="/dashboard" element={<Dashboard />}>

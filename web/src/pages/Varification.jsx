@@ -20,6 +20,8 @@ const Varification = () => {
           code,
         });
 
+        console.log(response);
+
         if (response.success) {
           localStorage.setItem("token", response.token);
           navigate("/dashboard");
