@@ -55,15 +55,6 @@ const NewsCard = () => {
     }
   };
 
-  // const handleView = async () => {
-  //   setViews((prev) => prev + 1);
-  //   try {
-  //     await commentService.addState(newsId, { views: views + 1 });
-  //   } catch (err) {
-  //     console.error("Failed to view:", err);
-  //   }
-  // };
-
   const handleNewComment = async ({ text }) => {
     try {
       const comment = {
