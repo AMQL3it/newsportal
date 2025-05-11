@@ -4,9 +4,6 @@ const commentService = {
   // Create a new Comment
   async create(data) {
     try {
-      if (!data.name) {
-        throw new Error("Name is required to create an Comment");
-      }
       const comment = await commentRepository.create(data);
       return comment;
     } catch (error) {

@@ -26,7 +26,7 @@ const authService = {
     };
     const token = generateToken(payload);
 
-    await userService.tokenCreate({
+    const data = await userService.tokenCreate({
       user_id: user.id,
       token,
       login_time: new Date(),
@@ -38,6 +38,7 @@ const authService = {
       success: true,
       token,
       message: result.message,
+      data,
     };
   },
 

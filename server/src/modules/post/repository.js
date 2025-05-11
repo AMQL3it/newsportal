@@ -2,6 +2,10 @@ const Post = require("./models/Post");
 const PostState = require("./models/PostState");
 const Category = require("../category/model");
 const Tag = require("../tag/model");
+const PostTag = require("../junctions/PostTag");
+const Comment = require("../comment/model");
+const User = require("../user/models/User");
+
 const { sequelize } = require("../../config");
 
 const postRepository = {
@@ -39,11 +43,20 @@ const postRepository = {
     const { count, rows } = await Post.findAndCountAll({
       include: [
         { model: PostState, as: "state" }, // যদি associations.js-এ `as: "state"` থাকে
-        { model: Tag, as: "tags" }, // correct alias
+        {
+          model: Tag,
+          as: "tags",
+          attributes: ["id", "name"],
+          through: { attributes: [] }, // remove PostTag junction data
+        },
         {
           model: Category,
           as: "category",
           attributes: ["id", "name"], // শুধুমাত্র id, name আনছে
+        },
+        {
+          model: Comment,
+          as: "comments",
         },
       ],
       order: [["id", "DESC"]],
@@ -55,10 +68,37 @@ const postRepository = {
   // ✅ Get one Post by ID + Stats + Tags + Category
   async getById(id) {
     return await Post.findByPk(id, {
+      attributes: ["id", "title", "content", "image", "createdAt", "author"],
+
       include: [
-        { model: PostState, as: "post_states" },
-        { model: Tag, as: "tags" },
-        // { model: Category, as: "category" },
+        {
+          model: PostState,
+          as: "state",
+          attributes: ["views", "likes"],
+        },
+        {
+          model: Tag,
+          as: "tags",
+          attributes: ["id", "name"],
+          through: { attributes: [] }, // remove PostTag junction data
+        },
+        {
+          model: Category,
+          as: "category",
+          attributes: ["name"], // only show category name
+        },
+        {
+          model: Comment,
+          as: "comments",
+          attributes: ["id", "comment", "parent_id", "is_active", "createdAt"],
+          include: [
+            {
+              model: User,
+              as: "user",
+              attributes: ["id", "name"],
+            },
+          ],
+        },
       ],
     });
   },

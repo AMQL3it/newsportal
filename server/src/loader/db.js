@@ -16,7 +16,6 @@ const dbconnection = async () => {
 };
 
 const Models = require("./models");
-// const setupAssociations = require("../databases/associations");
 
 // { alter: true }
 const dbsync = async () => {

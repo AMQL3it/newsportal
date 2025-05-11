@@ -12,6 +12,8 @@ const Post = require("../modules/post/models/Post");
 const PostState = require("../modules/post/models/PostState");
 const PostTag = require("../modules/junctions/PostTag");
 
+const Comment = require("../modules/comment/model");
+
 // ==================== Associations ====================
 
 // Role - User (One to Many)
@@ -77,6 +79,18 @@ Tag.belongsToMany(Post, {
   as: "posts",
 });
 
+// Comment - Post (Many to One)
+Post.hasMany(Comment, { foreignKey: "post_id", as: "comments" });
+Comment.belongsTo(Post, { foreignKey: "post_id", as: "post" });
+
+// Comment - User (Many to One)
+User.hasMany(Comment, { foreignKey: "user_id", as: "comments" });
+Comment.belongsTo(User, { foreignKey: "user_id", as: "user" });
+
+// Nested Comments (Self Referencing)
+Comment.hasMany(Comment, { as: "Replies", foreignKey: "parent_id" });
+Comment.belongsTo(Comment, { as: "Parent", foreignKey: "parent_id" });
+
 // ==================== Export all models ====================
 module.exports = {
   Role,
@@ -91,4 +105,6 @@ module.exports = {
   Post,
   PostState,
   PostTag,
+
+  Comment,
 };
