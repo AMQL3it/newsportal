@@ -10,12 +10,14 @@ import TitleLine from "../General/TitleLine";
 const GallaryDisplay = () => {
   const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadPosts = async () => {
       try {
         const result = await postService.getAll();
         setPosts(result.data);
+        setLoading(false);
       } catch (error) {
         console.error("Failed to load gallary posts:", error);
       }
@@ -28,6 +30,14 @@ const GallaryDisplay = () => {
     await commentService.addState(id, { views: views + 1 });
     navigate(`newsfeed/news/${id}`);
   };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-60">
+        <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-3 px-4 py-2">

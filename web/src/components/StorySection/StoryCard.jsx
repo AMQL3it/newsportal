@@ -1,25 +1,30 @@
-import React from "react";
-import styles from "./StorySection.module.css";
-// import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import Meta from "../General/Meta";
+import NewsTag from "../General/NewsTag";
 
 const StoryCard = ({ story }) => {
   return (
-    <div className={styles.storyCard}>
-      <img src={story.image} alt={story.title} />
-      <div className={styles.overlay}>
-        <div className={styles.tags}>
-          {story.tags.map((tag, idx) => (
-            <span
-              key={idx}
-              className={`${styles.tag} ${tag.toLowerCase() === "gadget" ? styles.green : styles.red}`}
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
-        <h2 className={styles.storyTitle}>{story.title}</h2>
-        <Meta date={story.date} author={story.author} />
+    <div className="relative w-full max-w-full h-full rounded overflow-hidden flex-none sm:h-[60vh]">
+      <img
+        src={`http://localhost:5000/${story.image}`}
+        alt={story.title}
+        className="w-full h-full object-cover block"
+      />
+
+      <div className="absolute bottom-0 w-full bg-gradient-to-t from-black/80 to-transparent text-white p-4">
+        {story.tags && (
+          <div className="flex gap-2 mb-2 flex-wrap">
+            <NewsTag tags={story.tags.map((t) => t.name)} />
+          </div>
+        )}
+        <h2 className="text-sm font-semibold mb-1">{story.title}</h2>
+        <Meta
+          date={new Date(story.createdAt).toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "long",
+            year: "numeric",
+          })}
+          author={story.author}
+        />
       </div>
     </div>
   );

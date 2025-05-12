@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import commentService from "../../services/commentService";
 import postService from "../../services/postService";
 import getPreviewText from "../../utils/getPreviewText";
 import ContinueButton from "../General/ContinueButton";
@@ -8,8 +10,10 @@ import Overlay from "../General/Overlay";
 import TitleLine from "../General/TitleLine";
 
 const FoodDisplay = () => {
+  const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
   const [activePost, setActivePost] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchPosts();
@@ -21,13 +25,27 @@ const FoodDisplay = () => {
       const latestPosts = result.data.slice(0, 6);
       setPosts(latestPosts);
       setActivePost(latestPosts[0]);
+      setLoading(false);
     } catch (err) {
       console.error("Failed to fetch posts", err);
     }
   };
 
+  const handleContinue = async (id, views) => {
+    await commentService.addState(id, { views: views + 1 });
+    navigate(`newsfeed/news/${id}`);
+  };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-60">
+        <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex flex-col gap-3 p-4">
+    <div className="flex flex-col gap-3 p-4 w-3/4">
       <TitleLine title="Food" />
 
       {posts.length === 0 ? (
@@ -65,9 +83,12 @@ const FoodDisplay = () => {
                   {activePost.content?.split(" ").length > 30 && (
                     <div className="mt-2">
                       <ContinueButton
-                        onClick={() =>
-                          (window.location.href = `/news/${activePost.id}`)
-                        }
+                        onClick={() => {
+                          handleContinue(
+                            activePost.id,
+                            activePost.state?.views || 0
+                          );
+                        }}
                       />
                     </div>
                   )}

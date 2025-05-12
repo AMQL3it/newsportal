@@ -1,13 +1,16 @@
-import React from "react";
-import style from "./CoverSection.module.css";
-import FeaturedNews from "./FeaturedNews";
+import StorySection from "../StorySection";
 import GridNewsCards from "./GridNewsCards";
 import SuggestedNewsCards from "./SuggestedNewsCards";
-import StorySection from "../StorySection";
 
 const CoverSection = () => {
   return (
-    <div className={style.coverSection}>
+    <div
+      className="m-2 grid gap-2"
+      style={{
+        gridTemplateColumns: "2fr 1.5fr",
+        gridTemplateRows: "auto auto",
+      }}
+    >
       {/* <FeaturedNews /> */}
       <StorySection />
       <GridNewsCards />

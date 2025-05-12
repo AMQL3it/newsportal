@@ -1,26 +1,56 @@
-import React, { useEffect, useRef, useState } from "react";
-import styles from "./StorySection.module.css";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import commentService from "../../services/commentService";
+import postService from "../../services/postService";
 import StoryCard from "./StoryCard";
-import { stories as mockStories } from "./storyData";
-// import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
-// import TitleLine from "../General/TitleLine";
 
 const StorySection = () => {
+  const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
   const intervalRef = useRef(null);
+  const [stories, setStories] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    startAutoSlide();
-    return () => stopAutoSlide();
+    fetchPosts();
   }, []);
+
+  useEffect(() => {
+    if (stories.length > 0) {
+      startAutoSlide();
+    }
+    return () => stopAutoSlide();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stories]);
+
+  const fetchPosts = async () => {
+    try {
+      const result = await postService.getAll();
+      const formatted = result.data.map((p) => ({
+        id: p.id,
+        title: p.title,
+        content: p.content,
+        image: p.image,
+        createdAt: p.createdAt,
+        author: p.author,
+        tags: p.tags || [],
+        category: p.category?.name || "Uncategorized",
+      }));
+
+      const latestPosts = formatted.slice(0, 5);
+      setStories(latestPosts);
+      setLoading(false);
+    } catch (err) {
+      console.error("Failed to fetch posts", err);
+      setLoading(false);
+    }
+  };
 
   const startAutoSlide = () => {
     stopAutoSlide();
     intervalRef.current = setInterval(() => {
-      setCurrentIndex((prev) =>
-        prev >= mockStories.length - 1 ? 0 : prev + 1
-      );
-    }, 5000);
+      setCurrentIndex((prev) => (prev >= stories.length - 1 ? 0 : prev + 1));
+    }, 3000);
   };
 
   const stopAutoSlide = () => {
@@ -29,36 +59,50 @@ const StorySection = () => {
 
   const handleNext = () => {
     stopAutoSlide();
-    setCurrentIndex((prev) =>
-      prev >= mockStories.length - 1 ? 0 : prev + 1
-    );
+    setCurrentIndex((prev) => (prev >= stories.length - 1 ? 0 : prev + 1));
     startAutoSlide();
   };
 
   const handlePrev = () => {
     stopAutoSlide();
-    setCurrentIndex((prev) =>
-      prev <= 0 ? mockStories.length - 1 : prev - 1
-    );
+    setCurrentIndex((prev) => (prev <= 0 ? stories.length - 1 : prev - 1));
     startAutoSlide();
   };
 
+  const handleContinue = async (id, views) => {
+    await commentService.addState(id, { views: views + 1 });
+    navigate(`newsfeed/news/${id}`);
+  };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-60">
+        <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
   return (
-    <div className={styles.storySlider}>
+    <div className="relative overflow-hidden w-full">
       <div
-        className={styles.sliderInner}
+        className="flex transition-transform duration-500 ease-in-out will-change-transform"
         style={{
-          transform: `translateX(-${currentIndex * (100 / mockStories.length)}%)`,
-          width: `${mockStories.length * 100}%`,
+          transform: `translateX(-${currentIndex * (100 / stories.length)}%)`,
+          width: `${stories.length * 100}%`,
         }}
       >
-        {mockStories.map((story) => (
+        {stories.map((story) => (
           <div
             key={story.id}
-            className={styles.sliderItem}
-            style={{ width: `${100 / mockStories.length}%` }}
+            className="flex-shrink-0 cursor-pointer"
+            onClick={() => handleContinue(story.id, story.state?.views || 0)}
+            style={{ width: `${100 / stories.length}%` }}
           >
-            <StoryCard story={story} handlePrev={handlePrev} handleNext={handleNext} />
+            <StoryCard
+              story={story}
+              handlePrev={handlePrev}
+              handleNext={handleNext}
+            />
           </div>
         ))}
       </div>

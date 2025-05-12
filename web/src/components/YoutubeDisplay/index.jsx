@@ -13,6 +13,7 @@ const YoutubeDisplay = () => {
   const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
   const [activePost, setActivePost] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchLatestPosts();
@@ -24,6 +25,7 @@ const YoutubeDisplay = () => {
       const latestPosts = result.data.slice(0, 6);
       setPosts(latestPosts);
       setActivePost(latestPosts[0]);
+      setLoading(false);
     } catch (err) {
       console.error("Failed to fetch posts", err);
     }
@@ -33,6 +35,14 @@ const YoutubeDisplay = () => {
     await commentService.addState(id, { views: views + 1 });
     navigate(`newsfeed/news/${id}`);
   };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-60">
+        <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-4">
