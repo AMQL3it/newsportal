@@ -43,40 +43,40 @@ const BreakingNews = () => {
   const currentNews = news[currentIndex];
 
   return (
-    <div className="flex items-stretch h-12 mx-2">
-      {/* Header */}
-      <div className="flex items-center bg-yellow-500 text-white px-4 text-sm font-medium gap-2">
+    <div className="flex items-stretch h-12 sm:h-auto mx-2">
+      {/* Left Section: Breaking News Label */}
+      <div className="flex items-center bg-red-500 text-white px-3 text-xs sm:text-sm font-medium gap-2 min-w-[40px] sm:min-w-[140px]">
         <FaBullhorn />
-        <span className="hidden md:inline">Breaking News</span>
+        <span className="hidden sm:inline">Breaking News</span>
       </div>
 
-      {/* News Content */}
-      <div className="flex-1 flex justify-between items-center px-4 border border-gray-300 bg-white">
-        {/* News Text */}
-        <div className="flex items-center gap-3 text-sm overflow-hidden">
+      {/* Right Section: News Content & Arrows */}
+      <div className="flex-1 flex justify-between items-center px-3 border border-gray-300 bg-white overflow-hidden">
+        {/* News Info */}
+        <div className="flex items-center gap-2 text-xs sm:text-sm w-full overflow-hidden">
           <span
-            className={`rounded px-2 py-1 text-white text-xs font-semibold ${
+            className={`rounded px-2 py-1 text-white text-[10px] sm:text-xs font-semibold ${
               newsTitleColors[currentNews.title]
             }`}
           >
             {currentNews.title}
           </span>
-          <span className="text-gray-700 font-medium truncate">
+          <span className="text-gray-700 font-medium truncate w-full">
             {currentNews.headline}
           </span>
         </div>
 
-        {/* Arrow Buttons */}
-        <div className="flex flex-row gap-3 rounded p-1">
+        {/* Navigation Arrows */}
+        <div className="flex flex-row gap-2 ml-2 shrink-0">
           <button
             onClick={handlePrev}
-            className="hover:text-black bg-gray-200 p-2"
+            className="hover:text-black bg-gray-200 p-1 sm:p-2 text-xs sm:text-sm rounded"
           >
             <FaArrowUp />
           </button>
           <button
             onClick={handleNext}
-            className="hover:text-black bg-gray-200 p-2"
+            className="hover:text-black bg-gray-200 p-1 sm:p-2 text-xs sm:text-sm rounded"
           >
             <FaArrowDown />
           </button>

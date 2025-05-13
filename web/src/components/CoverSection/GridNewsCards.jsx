@@ -1,13 +1,9 @@
-import Meta from "../General/Meta";
-import NewsTag from "../General/NewsTag";
-import Overlay from "../General/Overlay";
-import style from "./CoverSection.module.css";
-
 import { useEffect, useState } from "react";
-import postService from "../../services/postService";
-
 import { useNavigate } from "react-router-dom";
 import commentService from "../../services/commentService";
+import postService from "../../services/postService";
+import Meta from "../General/Meta";
+import NewsTag from "../General/NewsTag";
 
 const GridNewsCards = () => {
   const navigate = useNavigate();
@@ -34,8 +30,6 @@ const GridNewsCards = () => {
 
       const latestPosts = formatted.slice(0, 4);
       setPosts(latestPosts);
-      console.log(latestPosts);
-
       setLoading(false);
     } catch (err) {
       console.error("Failed to fetch posts", err);
@@ -55,22 +49,27 @@ const GridNewsCards = () => {
       </div>
     );
   }
+
   return (
-    <div className={style.coverSectionRight}>
+    <div className="grid grid-cols-2 gap-3 overflow-hidden sm:grid-cols-1 md:grid-cols-2">
       {posts.map((item) => (
         <div
           key={item.id}
-          className={style.gridCard}
+          className="relative rounded-md overflow-hidden cursor-pointer"
           onClick={() => handleContinue(item.id, item.views)}
         >
-          <img src={`http://localhost:5000/${item.image}`} alt="news" />
-          <Overlay>
-            {item.tags && (
-              <div className="flex gap-2 mb-2 flex-wrap">
+          <img
+            src={`http://localhost:5000/${item.image}`}
+            alt="news"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute bottom-0 w-full bg-gradient-to-t from-black/80 to-transparent text-white p-3">
+            {item.tags && item.tags.length > 0 && (
+              <div className="flex gap-2 flex-wrap mb-2">
                 <NewsTag tags={item.tags.map((t) => t.name)} />
               </div>
             )}
-            <span>{item.title}</span>
+            <div className="text-sm font-semibold">{item.title}</div>
             <Meta
               date={new Date(item.createdAt).toLocaleDateString("en-GB", {
                 day: "2-digit",
@@ -79,7 +78,7 @@ const GridNewsCards = () => {
               })}
               author={item.author}
             />
-          </Overlay>
+          </div>
         </div>
       ))}
     </div>

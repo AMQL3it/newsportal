@@ -5,7 +5,7 @@ import commentService from "../../services/commentService";
 import postService from "../../services/postService";
 import Meta from "../General/Meta";
 
-const SuggestedNewsCards = ({ styleStatus = "row" }) => {
+const SuggestedNewsCards = () => {
   const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -29,7 +29,7 @@ const SuggestedNewsCards = ({ styleStatus = "row" }) => {
         views: p.views || 0,
       }));
 
-      const latestPosts = formatted.slice(0, 4);
+      const latestPosts = formatted.slice(0, 5);
       setPosts(latestPosts);
     } catch (err) {
       console.error("Failed to fetch posts", err);
@@ -63,40 +63,38 @@ const SuggestedNewsCards = ({ styleStatus = "row" }) => {
   }
 
   return (
-    <div
-      className={`w-full flex gap-4 bg-gray-200 p-4 rounded-md overflow-x-auto ${
-        styleStatus === "column" ? "flex-col" : "flex-row"
-      }`}
-    >
-      {posts.map((item) => (
-        <div
-          key={item.id}
-          className="flex bg-white rounded-md shadow-md overflow-hidden max-h-40 w-[350px] min-w-[300px]"
-        >
-          <img
-            src={`http://localhost:5000/${item.image}`}
-            alt={item.title}
-            onError={(e) => (e.target.src = "/fallback.jpg")}
-            className="w-1/2 object-cover rounded-l-md"
-          />
-          <div className="flex flex-col justify-between p-3 w-1/2">
-            <p
-              className="text-sm font-semibold cursor-pointer hover:text-blue-600 transition"
-              onClick={() => handleContinue(item.id, item.views)}
-            >
-              {item.title}
-            </p>
-            <Meta
-              date={new Date(item.createdAt).toLocaleDateString("en-GB", {
-                day: "2-digit",
-                month: "long",
-                year: "numeric",
-              })}
-              author={item.author}
+    <div className="w-full bg-gray-200 p-4 rounded-md">
+      <div className="flex gap-4 min-w-[600px] flex-row sm:min-w-0">
+        {posts.map((item) => (
+          <div
+            key={item.id}
+            className="flex bg-white rounded-md shadow-md overflow-hidden h-[150px] min-w-[280px] sm:min-w-0 sm:w-full sm:h-auto"
+          >
+            <img
+              src={`http://localhost:5000/${item.image}`}
+              alt={item.title}
+              onError={(e) => (e.target.src = "/fallback.jpg")}
+              className="w-1/2 h-full object-cover sm:w-1/3 sm:h-[100px]"
             />
+            <div className="flex flex-col justify-between p-3 w-1/2 sm:w-2/3">
+              <p
+                className="text-sm font-semibold cursor-pointer hover:text-blue-600 transition line-clamp-3"
+                onClick={() => handleContinue(item.id, item.views)}
+              >
+                {item.title}
+              </p>
+              <Meta
+                date={new Date(item.createdAt).toLocaleDateString("en-GB", {
+                  day: "2-digit",
+                  month: "long",
+                  year: "numeric",
+                })}
+                author={item.author}
+              />
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 };

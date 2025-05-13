@@ -1,42 +1,82 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
+import { FaBars, FaHome } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
-import { FaHome } from "react-icons/fa";
-import style from "./Navbar.module.css";
+import categoryService from "../../services/categoryService";
 
 const Navbar = () => {
-    const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [categories, setCategories] = useState([]);
 
-    const toggleMenu = () => {
-        setIsOpen((prev) => !prev);
-    };
+  useEffect(() => {
+    loadCategories();
+  }, []);
 
-    return (
-        <div className={style.navbar}>
-            <ul>
-                <li
-                    style={{ backgroundColor: "#127492", borderLeft: "none" }}
-                    onClick={toggleMenu}
-                    className={style.homeIcon}
-                >
-                    <NavLink to="#"><FaHome /></NavLink>
-                </li>
+  const loadCategories = async () => {
+    try {
+      const res = await categoryService.getAll();
+      setCategories(res.data || []);
+    } catch (error) {
+      console.error("Failed to load categories", error);
+    }
+  };
 
-                <div className={`${style.menuItems} ${isOpen ? style.show : ""}`}>
-                    <li><NavLink to="/">Top News</NavLink></li>
-                    <li><NavLink to="/">National</NavLink></li>
-                    <li><NavLink to="/">International</NavLink></li>
-                    <li><NavLink to="/">Business</NavLink></li>
-                    <li><NavLink to="/">Sports</NavLink></li>
-                    <li><NavLink to="/">Entertainment</NavLink></li>
-                </div>
-            </ul>
+  const toggleMenu = () => setIsOpen((prev) => !prev);
 
-            <div className={`${style.searchbar} ${isOpen ? style.show : ""}`}>
-                <input type="text" placeholder="Search" />
-                <button><i className="fa fa-search"></i></button>
-            </div>
+  return (
+    <nav className="bg-green-500 text-gray-100">
+      <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between flex-wrap">
+        {/* Left - Logo/Home */}
+        <div className="flex items-center gap-2">
+          <NavLink to="/" className="text-xl font-bold flex items-center gap-2">
+            <FaHome />
+            <span className="hidden sm:inline">Home</span>
+          </NavLink>
         </div>
-    );
+
+        {/* Mobile menu button */}
+        <div className="block md:hidden">
+          <button
+            onClick={toggleMenu}
+            className="text-white focus:outline-none"
+          >
+            <FaBars size={20} />
+          </button>
+        </div>
+
+        {/* Menu items */}
+        <div
+          className={`w-full md:flex md:items-center md:w-auto ${
+            isOpen ? "block" : "hidden"
+          }`}
+        >
+          <ul className="md:flex md:space-x-4 flex flex-col md:flex-row mt-3 md:mt-0">
+            {categories.map((cat) => (
+              <li key={cat.id}>
+                <NavLink
+                  to={`/category/${cat.slug}`}
+                  className="block px-4 py-2 text-sm font-medium hover:bg-green-600 hover:text-white rounded transition duration-1000"
+                >
+                  {cat.name}
+                </NavLink>
+              </li>
+            ))}
+          </ul>
+
+          {/* Search bar */}
+          <div className="mt-3 md:mt-0 md:ml-4 flex items-center w-full md:w-auto">
+            <input
+              type="text"
+              placeholder="Search..."
+              className="px-3 py-1 rounded-l bg-white text-gray-800 w-full md:w-64 focus:outline-none"
+            />
+            <button className="bg-green-600 hover:bg-green-700 text-white px-4 py-1 rounded-r transition duration-1000">
+              Search
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+  );
 };
 
 export default Navbar;
