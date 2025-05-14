@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
+import { FaFolder } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import categoryService from "../../services/categoryService";
 import styles from "./FeedSidebar.module.css";
 import SidebarLinkList from "./SidebarLinkList";
 import SidebarSection from "./SidebarSection";
 
 const FeedSidebar = () => {
+  const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
@@ -28,6 +31,11 @@ const FeedSidebar = () => {
 
     fetchCategories();
   }, []);
+
+  const handleLinkClick = (id) => {
+    navigate("./" + id);
+  };
+
   return (
     <aside className={styles.sidebar}>
       <SidebarSection title="Recent Posts">
@@ -57,7 +65,18 @@ const FeedSidebar = () => {
       </SidebarSection>
 
       <SidebarSection title="Categories">
-        <SidebarLinkList items={categories} icon="folder" />
+        <div className="flex flex-col gap-2 mt-2">
+          {categories.map((item) => (
+            <div
+              key={item.id}
+              className="flex items-center gap-2 text-sm font-medium text-green-600 hover:text-green-500 cursor-pointer"
+              onClick={() => handleLinkClick(item.id)}
+            >
+              <FaFolder />
+              <span>{item.name}</span>
+            </div>
+          ))}
+        </div>
       </SidebarSection>
     </aside>
   );
