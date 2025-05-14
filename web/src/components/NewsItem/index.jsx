@@ -11,7 +11,7 @@ const NewsItem = ({ news }) => {
 
   const handleContinue = async (views) => {
     await commentService.addState(news.id, { views: views + 1 });
-    navigate("news/" + news.id);
+    navigate("../news/" + news.id);
   };
 
   return (

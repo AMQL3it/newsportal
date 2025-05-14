@@ -53,7 +53,7 @@ const Navbar = () => {
             {categories.map((cat) => (
               <li key={cat.id}>
                 <NavLink
-                  to={`/category/${cat.slug}`}
+                  to={`/newsfeed/${cat.id}`}
                   className="block px-4 py-2 text-sm font-medium hover:bg-green-600 hover:text-white rounded transition duration-1000"
                 >
                   {cat.name}

@@ -21,7 +21,8 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route exect path="" element={<HomePage />} />
           <Route path="newsfeed" element={<ExplorePage />}>
-            <Route index element={<NewsFeed />} />
+            <Route index element={<div>Select a category</div>} />
+            <Route path=":catId" element={<NewsFeed />} />
             <Route path="news/:newsId" element={<NewsCard />} />
           </Route>
 
