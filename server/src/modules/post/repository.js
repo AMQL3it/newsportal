@@ -65,6 +65,48 @@ const postRepository = {
     return { data: rows, total: count };
   },
 
+  async getAllByCategory(cat_id) {
+    try {
+      const where = {};
+
+      // তোমার মূল Post filtering এখানে থাকলে সেটাও যোগ করো
+      // যেমনঃ if (query.status) where.status = query.status;
+
+      const { count, rows } = await Post.findAndCountAll({
+        where,
+        include: [
+          { model: PostState, as: "state" },
+          {
+            model: Tag,
+            as: "tags",
+            attributes: ["id", "name"],
+            through: { attributes: [] },
+          },
+          {
+            model: Category,
+            as: "category",
+            attributes: ["id", "name"],
+            ...(cat_id && {
+              where: {
+                id: parseInt(cat_id),
+              },
+            }),
+          },
+          {
+            model: Comment,
+            as: "comments",
+          },
+        ],
+        order: [["id", "DESC"]],
+      });
+
+      return { data: rows, total: count };
+    } catch (error) {
+      console.error("Error fetching Posts by query:", error.message);
+      throw error;
+    }
+  },
+
   // ✅ Get one Post by ID + Stats + Tags + Category
   async getById(id) {
     return await Post.findByPk(id, {

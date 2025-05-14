@@ -1,19 +1,22 @@
 const postRepository = require("./repository");
-const { calculateSeoScore, calculateReadableScore } = require('../../utils/seoCalculator');
+const {
+  calculateSeoScore,
+  calculateReadableScore,
+} = require("../../utils/seoCalculator");
 const fs = require("fs");
 const path = require("path");
 
 const postService = {
   async create(req) {
-    const filePath = req.file?.path; 
+    const filePath = req.file?.path;
     try {
-      if(req.file){
+      if (req.file) {
         req.body.image = req.file.path;
       }
-  
+
       const seo_score = calculateSeoScore(req.body.title, req.body.content);
       const readable_score = calculateReadableScore(req.body.content);
-  
+
       req.body.seo_score = seo_score;
       req.body.readable_score = readable_score;
 
@@ -28,6 +31,10 @@ const postService = {
 
   async getAll() {
     return await postRepository.getAll();
+  },
+
+  async getAllByCategory(id) {
+    return await postRepository.getAllByCategory(id);
   },
 
   async getById(id) {

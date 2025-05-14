@@ -5,6 +5,7 @@ const upload = require("../../utils/multer/upload"); // upload middleware টা
 
 router.post("/", upload.single("image"), postController.create); // single image field নাম "image"
 router.get("/", postController.getAll);
+router.get("/category/:id", postController.getAllByCategory);
 router.get("/:id", postController.getById);
 router.put("/:id", upload.single("image"), postController.update); // Update এও লাগবে
 router.put("/:id/state", postController.updateState);
