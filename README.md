@@ -11,50 +11,49 @@ A full-stack application to manage newspaper and magazine important news. It inc
 
 ## 📁 Project Structure
 
-NEWSPORTAL/ 
-    ├── app/ # React Native (Expo) app 
-    ├── server/ # Express backend 
-    ├── web/ # React web frontend 
-    ├── Dockerfile # Unified Dockerfile for full-stack setup 
-    ├── docker-compose.yml (optional for DB setup) 
-    ├── .env # Environment variables 
-    └── README.md
+NEWSPORTAL/
+├── app/ # React Native (Expo) app
+├── server/ # Express backend
+├── web/ # React web frontend
+├── Dockerfile # Unified Dockerfile for full-stack setup
+├── docker-compose.yml (optional for DB setup)
+├── .env # Environment variables
+└── README.md
 
 ---
 
 ## 🚀 Features
 
-- Admin Dashboard
-- Mobile App for On-the-Go Management
+A modern, scalable, and secure full-stack platform for dynamic news delivery and content management.
+
+- Developed category & tag-based filtering for personalized news discovery.
+- Implemented JWT + Cookie-based authentication with optional OTP login for secure user access.
+- Built a role-based admin dashboard for managing users, categories, tags, and news posts.
+- Designed a comment system with nested replies, likes, and view tracking for interactive engagement.
+- Structured backend with Repository–Service–Controller pattern to ensure clean modular code and scalability.
+- Fully containerized using Docker Compose to simplify development, testing, and deployment workflow.
+- Enabled users to browse, like, comment, and share news by category/tag, with prioritization for trending andlatest content.
+
+Tech Stack: React.js, Node.js (Express), MySQL (Sequelize), JWT Auth, Docker
 
 ---
 
 ## 🧑‍💻 Tech Stack
 
-| Layer        | Technology       |
-|--------------|------------------|
-| Web Frontend | React.js         |
+| Layer        | Technology          |
+| ------------ | ------------------- |
+| Web Frontend | React.js            |
 | Mobile App   | React Native (Expo) |
-| Backend      | Node.js + Express |
-| ORM          | Sequelize         |
-| Database     | MySQL             |
+| Backend      | Node.js + Express   |
+| ORM          | Sequelize           |
+| Database     | MySQL               |
 
 ---
 
 ## ⚙️ Installation
 
 # 🖥 Web (React) - web
-cd web
-npm install
 
 # 🌐 Backend (Express.js) - Server
-cd ../server
-npm install
 
 # 📱 Mobile App (React Native) - app
-cd ../app
-npm install
-
----
-
-### 1️⃣ Clone the Repo
