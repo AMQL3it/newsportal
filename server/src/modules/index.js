@@ -5,6 +5,8 @@ const api = {
   tags: require("./tag"),
   posts: require("./post"),
   comments: require("./comment"),
+  covers: require("./cover"),
+  // roles: require("./role"),
   // adscategories: require("./adscategory"),
   // advertisements: require("./advertisement"),
   // "features": require("./features"),

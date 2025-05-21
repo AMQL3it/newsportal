@@ -13,6 +13,7 @@ const PostState = require("../modules/post/models/PostState");
 const PostTag = require("../modules/junctions/PostTag");
 
 const Comment = require("../modules/comment/model");
+const Cover = require("../modules/cover/model");
 
 // ==================== Associations ====================
 
@@ -107,4 +108,6 @@ module.exports = {
   PostTag,
 
   Comment,
+
+  Cover,
 };
