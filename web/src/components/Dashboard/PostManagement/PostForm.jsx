@@ -1,6 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import categoryService from "../../../services/categoryService";
 import Modal from "../../General/Modal";
+import RichTextEditor from "./RichTextEditor";
 
 const PostForm = ({
   title,
@@ -14,14 +16,18 @@ const PostForm = ({
   const [tags, setTags] = useState([]);
   const [preview, setPreview] = useState(null);
   const layouts = ["Standard", "Featured", "Minimal"];
+  const [content, setContent] = useState("");
 
   useEffect(() => {
     loadCategories();
-  });
+  }, []);
 
   const loadCategories = async () => {
     const res = await categoryService.getAll();
     setCategories(res.data);
+    console.log(res.data);
+
+    setContent(formData.content);
 
     if (formData.category_id) {
       const selected = res.data.find((c) => c.id === formData.category_id);
@@ -47,6 +53,11 @@ const PostForm = ({
       setFormData({ ...formData, image: file });
       setPreview(URL.createObjectURL(file));
     }
+  };
+
+  const handleContentChange = (newContent) => {
+    setContent(newContent);
+    setFormData({ ...formData, content: newContent });
   };
 
   const handleTagToggle = (tagId) => {
@@ -95,15 +106,21 @@ const PostForm = ({
         {/* Content */}
         <div className="flex flex-col gap-1">
           <label className="font-medium">Content:</label>
-          <textarea
+          {/* <textarea
             name="content"
             rows={4}
             value={formData.content}
             onChange={handleChange}
             required
             className="border rounded px-3 py-2 text-sm"
+          /> */}
+          <RichTextEditor
+            value={formData.content || content}
+            onChange={handleContentChange}
           />
         </div>
+
+        {/* <Preview /> */}
 
         {/* Image */}
         <div className="flex flex-col gap-1">

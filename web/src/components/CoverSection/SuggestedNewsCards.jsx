@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import MetaCol from "../General/MetaCol";
 
 import commentService from "../../services/commentService";
 import postService from "../../services/postService";
-import Meta from "../General/Meta";
 
-const SuggestedNewsCards = () => {
+const SuggestedNewsCards = ({ suggestedNews }) => {
   const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -29,7 +29,7 @@ const SuggestedNewsCards = () => {
         views: p.views || 0,
       }));
 
-      const latestPosts = formatted.slice(0, 5);
+      const latestPosts = formatted.slice(0, 4);
       setPosts(latestPosts);
     } catch (err) {
       console.error("Failed to fetch posts", err);
@@ -65,7 +65,7 @@ const SuggestedNewsCards = () => {
   return (
     <div className="w-full bg-gray-200 p-4 rounded-md">
       <div className="flex gap-4 min-w-[600px] flex-row sm:min-w-0">
-        {posts.map((item) => (
+        {suggestedNews.map((item) => (
           <div
             key={item.id}
             className="flex bg-white rounded-md shadow-md overflow-hidden h-[150px] min-w-[280px] sm:min-w-0 sm:w-full sm:h-auto"
@@ -83,7 +83,7 @@ const SuggestedNewsCards = () => {
               >
                 {item.title}
               </p>
-              <Meta
+              <MetaCol
                 date={new Date(item.createdAt).toLocaleDateString("en-GB", {
                   day: "2-digit",
                   month: "long",
@@ -91,6 +91,20 @@ const SuggestedNewsCards = () => {
                 })}
                 author={item.author}
               />
+              {/* <div className="flex flex-wrap justify-between items-center text-sm text-gray-600">
+                <span className="flex algems-center gap-2">
+                  <FaCalendarCheck />
+                  {new Date(item.createdAt).toLocaleDateString("en-GB", {
+                    day: "2-digit",
+                    month: "long",
+                    year: "numeric",
+                  })}
+                </span>
+                <span className="flex algems-center gap-2">
+                  <FaUserTie />
+                  {item.author}
+                </span>
+              </div> */}
             </div>
           </div>
         ))}

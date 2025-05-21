@@ -53,9 +53,14 @@ const NewsItem = ({ news }) => {
         </div>
       </div>
 
-      <p className="text-sm text-gray-700 leading-relaxed mt-1">
+      <div
+        className="prose max-w-none"
+        dangerouslySetInnerHTML={{ __html: getPreviewText(news.content, 30) }}
+      />
+
+      {/* <p className="text-sm text-gray-700 leading-relaxed mt-1">
         {getPreviewText(news.content, 30)}
-      </p>
+      </p> */}
 
       {news.content.split(" ").length > 30 && (
         <ContinueButton

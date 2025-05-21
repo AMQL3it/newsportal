@@ -1,30 +1,22 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import commentService from "../../services/commentService";
-import postService from "../../services/postService";
 import Meta from "../General/Meta";
 import NewsTag from "../General/NewsTag";
 import Overlay from "../General/Overlay";
 import TitleLine from "../General/TitleLine";
 
-const GallaryDisplay = () => {
+const GalleryDisplay = ({ category, allposts }) => {
   const navigate = useNavigate();
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState(allposts);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const loadPosts = async () => {
-      try {
-        const result = await postService.getAll();
-        setPosts(result.data);
-        setLoading(false);
-      } catch (error) {
-        console.error("Failed to load gallary posts:", error);
-      }
-    };
-
-    loadPosts();
-  }, []);
+    if (!allposts) return;
+    const latestPosts = allposts.slice(0, 6);
+    setPosts(latestPosts);
+    setLoading(false);
+  }, [allposts]);
 
   const handleContinue = async (id, views) => {
     await commentService.addState(id, { views: views + 1 });
@@ -41,7 +33,7 @@ const GallaryDisplay = () => {
 
   return (
     <div className="flex flex-col gap-3 px-4 py-2">
-      <TitleLine title="Gallary" />
+      <TitleLine title={category} />
       {posts.length === 0 ? (
         <div className="text-center p-6">No posts found</div>
       ) : (
@@ -81,4 +73,4 @@ const GallaryDisplay = () => {
   );
 };
 
-export default GallaryDisplay;
+export default GalleryDisplay;

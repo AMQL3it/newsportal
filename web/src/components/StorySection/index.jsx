@@ -1,19 +1,23 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import commentService from "../../services/commentService";
-import postService from "../../services/postService";
 import StoryCard from "./StoryCard";
 
-const StorySection = () => {
+const StorySection = ({ stories }) => {
+  // console.log("Stories: ", stories);
+
   const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
   const intervalRef = useRef(null);
-  const [stories, setStories] = useState([]);
+  // const [storiesa, setStories] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchPosts();
-  }, []);
+    // fetchPosts();
+    if (stories.length > 0) {
+      setLoading(false);
+    }
+  }, [stories]);
 
   useEffect(() => {
     if (stories.length > 0) {
@@ -23,28 +27,28 @@ const StorySection = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stories]);
 
-  const fetchPosts = async () => {
-    try {
-      const result = await postService.getAll();
-      const formatted = result.data.map((p) => ({
-        id: p.id,
-        title: p.title,
-        content: p.content,
-        image: p.image,
-        createdAt: p.createdAt,
-        author: p.author,
-        tags: p.tags || [],
-        category: p.category?.name || "Uncategorized",
-      }));
+  // const fetchPosts = async () => {
+  //   try {
+  //     const result = await postService.getAll();
+  //     const formatted = result.data.map((p) => ({
+  //       id: p.id,
+  //       title: p.title,
+  //       content: p.content,
+  //       image: p.image,
+  //       createdAt: p.createdAt,
+  //       author: p.author,
+  //       tags: p.tags || [],
+  //       category: p.category?.name || "Uncategorized",
+  //     }));
 
-      const latestPosts = formatted.slice(0, 5);
-      setStories(latestPosts);
-      setLoading(false);
-    } catch (err) {
-      console.error("Failed to fetch posts", err);
-      setLoading(false);
-    }
-  };
+  //     const latestPosts = formatted.slice(0, 5);
+  //     // setStories(latestPosts);
+  //     setLoading(false);
+  //   } catch (err) {
+  //     console.error("Failed to fetch posts", err);
+  //     setLoading(false);
+  //   }
+  // };
 
   const startAutoSlide = () => {
     stopAutoSlide();
@@ -82,6 +86,13 @@ const StorySection = () => {
     );
   }
 
+  if (stories.length === 0) {
+    return (
+      <div className="flex justify-center items-center h-60">
+        <p className="text-gray-500">No stories found</p>
+      </div>
+    );
+  }
   return (
     <div className="relative overflow-hidden w-full">
       <div

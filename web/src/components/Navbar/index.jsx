@@ -1,24 +1,23 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FaBars, FaHome } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
-import categoryService from "../../services/categoryService";
 
-const Navbar = () => {
+const Navbar = ({ navlist }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [categories, setCategories] = useState([]);
+  // const [categories, setCategories] = useState([]);
 
-  useEffect(() => {
-    loadCategories();
-  }, []);
+  // useEffect(() => {
+  //   loadCategories();
+  // }, []);
 
-  const loadCategories = async () => {
-    try {
-      const res = await categoryService.getAll();
-      setCategories(res.data || []);
-    } catch (error) {
-      console.error("Failed to load categories", error);
-    }
-  };
+  // const loadCategories = async () => {
+  //   try {
+  //     const res = await categoryService.getAll();
+  //     setCategories(res.data || []);
+  //   } catch (error) {
+  //     console.error("Failed to load categories", error);
+  //   }
+  // };
 
   const toggleMenu = () => setIsOpen((prev) => !prev);
 
@@ -50,7 +49,7 @@ const Navbar = () => {
           }`}
         >
           <ul className="md:flex md:space-x-4 flex flex-col md:flex-row mt-3 md:mt-0">
-            {categories.map((cat) => (
+            {navlist.map((cat) => (
               <li key={cat.id}>
                 <NavLink
                   to={`/newsfeed/${cat.id}`}

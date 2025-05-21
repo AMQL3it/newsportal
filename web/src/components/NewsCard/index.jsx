@@ -86,7 +86,10 @@ const NewsCard = () => {
 
       {news.tags && <NewsTag tags={news.tags.map((t) => t.name)} />}
 
-      <p className="mt-4 text-gray-700">{news.content}</p>
+      <div
+        className="prose max-w-none"
+        dangerouslySetInnerHTML={{ __html: news.content }}
+      />
 
       <div className="mt-4 flex justify-between items-center text-sm text-gray-600">
         <Meta

@@ -2,34 +2,27 @@ import { useEffect, useState } from "react";
 import { FaComment, FaEye, FaHeart } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import commentService from "../../services/commentService";
-import postService from "../../services/postService";
 import getPreviewText from "../../utils/getPreviewText";
 import ContinueButton from "../General/ContinueButton";
 import Meta from "../General/Meta";
 import NewsTag from "../General/NewsTag";
 import TitleLine from "../General/TitleLine";
 
-const YoutubeDisplay = () => {
+const YouTubeDisplay = ({ category, allposts }) => {
   const navigate = useNavigate();
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState(allposts);
+  // const [title, setTitle] = useState(category);
   const [activePost, setActivePost] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchLatestPosts();
-  }, []);
-
-  const fetchLatestPosts = async () => {
-    try {
-      const result = await postService.getAll(); // Assume sorted latest
-      const latestPosts = result.data.slice(0, 6);
-      setPosts(latestPosts);
-      setActivePost(latestPosts[0]);
-      setLoading(false);
-    } catch (err) {
-      console.error("Failed to fetch posts", err);
-    }
-  };
+    if (!allposts) return;
+    const latestPosts = allposts.slice(0, 6);
+    setPosts(latestPosts);
+    setActivePost(latestPosts[0]);
+    setLoading(false);
+    // setTitle(category);
+  }, [allposts]);
 
   const handleContinue = async (id, views) => {
     await commentService.addState(id, { views: views + 1 });
@@ -46,7 +39,7 @@ const YoutubeDisplay = () => {
 
   return (
     <div className="p-4">
-      <TitleLine title="Youtube Display" />
+      <TitleLine title={category} />
       {posts.length === 0 ? (
         <div className="text-center p-6">No posts found</div>
       ) : (
@@ -92,9 +85,12 @@ const YoutubeDisplay = () => {
                     </span>
                   </div>
                 </div>
-                <p className="text-sm text-gray-700 leading-relaxed">
-                  {getPreviewText(activePost.content, 30)}
-                </p>
+                <div
+                  className="prose max-w-none"
+                  dangerouslySetInnerHTML={{
+                    __html: getPreviewText(activePost.content, 30),
+                  }}
+                />
                 {activePost.content.split(" ").length > 30 && (
                   <div className="mt-2">
                     <ContinueButton
@@ -153,4 +149,4 @@ const YoutubeDisplay = () => {
   );
 };
 
-export default YoutubeDisplay;
+export default YouTubeDisplay;

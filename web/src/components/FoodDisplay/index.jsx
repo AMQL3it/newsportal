@@ -1,35 +1,27 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import commentService from "../../services/commentService";
-import postService from "../../services/postService";
 import getPreviewText from "../../utils/getPreviewText";
 import ContinueButton from "../General/ContinueButton";
 import Meta from "../General/Meta";
+import MetaCol from "../General/MetaCol";
 import NewsTag from "../General/NewsTag";
 import Overlay from "../General/Overlay";
 import TitleLine from "../General/TitleLine";
 
-const FoodDisplay = () => {
+const FoodDisplay = ({ category, allposts }) => {
   const navigate = useNavigate();
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState(allposts);
   const [activePost, setActivePost] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchPosts();
-  }, []);
-
-  const fetchPosts = async () => {
-    try {
-      const result = await postService.getAll();
-      const latestPosts = result.data.slice(0, 6);
-      setPosts(latestPosts);
-      setActivePost(latestPosts[0]);
-      setLoading(false);
-    } catch (err) {
-      console.error("Failed to fetch posts", err);
-    }
-  };
+    if (!allposts) return;
+    const latestPosts = allposts.slice(0, 6);
+    setPosts(latestPosts);
+    setActivePost(latestPosts[0]);
+    setLoading(false);
+  }, [allposts]);
 
   const handleContinue = async (id, views) => {
     await commentService.addState(id, { views: views + 1 });
@@ -45,8 +37,8 @@ const FoodDisplay = () => {
   }
 
   return (
-    <div className="flex flex-col gap-3 p-4 w-3/4">
-      <TitleLine title="Food" />
+    <div className="flex flex-col gap-3 p-4 w-4/6">
+      <TitleLine title={category} />
 
       {posts.length === 0 ? (
         <div className="text-center p-6">No posts found</div>
@@ -77,9 +69,12 @@ const FoodDisplay = () => {
                     )}
                     author={activePost.author || "Unknown"}
                   />
-                  <p className="text-sm text-white-500 leading-relaxed">
-                    {getPreviewText(activePost.content, 30)}
-                  </p>
+                  <div
+                    className="prose max-w-none"
+                    dangerouslySetInnerHTML={{
+                      __html: getPreviewText(activePost.content, 10),
+                    }}
+                  />
                   {activePost.content?.split(" ").length > 30 && (
                     <div className="mt-2">
                       <ContinueButton
@@ -123,7 +118,7 @@ const FoodDisplay = () => {
                       {getPreviewText(post.content, 15)}
                     </p>
                     <div className="text-xs text-gray-500 flex items-center gap-2 mt-1">
-                      <Meta
+                      <MetaCol
                         date={new Date(post.createdAt).toLocaleDateString(
                           "en-GB",
                           {
