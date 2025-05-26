@@ -4,16 +4,12 @@ import commentService from "../../services/commentService";
 import StoryCard from "./StoryCard";
 
 const StorySection = ({ stories }) => {
-  // console.log("Stories: ", stories);
-
   const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
   const intervalRef = useRef(null);
-  // const [storiesa, setStories] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // fetchPosts();
     if (stories.length > 0) {
       setLoading(false);
     }
@@ -26,29 +22,6 @@ const StorySection = ({ stories }) => {
     return () => stopAutoSlide();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stories]);
-
-  // const fetchPosts = async () => {
-  //   try {
-  //     const result = await postService.getAll();
-  //     const formatted = result.data.map((p) => ({
-  //       id: p.id,
-  //       title: p.title,
-  //       content: p.content,
-  //       image: p.image,
-  //       createdAt: p.createdAt,
-  //       author: p.author,
-  //       tags: p.tags || [],
-  //       category: p.category?.name || "Uncategorized",
-  //     }));
-
-  //     const latestPosts = formatted.slice(0, 5);
-  //     // setStories(latestPosts);
-  //     setLoading(false);
-  //   } catch (err) {
-  //     console.error("Failed to fetch posts", err);
-  //     setLoading(false);
-  //   }
-  // };
 
   const startAutoSlide = () => {
     stopAutoSlide();
@@ -80,7 +53,7 @@ const StorySection = ({ stories }) => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-60">
+      <div className="flex justify-center items-center h-60 dark:bg-gray-900 dark:text-gray-200">
         <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
@@ -88,13 +61,14 @@ const StorySection = ({ stories }) => {
 
   if (stories.length === 0) {
     return (
-      <div className="flex justify-center items-center h-60">
-        <p className="text-gray-500">No stories found</p>
+      <div className="flex justify-center items-center h-60 dark:bg-gray-900 dark:text-gray-400">
+        <p>No stories found</p>
       </div>
     );
   }
+
   return (
-    <div className="relative overflow-hidden w-full">
+    <div className="relative overflow-hidden w-full dark:bg-gray-900">
       <div
         className="flex transition-transform duration-500 ease-in-out will-change-transform"
         style={{

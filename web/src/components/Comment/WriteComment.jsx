@@ -29,10 +29,10 @@ const WriteComment = ({ onSubmit }) => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="w-full flex flex-col gap-2 mt-4 bg-gray-50 p-4 rounded-lg shadow"
+      className="w-full flex flex-col gap-2 mt-6 p-4 rounded-xl bg-gray-100 dark:bg-gray-800 shadow"
     >
       <textarea
-        className="w-full p-2 border border-gray-300 rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
+        className="w-full p-3 border border-gray-300 dark:border-gray-700 rounded-lg resize-none bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
         rows="3"
         value={text}
         onChange={(e) => setText(e.target.value)}
@@ -40,12 +40,12 @@ const WriteComment = ({ onSubmit }) => {
         disabled={loading}
       ></textarea>
 
-      {error && <p className="text-red-500 text-sm font-medium">{error}</p>}
+      {error && <p className="text-red-500 text-sm">{error}</p>}
 
       <button
         type="submit"
         disabled={loading}
-        className="self-end px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md font-semibold transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="self-end px-4 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white rounded-md font-medium transition disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {loading ? "Submitting..." : "Submit"}
       </button>

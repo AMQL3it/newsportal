@@ -10,13 +10,15 @@ const StoryCard = ({ story }) => {
         className="w-full h-full object-cover block"
       />
 
-      <div className="absolute bottom-0 w-full bg-gradient-to-t from-black/80 to-transparent text-white p-4">
+      <div className="absolute bottom-0 w-full bg-gradient-to-t from-black/80 to-transparent text-white p-4 dark:from-gray-900/80">
         {story.tags && (
           <div className="flex gap-2 mb-2 flex-wrap">
             <NewsTag tags={story.tags.map((t) => t.name)} />
           </div>
         )}
-        <h2 className="text-sm font-semibold mb-1">{story.title}</h2>
+        <h2 className="text-sm font-semibold mb-1 dark:text-gray-200">
+          {story.title}
+        </h2>
         <Meta
           date={new Date(story.createdAt).toLocaleDateString("en-GB", {
             day: "2-digit",

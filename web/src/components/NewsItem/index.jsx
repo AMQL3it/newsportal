@@ -15,19 +15,21 @@ const NewsItem = ({ news }) => {
   };
 
   return (
-    <div className="flex flex-col gap-2 mb-2.5">
+    <div className="flex flex-col gap-3 p-2 rounded-lg bg-gray-200 dark:bg-gray-900 shadow-md transition duration-300">
       <img
         src={`http://localhost:5000/${news.image}`}
         alt={news.title}
         onClick={() => handleContinue(news.state?.views || 0)}
-        className="w-full h-[12.5rem] md:h-[15rem] object-cover rounded-md cursor-pointer"
+        className="w-full h-52 md:h-64 object-cover rounded-lg cursor-pointer hover:opacity-90 transition"
       />
 
-      <h3 className="text-xl font-semibold my-2 text-gray-900">{news.title}</h3>
+      <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white leading-snug">
+        {news.title}
+      </h3>
 
       <NewsTag tags={news.tags.map((t) => t.name)} />
 
-      <div className="flex justify-between items-center mt-4 text-sm text-gray-600 flex-wrap">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mt-2 text-sm text-gray-600 dark:text-gray-400">
         <Meta
           date={new Date(news.createdAt).toLocaleDateString("en-GB", {
             day: "2-digit",
@@ -37,30 +39,26 @@ const NewsItem = ({ news }) => {
           author={news.author}
         />
 
-        <div className="flex gap-4 items-center mr-2.5 mt-2 md:mt-0">
-          <span className="flex items-center gap-1 font-medium cursor-pointer">
-            <FaEye className="text-gray-500 text-base" />{" "}
+        <div className="flex gap-4 items-center mt-3 md:mt-0">
+          <span className="flex items-center gap-1 cursor-pointer">
+            <FaEye className="text-base text-gray-500 dark:text-gray-400" />
             {news.state?.views || 0}
           </span>
-          <span className="flex items-center gap-1 font-medium cursor-pointer">
-            <FaHeart className="text-gray-500 text-base" />{" "}
+          <span className="flex items-center gap-1 cursor-pointer">
+            <FaHeart className="text-base text-gray-500 dark:text-gray-400" />
             {news.state?.likes || 0}
           </span>
-          <span className="flex items-center gap-1 font-medium cursor-pointer">
-            <FaComment className="text-gray-500 text-base" />{" "}
+          <span className="flex items-center gap-1 cursor-pointer">
+            <FaComment className="text-base text-gray-500 dark:text-gray-400" />
             {news.comments.length}
           </span>
         </div>
       </div>
 
       <div
-        className="prose max-w-none"
+        className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed mt-2 prose dark:prose-invert max-w-none"
         dangerouslySetInnerHTML={{ __html: getPreviewText(news.content, 30) }}
       />
-
-      {/* <p className="text-sm text-gray-700 leading-relaxed mt-1">
-        {getPreviewText(news.content, 30)}
-      </p> */}
 
       {news.content.split(" ").length > 30 && (
         <ContinueButton

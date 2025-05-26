@@ -1,12 +1,10 @@
-import React from "react";
 import TitleLine from "../General/TitleLine";
-import styles from "./FeedSidebar.module.css";
 
 const SidebarSection = ({ title, children }) => (
-    <section className={styles.sidebarSection}>
-        <TitleLine title={title} />
-        {children}
-    </section>
+  <section className="mb-6 last:mb-0 ">
+    <TitleLine title={title} />
+    <div className="mt-3">{children}</div>
+  </section>
 );
 
 export default SidebarSection;

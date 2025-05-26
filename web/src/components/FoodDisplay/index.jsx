@@ -37,11 +37,13 @@ const FoodDisplay = ({ category, allposts }) => {
   }
 
   return (
-    <div className="flex flex-col gap-3 p-4 w-4/6">
+    <div className="flex flex-col gap-3 p-4 w-full lg:w-4/6">
       <TitleLine title={category} />
 
       {posts.length === 0 ? (
-        <div className="text-center p-6">No posts found</div>
+        <div className="text-center p-6 text-gray-700 dark:text-gray-300">
+          No posts found
+        </div>
       ) : (
         <div className="flex flex-col gap-3">
           {/* Main Featured Post */}
@@ -53,9 +55,9 @@ const FoodDisplay = ({ category, allposts }) => {
                 className="w-full h-full object-cover"
               />
               <Overlay>
-                <div className="bg-white-500 p-2">
+                <div className="bg-white/80 dark:bg-black/60 p-2">
                   <NewsTag tags={activePost.tags.map((t) => t.name)} />
-                  <span className="text-white font-semibold text-sm">
+                  <span className="text-gray-900 dark:text-white font-semibold text-sm">
                     {activePost.title}
                   </span>
                   <Meta
@@ -70,7 +72,7 @@ const FoodDisplay = ({ category, allposts }) => {
                     author={activePost.author || "Unknown"}
                   />
                   <div
-                    className="prose max-w-none"
+                    className="prose max-w-none text-gray-800 dark:text-gray-200"
                     dangerouslySetInnerHTML={{
                       __html: getPreviewText(activePost.content, 10),
                     }}
@@ -103,7 +105,7 @@ const FoodDisplay = ({ category, allposts }) => {
                   onClick={() => {
                     setActivePost(post);
                   }}
-                  className="flex flex-col cursor-pointer bg-white rounded shadow overflow-hidden hover:shadow-md transition w-full sm:w-1/3"
+                  className="flex flex-col cursor-pointer bg-white dark:bg-gray-800 rounded shadow overflow-hidden hover:shadow-md transition w-full sm:w-1/3"
                 >
                   <img
                     src={`http://localhost:5000/${post.image}`}
@@ -111,13 +113,13 @@ const FoodDisplay = ({ category, allposts }) => {
                     className="h-36 w-full object-cover"
                   />
                   <div className="p-2">
-                    <h4 className="text-sm font-medium line-clamp-2">
+                    <h4 className="text-sm font-medium line-clamp-2 text-gray-900 dark:text-gray-100">
                       {post.title}
                     </h4>
-                    <p className="text-sm text-white-500 leading-relaxed">
+                    <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
                       {getPreviewText(post.content, 15)}
                     </p>
-                    <div className="text-xs text-gray-500 flex items-center gap-2 mt-1">
+                    <div className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-2 mt-1">
                       <MetaCol
                         date={new Date(post.createdAt).toLocaleDateString(
                           "en-GB",

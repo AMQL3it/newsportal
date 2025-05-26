@@ -1,28 +1,15 @@
 import { useState } from "react";
 import { FaBars, FaHome } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
+// import ThemeToggle from "@/components/ui/ThemeToggle"; // Uncomment when using
 
 const Navbar = ({ navlist }) => {
   const [isOpen, setIsOpen] = useState(false);
-  // const [categories, setCategories] = useState([]);
-
-  // useEffect(() => {
-  //   loadCategories();
-  // }, []);
-
-  // const loadCategories = async () => {
-  //   try {
-  //     const res = await categoryService.getAll();
-  //     setCategories(res.data || []);
-  //   } catch (error) {
-  //     console.error("Failed to load categories", error);
-  //   }
-  // };
 
   const toggleMenu = () => setIsOpen((prev) => !prev);
 
   return (
-    <nav className="bg-green-500 text-gray-100">
+    <nav className="bg-[#127492] text-white dark:bg-[#127492] dark:text-gray-200 shadow-md">
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between flex-wrap">
         {/* Left - Logo/Home */}
         <div className="flex items-center gap-2">
@@ -38,13 +25,13 @@ const Navbar = ({ navlist }) => {
             onClick={toggleMenu}
             className="text-white focus:outline-none"
           >
-            <FaBars size={20} />
+            <FaBars size={22} />
           </button>
         </div>
 
         {/* Menu items */}
         <div
-          className={`w-full md:flex md:items-center md:w-auto ${
+          className={`w-full md:flex md:items-center md:w-auto transition-all duration-300 ease-in-out ${
             isOpen ? "block" : "hidden"
           }`}
         >
@@ -53,7 +40,13 @@ const Navbar = ({ navlist }) => {
               <li key={cat.id}>
                 <NavLink
                   to={`/newsfeed/${cat.id}`}
-                  className="block px-4 py-2 text-sm font-medium hover:bg-green-600 hover:text-white rounded transition duration-1000"
+                  className={({ isActive }) =>
+                    `block px-4 py-2 text-sm font-medium rounded transition duration-300 ${
+                      isActive
+                        ? "bg-gray-800 text-white dark:bg-gray-800 dark:text-white"
+                        : "hover:bg-gray-700 hover:text-white"
+                    }`
+                  }
                 >
                   {cat.name}
                 </NavLink>
@@ -66,9 +59,9 @@ const Navbar = ({ navlist }) => {
             <input
               type="text"
               placeholder="Search..."
-              className="px-3 py-1 rounded-l bg-white text-gray-800 w-full md:w-64 focus:outline-none"
+              className="px-3 py-1 rounded-l bg-white text-gray-800 w-full md:w-64 focus:outline-none dark:bg-gray-100 dark:text-gray-900"
             />
-            <button className="bg-green-600 hover:bg-green-700 text-white px-4 py-1 rounded-r transition duration-1000">
+            <button className="bg-[#116A7B] hover:bg-[#0F4C5C] text-white px-4 py-1 rounded-r transition duration-300">
               Search
             </button>
           </div>

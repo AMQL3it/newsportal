@@ -1,17 +1,13 @@
-import FeedSidebar from "../../components/FeedSidebar/FeedSidebar";
-// import SuggestedNewsCard from "../../components/SuggestedNewsCard";
 import { Outlet } from "react-router-dom";
-import style from "./ExplorePage.module.css";
+import FeedSidebar from "../../components/FeedSidebar/FeedSidebar";
 
 const ExplorePage = () => {
   return (
-    <div className={style.explorePage}>
-      <div className={style.newsSection}>
+    <div className="flex flex-col md:flex-row gap-1.5 w-full px-2">
+      <div className="w-full md:w-[75vw] flex flex-col gap-1.5">
         <Outlet />
-        {/* <NewsFeed status="singleNews" />
-        <SuggestedNewsCard /> */}
       </div>
-      <div className={style.sidebarSection}>
+      <div className="w-full md:w-[25vw] bg-transparent rounded-lg shadow-sm">
         <FeedSidebar />
       </div>
     </div>

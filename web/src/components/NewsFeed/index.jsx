@@ -5,7 +5,7 @@ import Divider from "../General/Divider";
 import NewsItem from "../NewsItem";
 
 const NewsFeed = () => {
-  const { catId } = useParams(); // ✅ তুমি ঠিকই change করছো
+  const { catId } = useParams();
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -37,21 +37,21 @@ const NewsFeed = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-60">
-        <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-12 h-12 border-4 border-blue-500 dark:border-blue-400 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
 
   if (posts.length === 0) {
     return (
-      <div className="flex justify-center items-center h-60 text-gray-500 text-lg">
+      <div className="flex justify-center items-center h-60 text-gray-500 dark:text-gray-400 text-lg">
         এই ক্যাটেগরিতে কোনো নিউজ পাওয়া যায়নি।
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col gap-2.5 pl-2">
+    <div className="flex flex-col gap-3 transition-all duration-300">
       {posts.map((news) => (
         <NewsItem key={news.id} news={news} />
       ))}

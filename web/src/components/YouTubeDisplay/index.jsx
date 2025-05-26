@@ -11,7 +11,6 @@ import TitleLine from "../General/TitleLine";
 const YouTubeDisplay = ({ category, allposts }) => {
   const navigate = useNavigate();
   const [posts, setPosts] = useState(allposts);
-  // const [title, setTitle] = useState(category);
   const [activePost, setActivePost] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -21,7 +20,6 @@ const YouTubeDisplay = ({ category, allposts }) => {
     setPosts(latestPosts);
     setActivePost(latestPosts[0]);
     setLoading(false);
-    // setTitle(category);
   }, [allposts]);
 
   const handleContinue = async (id, views) => {
@@ -32,7 +30,7 @@ const YouTubeDisplay = ({ category, allposts }) => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-60">
-        <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin dark:border-blue-400 dark:border-t-transparent"></div>
       </div>
     );
   }
@@ -41,7 +39,9 @@ const YouTubeDisplay = ({ category, allposts }) => {
     <div className="p-4">
       <TitleLine title={category} />
       {posts.length === 0 ? (
-        <div className="text-center p-6">No posts found</div>
+        <div className="text-center p-6 text-gray-500 dark:text-gray-400">
+          No posts found
+        </div>
       ) : (
         <div className="flex mt-4 flex-col md:flex-row gap-4">
           {/* LEFT MAIN NEWS */}
@@ -53,11 +53,13 @@ const YouTubeDisplay = ({ category, allposts }) => {
                   alt={activePost.title}
                   className="w-full h-64 object-cover rounded"
                 />
-                <h3 className="text-lg font-semibold">{activePost.title}</h3>
+                <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
+                  {activePost.title}
+                </h3>
                 {activePost.tags && (
                   <NewsTag tags={activePost.tags.map((t) => t.name)} />
                 )}
-                <div className="mt-4 flex justify-between items-center text-sm text-gray-600">
+                <div className="mt-4 flex justify-between items-center text-sm text-gray-600 dark:text-gray-400">
                   <Meta
                     date={new Date(activePost.createdAt).toLocaleDateString(
                       "en-GB",
@@ -71,10 +73,7 @@ const YouTubeDisplay = ({ category, allposts }) => {
                   />
 
                   <div className="flex gap-4 items-center">
-                    <span
-                      className="cursor-pointer flex items-center gap-1"
-                      // onClick={handleView}
-                    >
+                    <span className="cursor-pointer flex items-center gap-1">
                       <FaEye /> {activePost.state.views}
                     </span>
                     <span className="cursor-pointer flex items-center gap-1">
@@ -86,7 +85,7 @@ const YouTubeDisplay = ({ category, allposts }) => {
                   </div>
                 </div>
                 <div
-                  className="prose max-w-none"
+                  className="prose max-w-none text-gray-700 dark:text-gray-300"
                   dangerouslySetInnerHTML={{
                     __html: getPreviewText(activePost.content, 30),
                   }}
@@ -113,8 +112,10 @@ const YouTubeDisplay = ({ category, allposts }) => {
                 <div
                   key={post.id}
                   onClick={() => setActivePost(post)}
-                  className={`flex gap-3 cursor-pointer hover:bg-gray-100 p-2 rounded ${
-                    post.id === activePost.id ? "bg-gray-200" : ""
+                  className={`flex gap-3 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded transition ${
+                    post.id === activePost.id
+                      ? "bg-gray-200 dark:bg-gray-700"
+                      : ""
                   }`}
                 >
                   <img
@@ -123,10 +124,10 @@ const YouTubeDisplay = ({ category, allposts }) => {
                     className="w-24 h-16 object-cover rounded"
                   />
                   <div className="flex-1">
-                    <h4 className="text-sm font-medium line-clamp-2">
+                    <h4 className="text-sm font-medium line-clamp-2 text-gray-800 dark:text-gray-100">
                       {post.title}
                     </h4>
-                    <div className="text-xs text-gray-500 flex items-center gap-2">
+                    <div className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-2">
                       <Meta
                         date={new Date(post.createdAt).toLocaleDateString(
                           "en-GB",

@@ -8,12 +8,12 @@ import NewsCard from "./components/NewsCard";
 import NewsFeed from "./components/NewsFeed";
 import Dashboard from "./pages/Dashboard";
 import ExplorePage from "./pages/ExplorePage";
+import ForgotPassword from "./pages/ForgotPassword";
 import HomePage from "./pages/HomePage";
 import Layout from "./pages/Layout";
 import Login from "./pages/Login";
+import Registration from "./pages/Registration";
 import Varification from "./pages/Varification";
-// import CategoryPage from './pages/CategoryPage';
-// import NewsDetails from './pages/NewsDetails';
 
 function App() {
   return (
@@ -31,7 +31,9 @@ function App() {
           <Route path="*" element={<div>404</div>} />
         </Route>
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Registration />} />
         <Route path="/varification" element={<Varification />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/dashboard" element={<Dashboard />}>
           <Route path="categories" element={<Category />} />
           <Route path="tags" element={<Tags />} />
