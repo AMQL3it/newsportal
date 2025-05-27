@@ -6,13 +6,13 @@ import AddButton from "../../General/AddButton";
 import Pagination from "../../General/Pagination";
 import TitleLine from "../../General/TitleLine";
 import EditForm from "./EditForm";
-import styles from "./Tag.module.css";
 
 const Tag = () => {
   const [tags, setTags] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({ name: "", description: "" });
+
   const tableHead = ["ID", "Name", "Description", "Response", "Activity"];
 
   useEffect(() => {
@@ -31,6 +31,7 @@ const Tag = () => {
       setTags(formattedTags);
     } catch (error) {
       console.error("Error fetching tags:", error);
+      SweetAlert.errorAlert("Failed to fetch tags!");
     }
   };
 
@@ -61,7 +62,7 @@ const Tag = () => {
     if (deleteConfirmed) {
       try {
         await tagService.delete(id);
-        getAllTags();
+        await getAllTags();
         SweetAlert.successAlert("Tag deleted successfully!");
       } catch (error) {
         console.error("Error deleting tag:", error);
@@ -69,10 +70,6 @@ const Tag = () => {
       }
     }
   };
-
-  // const onView = async (id) => {
-  //   alert(`View button pressed for ID: ${id}`);
-  // };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -83,14 +80,14 @@ const Tag = () => {
     e.preventDefault();
 
     try {
-      const formDataCopy = { ...formData }; // formData কপি নিচ্ছি
+      const formDataCopy = { ...formData };
 
-      // ✅ name থেকে slug বানানো
+      // Generate slug from name
       if (formDataCopy.name) {
         formDataCopy.slug = formDataCopy.name
           .toLowerCase()
-          .replace(/\s+/g, "_") // এক বা একাধিক space কে _ দিয়ে বদলাও
-          .replace(/[^\w_]+/g, ""); // অক্ষর আর _ ছাড়া সব রিমুভ করো
+          .replace(/\s+/g, "_")
+          .replace(/[^\w_]+/g, "");
       }
 
       if (editingId) {
@@ -128,50 +125,76 @@ const Tag = () => {
         <AddButton onClick={onAdd} />
       </TitleLine>
 
-      <table className={styles.table}>
-        <thead>
-          <tr>
-            {tableHead.map((head, index) => (
-              <th key={index}>{head}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {displayedTags.length > 0 ? (
-            displayedTags.map((row, index) => (
-              <tr key={index}>
-                <td>{row.id}</td>
-                <td>{row.name}</td>
-                <td>{row.description}</td>
-                <td>{row.response}</td>
-                <td>
-                  {/* <button className={styles.viewBtn} onClick={() => onView(row.id)}>
-                    <i className="fa fa-eye" title="View"></i>
-                  </button> */}
-                  <button
-                    className={styles.editBtn}
-                    onClick={() => onEdit(row.id)}
-                  >
-                    <FaEdit />
-                  </button>
-                  <button
-                    className={styles.deleteBtn}
-                    onClick={() => onDelete(row.id)}
-                  >
-                    <FaTrashAlt />
-                  </button>
+      <div className="overflow-x-auto rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
+        <table className="w-full text-left text-sm text-gray-700 dark:text-gray-300">
+          <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200">
+            <tr>
+              {tableHead.map((head, index) => (
+                <th
+                  key={index}
+                  className="px-4 py-3 border-b border-gray-300 dark:border-gray-600"
+                >
+                  {head}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {displayedTags.length > 0 ? (
+              displayedTags.map((row, index) => (
+                <tr
+                  key={row.id}
+                  className={`border-b border-gray-200 dark:border-gray-700 ${
+                    index % 2 === 0
+                      ? "bg-white dark:bg-gray-900"
+                      : "bg-gray-50 dark:bg-gray-800"
+                  }`}
+                >
+                  <td className="px-4 py-2">{row.id}</td>
+                  <td className="px-4 py-2">{row.name}</td>
+                  <td className="px-4 py-2">{row.description}</td>
+                  <td className="px-4 py-2">
+                    <span
+                      className={`px-2 py-1 rounded text-xs font-semibold ${
+                        row.response === "Enable"
+                          ? "bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100"
+                          : "bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100"
+                      }`}
+                    >
+                      {row.response}
+                    </span>
+                  </td>
+                  <td className="px-4 py-2 space-x-2">
+                    <button
+                      aria-label="Edit Tag"
+                      onClick={() => onEdit(row.id)}
+                      className="text-blue-600 hover:text-blue-800 dark:hover:text-blue-400 transition"
+                    >
+                      <FaEdit size={18} />
+                    </button>
+                    <button
+                      aria-label="Delete Tag"
+                      onClick={() => onDelete(row.id)}
+                      className="text-red-600 hover:text-red-800 dark:hover:text-red-400 transition"
+                    >
+                      <FaTrashAlt size={18} />
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td
+                  colSpan={tableHead.length}
+                  className="text-center py-6 text-gray-500 dark:text-gray-400"
+                >
+                  No data found
                 </td>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan={tableHead.length} style={{ textAlign: "center" }}>
-                No data found
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            )}
+          </tbody>
+        </table>
+      </div>
 
       <Pagination
         currentPage={currentPage}
@@ -179,10 +202,10 @@ const Tag = () => {
         onPageChange={handlePageChange}
       />
 
-      {/* Modal */}
+      {/* Modal for Add/Edit */}
       {isModalOpen && (
         <EditForm
-          title="Tag"
+          title={"Tag"}
           formData={formData}
           handleInputChange={handleInputChange}
           handleSubmit={handleSubmit}

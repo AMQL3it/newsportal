@@ -34,6 +34,19 @@ const NewsFeed = () => {
     fetchPosts();
   }, [catId]);
 
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const displayPerPage = 5;
+  const totalPages = Math.ceil(posts.length / displayPerPage);
+  const startIndex = (currentPage - 1) * displayPerPage;
+  const displayed = posts.slice(startIndex, startIndex + displayPerPage);
+
+  const handlePageChange = (newPage) => {
+    if (newPage > 0 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-60">
@@ -51,11 +64,17 @@ const NewsFeed = () => {
   }
 
   return (
-    <div className="flex flex-col gap-3 transition-all duration-300">
-      {posts.map((news) => (
+    <div className="flex flex-col gap-3 transition-all duration-300 position-relative">
+      {/* <div> */}
+      {displayed.map((news) => (
         <NewsItem key={news.id} news={news} />
       ))}
-      <Divider />
+      {/* </div> */}
+      <Divider
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
     </div>
   );
 };

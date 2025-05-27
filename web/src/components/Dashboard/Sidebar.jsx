@@ -1,4 +1,16 @@
 import { useEffect, useState } from "react";
+import {
+  FaAd,
+  FaChartBar,
+  FaCog,
+  FaComments,
+  FaList,
+  FaRegNewspaper,
+  FaTachometerAlt,
+  FaTags,
+  FaUser,
+  FaUsers,
+} from "react-icons/fa";
 import { NavLink, useLocation } from "react-router-dom";
 import logo from "../../assets/logo.png";
 
@@ -7,135 +19,78 @@ const Sidebar = () => {
   const [active, setActive] = useState("");
 
   const menuItems = [
-    { name: "Dashboard", icon: "tachometer", to: "dashboard" },
-    { name: "Posts", icon: "building", to: "posts" },
-    { name: "Category", icon: "map", to: "categories" },
-    { name: "Tags", icon: "building", to: "tags" },
-    { name: "Advertisement", icon: "users", to: "advertisements" },
-    { name: "Comments", icon: "map", to: "comments" },
-    { name: "Users", icon: "shopping-cart", to: "users" },
-    { name: "Analytics & Reports", icon: "truck", to: "analytics" },
-    { name: "Settings", icon: "cog", bottom: true },
-    { name: "Profile", icon: "user", bottom: true },
+    { name: "Dashboard", icon: <FaTachometerAlt />, to: "dashboard" },
+    { name: "Posts", icon: <FaRegNewspaper />, to: "posts" },
+    { name: "Category", icon: <FaList />, to: "categories" },
+    { name: "Tags", icon: <FaTags />, to: "tags" },
+    { name: "Advertisement", icon: <FaAd />, to: "advertisements" },
+    { name: "Comments", icon: <FaComments />, to: "comments" },
+    { name: "Users", icon: <FaUsers />, to: "users" },
+    { name: "Analytics & Reports", icon: <FaChartBar />, to: "analytics" },
+    { name: "Settings", icon: <FaCog />, to: "settings", bottom: true },
+    { name: "Profile", icon: <FaUser />, to: "profile", bottom: true },
   ];
 
   useEffect(() => {
     const currentPath = location.pathname.split("/").filter(Boolean).pop();
-    
-    setActive(currentPath || ""); // fallback for root path
+    setActive(currentPath || "");
   }, [location]);
 
   return (
-    <div style={styles.sidebar}>
-      {/* Logo and Company Name */}
-      <div style={styles.logoContainer}>
-        <div style={styles.logo}>
-          <img src={logo} alt="Logo" style={styles.logo} />
-        </div>
-        <h2 style={styles.companyName}>AMQL3it</h2>
+    <div className="w-[250px] h-[100vh] bg-black/60 text-white p-4 flex flex-col justify-between">
+      {/* Logo Section */}
+      <div className="flex flex-col items-center gap-3">
+        <img
+          src={logo}
+          alt="Logo"
+          className="w-12 h-12 rounded-full object-cover"
+        />
+        <h2 className="text-lg font-bold">AMQL3it</h2>
       </div>
 
-      {/* Menu Items */}
-      <div style={styles.menuContainer}>
-        {menuItems.map((item, index) =>
-          !item.bottom ? (
+      {/* Top Menu */}
+      <div className="flex flex-col gap-2 mt-6 flex-1">
+        {menuItems
+          .filter((item) => !item.bottom)
+          .map((item, index) => (
             <NavLink
               to={item.to}
               key={index}
-              style={{
-                ...styles.menuButton,
-                ...(active === item.to ? styles.activeButton : styles.hoverButton),
-              }}
+              className={({ isActive }) =>
+                `flex items-center gap-3 px-3 py-2 rounded transition-colors duration-200 ${
+                  active === item.to || isActive
+                    ? "bg-green-600 font-bold"
+                    : "hover:bg-gray-500/50"
+                }`
+              }
             >
-              <i className={`fa fa-${item.icon}`} style={{ marginRight: "8px" }}></i>
+              <span className="text-lg">{item.icon}</span>
               {item.name}
             </NavLink>
-          ) : null
-        )}
+          ))}
       </div>
 
-      {/* Bottom Menu Items */}
-      <div style={styles.bottomMenu}>
-        {menuItems.map((item, index) =>
-          item.bottom ? (
+      {/* Bottom Menu */}
+      <div className="border-t border-gray-300 pt-4 flex flex-col gap-2">
+        {menuItems
+          .filter((item) => item.bottom)
+          .map((item, index) => (
             <button
               key={index}
-              style={{
-                ...styles.menuButton,
-                ...(active === item.to ? styles.activeButton : styles.hoverButton),
-              }}
               onClick={() => setActive(item.to)}
+              className={`flex items-center gap-3 px-3 py-2 rounded transition-colors duration-200 text-left ${
+                active === item.to
+                  ? "bg-green-600 font-bold"
+                  : "hover:bg-gray-500/50"
+              }`}
             >
-              <i className={`fa fa-${item.icon}`}></i>
+              <span className="text-lg">{item.icon}</span>
               {item.name}
             </button>
-          ) : null
-        )}
+          ))}
       </div>
     </div>
   );
-};
-
-const styles = {
-  sidebar: {
-    width: "200px",
-    height: "calc(100vh - 40px)",
-    backgroundColor: "rgba(35, 35, 35, 0.5)",
-    padding: "20px",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
-  },
-  logoContainer: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    gap: "10px",
-  },
-  logo: {
-    width: "50px",
-    height: "50px",
-    backgroundColor: "gray",
-    borderRadius: "50%",
-  },
-  companyName: {
-    fontSize: "18px",
-    fontWeight: "bold",
-    color: "white",
-  },
-  menuContainer: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "10px",
-    flex: 1,
-  },
-  menuButton: {
-    display: "flex",
-    alignItems: "center",
-    gap: "10px",
-    padding: "10px",
-    borderRadius: "5px",
-    border: "none",
-    background: "none",
-    cursor: "pointer",
-    transition: "background 0.3s",
-    color: "white",
-    textDecoration: "none",
-  },
-  activeButton: {
-    backgroundColor: "#4caf50",
-    fontWeight: "bold",
-  },
-  hoverButton: {
-    backgroundColor: "rgba(137, 137, 137, 0.3)",
-  },
-  bottomMenu: {
-    borderTop: "1px solid #ccc",
-    paddingTop: "10px",
-    display: "flex",
-    flexDirection: "column",
-    gap: "10px",
-  },
 };
 
 export default Sidebar;

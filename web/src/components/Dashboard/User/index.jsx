@@ -1,34 +1,32 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import styles from "../Category/Category.module.css";
+import { useEffect, useState } from "react";
+import { FaEdit, FaTrashAlt } from "react-icons/fa";
+import apiService from "../../../services/apiService";
+import tagService from "../../../services/tagService";
+import SweetAlert from "../../../utils/SweetAlert";
+import AddButton from "../../General/AddButton";
 import Pagination from "../../General/Pagination";
 import TitleLine from "../../General/TitleLine";
-import AddButton from "../../General/AddButton";
-import Modal from "../../General/Modal"; // new modal component
-import apiService from "../../../services/apiService";
-import { IoIosCheckmarkCircleOutline, IoIosCloseCircleOutline } from "react-icons/io";
+import UserForm from "./UserForm";
 
 const User = () => {
-  const { id } = useParams();
-  const [categories, setUsers] = useState([]);
+  const [users, setUsers] = useState([]);
   const [editingId, setEditingId] = useState(null);
-  const [editData, setEditData] = useState({ name: "", slug: "", description: "", is_active: true });
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    password: "",
+    confirmPassword: "",
+    role: "user",
+  });
 
-  const [isModalOpen, setIsModalOpen] = useState(false); // modal state
-  const [newUser, setNewUser] = useState({ name: "", color: ""});
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const categoriesPerPage = 5;
-  const totalPages = Math.ceil(categories.length / categoriesPerPage);
+  const tableHead = ["ID", "Name", "Email", "Phone", "Role", "Activity"];
 
   useEffect(() => {
-    // Dummy fallback data (for design/testing)
-   
-    getUsers(); // pass dummy as fallback
+    getUsers();
   }, []);
-  
-  
-  // ✅ Fixed async function with await + fallback
+
   const getUsers = async () => {
     try {
       const data = await apiService.getAll("users"); // 🔥 await added
@@ -40,43 +38,87 @@ const User = () => {
     }
   };
 
-  const handleEdit = (cat) => {
-    setEditingId(cat.id);
-    setEditData({
-      name: cat.name,
-      slug: cat.slug,
-      description: cat.description,
-      is_active: cat.is_active
+  const onAdd = () => {
+    setEditingId(null);
+    setFormData({
+      name: "",
+      email: "",
+      phone: "",
+      password: "",
+      confirmPassword: "",
+      role: "user",
     });
+    setIsModalOpen(true);
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setEditData({ ...editData, [name]: value });
-  };
-
-  const handleSave = async (id) => {
-    try {
-      const data = await apiService.put("users", id, editData, { "Content-Type": "application/json" });
-      console.log(data);
-      getUsers();
-      setEditingId(null);
-    } catch (error) {
-      console.error("Error updating category:", error);
+  const onEdit = (id) => {
+    const userToEdit = users.find((user) => user.id === id);
+    if (userToEdit) {
+      setFormData(userToEdit);
+      setEditingId(id);
+      setIsModalOpen(true);
     }
   };
 
-  const handleDelete = async (id) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete?");
-    if (confirmDelete) {
+  const onDelete = async (id) => {
+    const deleteConfirmed = await SweetAlert.deleteAlert();
+
+    if (deleteConfirmed) {
       try {
-        // await fetch(`/api/categories/${id}`, { method: "DELETE" });
-        setUsers((prev) => prev.filter((c) => c.id !== id));
+        await tagService.delete(id);
+        await getUsers();
+        SweetAlert.successAlert("Tag deleted successfully!");
       } catch (error) {
-        console.error("Error deleting category:", error);
+        console.error("Error deleting tag:", error);
+        SweetAlert.errorAlert("Failed to delete tag!");
       }
     }
   };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    setEditingId(null);
+    setFormData({
+      name: "",
+      email: "",
+      phone: "",
+      password: "",
+      confirmPassword: "",
+      role: "user",
+    });
+  };
+
+  const printRole = (role) => {
+    if (role === "superadmin") {
+      return <span className="text-red-500 font-semibold ">Super Admin</span>;
+    } else if (role === "admin") {
+      return <span className="text-green-500 font-semibold ">Admin</span>;
+    } else if (role === "editor") {
+      return <span className="text-blue-500 font-semibold ">Editor</span>;
+    } else {
+      return <span className="text-gray-500 font-semibold ">User</span>;
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // console.log(userInfo);
+
+    // API call and logic here
+  };
+
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const displayPerPage = 5;
+  const totalPages = Math.ceil(users.length / displayPerPage);
+  const startIndex = (currentPage - 1) * displayPerPage;
+  const displayedUsers = users.slice(startIndex, startIndex + displayPerPage);
 
   const handlePageChange = (newPage) => {
     if (newPage > 0 && newPage <= totalPages) {
@@ -84,76 +126,66 @@ const User = () => {
     }
   };
 
-  const handleAddUser = () => {
-    const newId = categories.length ? Math.max(...categories.map(c => c.id)) + 1 : 1;
-    const newCat = { id: newId, ...newUser };
-    setUsers([...categories, newCat]);
-    setNewUser({ name: "", color: ""});
-    setIsModalOpen(false);
-  };
-
-  const handleNewInput = (e) => {
-    const { name, value } = e.target;
-    setNewUser({ ...newUser, [name]: value });
-  };
-
-  // Paginated categories
-  const startIndex = (currentPage - 1) * categoriesPerPage;
-  const displayedCategories = categories.slice(startIndex, startIndex + categoriesPerPage);
-
   return (
-    <div className={styles.container}>
-      <TitleLine title="Categories">
-        <AddButton onClick={() => setIsModalOpen(true)} />
+    <>
+      <TitleLine title="User">
+        <AddButton onClick={onAdd} />
       </TitleLine>
 
-      <table className={styles.table}>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {displayedCategories.map((cat) => (
-            <tr key={cat.id}>
-              <td>
-                {editingId === cat.id ? (
-                  <input type="number" name="is_active" value={editData.is_active} onChange={handleChange} />
-                ) : (
-                  cat.is_active ? <IoIosCheckmarkCircleOutline style={{ color: "green" }} /> : <IoIosCloseCircleOutline style={{ color: "red" }} />
-                )}  
-              </td>
-              <td>
-                {editingId === cat.id ? (
-                  <input name="name" value={editData.name} onChange={handleChange} />
-                ) : (
-                  cat.name
-                )}
-              </td>
-
-              <td>
-                {editingId === cat.id ? (
-                  <input name="description" value={editData.description} onChange={handleChange} />
-                ) : (
-                  cat.description
-                )}
-              </td>
-              
-              <td>
-                {editingId === cat.id ? (
-                  <i className="fa fa-save" title="Save" onClick={() => handleSave(cat.id)} style={{ marginRight: "10px", cursor: "pointer" }}></i>
-                ) : (
-                  <i className="fa fa-edit" title="Edit" onClick={() => handleEdit(cat)} style={{ marginRight: "10px", cursor: "pointer" }}></i>
-                )}
-                <i className="fa fa-trash" title="Delete" onClick={() => handleDelete(cat.id)} style={{ color: "crimson", cursor: "pointer" }}></i>
-              </td>
+      <div className="overflow-x-auto rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
+        <table className="w-full text-left text-sm text-gray-700 dark:text-gray-300">
+          <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200">
+            <tr>
+              {tableHead.map((head, index) => (
+                <th
+                  key={index}
+                  className="px-4 py-3 border-b border-gray-300 dark:border-gray-600"
+                >
+                  {head}
+                </th>
+              ))}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {displayedUsers.length > 0 ? (
+              displayedUsers.map((user) => (
+                <tr
+                  key={user.id}
+                  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                >
+                  <td className="px-4 py-3">{user.id}</td>
+                  <td className="px-4 py-3">{user.name}</td>
+                  <td className="px-4 py-3">{user.email}</td>
+                  <td className="px-4 py-3">{user.phone}</td>
+                  <td className="px-4 py-3">{printRole(user.role?.name)}</td>
+                  <td className="px-4 py-3 flex gap-2">
+                    <button
+                      aria-label="Edit User"
+                      onClick={() => onEdit(user.id)}
+                      className="text-blue-600 hover:text-blue-800 dark:hover:text-blue-400 transition"
+                    >
+                      <FaEdit size={18} />
+                    </button>
+                    <button
+                      aria-label="Delete User"
+                      onClick={() => onDelete(user.id)}
+                      className="text-red-600 hover:text-red-800 dark:hover:text-red-400 transition"
+                    >
+                      <FaTrashAlt size={18} />
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={6} className="px-4 py-3 text-center">
+                  No users found.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
 
       <Pagination
         currentPage={currentPage}
@@ -161,20 +193,18 @@ const User = () => {
         onPageChange={handlePageChange}
       />
 
-      {/* Modal for adding category */}
+      {/* Modal for Add/Edit */}
       {isModalOpen && (
-        <Modal onClose={() => setIsModalOpen(false)} title="Add User">
-          <div className={styles.modalForm} style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-            
-            <input name="name" value={newUser.name} onChange={handleNewInput} placeholder="User Name" style={{ width: "100%", padding: "5px", borderRadius: "5px", border: "1px solid #ccc", boxShadow: "0 2px 4px hsla(0, 0.00%, 0.00%, 0.30)", outline: "none", fontSize: "16px" }}/>
-            
-            <input type="number" name="color" value={newUser.color} onChange={handleNewInput} placeholder="User Color" style={{ width: "100%", padding: "5px", borderRadius: "5px", border: "1px solid #ccc", boxShadow: "0 2px 4px hsla(0, 0.00%, 0.00%, 0.30)", outline: "none", fontSize: "16px" }} />
-            
-            <button onClick={handleAddUser} style={{ width: "fit-content", alignSelf: "center", backgroundColor: "var(--header-body-color)", color: "floralwhite", border: "none", padding: "5px 10px", borderRadius: "5px", cursor: "pointer", display: "flex", alignItems: "center", gap: "5px", transition: "all 1s ease"}}>Submit</button>
-          </div>
-        </Modal>
+        <UserForm
+          title={"User"}
+          formData={formData}
+          handleInputChange={handleInputChange}
+          handleSubmit={handleSubmit}
+          handleModalClose={handleModalClose}
+          editingId={editingId}
+        />
       )}
-    </div>
+    </>
   );
 };
 

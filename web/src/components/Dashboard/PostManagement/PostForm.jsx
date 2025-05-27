@@ -10,7 +10,6 @@ const PostForm = ({
   setFormData,
   handleSubmit,
   setIsModalOpen,
-  // editingId,
 }) => {
   const [categories, setCategories] = useState([]);
   const [tags, setTags] = useState([]);
@@ -23,15 +22,17 @@ const PostForm = ({
   }, []);
 
   const loadCategories = async () => {
-    const res = await categoryService.getAll();
-    setCategories(res.data);
-    console.log(res.data);
+    try {
+      const res = await categoryService.getAll();
+      setCategories(res.data);
+      setContent(formData.content);
 
-    setContent(formData.content);
-
-    if (formData.category_id) {
-      const selected = res.data.find((c) => c.id === formData.category_id);
-      setTags(selected?.tags || []);
+      if (formData.category_id) {
+        const selected = res.data.find((c) => c.id === formData.category_id);
+        setTags(selected?.tags || []);
+      }
+    } catch (error) {
+      console.error("Failed to load categories:", error);
     }
   };
 
@@ -76,75 +77,69 @@ const PostForm = ({
       onClose={() => setIsModalOpen(false)}
       onSubmit={handleSubmit}
     >
-      <form className="flex flex-col gap-4">
+      <form className="flex flex-col gap-5 text-gray-900 dark:text-gray-100 ">
         {/* Title */}
         <div className="flex flex-col gap-1">
-          <label className="font-medium">Title:</label>
+          <label className="font-semibold">Title:</label>
           <input
             type="text"
             name="title"
             value={formData.title}
             onChange={handleChange}
             required
-            className="border rounded px-3 py-2 text-sm"
+            className="border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-sm bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
           />
         </div>
 
         {/* Author */}
         <div className="flex flex-col gap-1">
-          <label className="font-medium">Author:</label>
+          <label className="font-semibold">Author:</label>
           <input
             type="text"
             name="author"
             value={formData.author}
             onChange={handleChange}
             required
-            className="border rounded px-3 py-2 text-sm"
+            className="border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-sm bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
           />
         </div>
 
         {/* Content */}
         <div className="flex flex-col gap-1">
-          <label className="font-medium">Content:</label>
-          {/* <textarea
-            name="content"
-            rows={4}
-            value={formData.content}
-            onChange={handleChange}
-            required
-            className="border rounded px-3 py-2 text-sm"
-          /> */}
+          <label className="font-semibold">Content:</label>
           <RichTextEditor
             value={formData.content || content}
             onChange={handleContentChange}
           />
         </div>
 
-        {/* <Preview /> */}
-
         {/* Image */}
         <div className="flex flex-col gap-1">
-          <label className="font-medium">Cover Image:</label>
+          <label className="font-semibold">Cover Image:</label>
           <input
             type="file"
             accept="image/*"
             onChange={handleFileChange}
-            className="text-sm"
+            className="text-sm text-gray-700 dark:text-gray-300"
           />
           {preview && (
-            <img src={preview} alt="preview" className="h-20 mt-2 rounded" />
+            <img
+              src={preview}
+              alt="preview"
+              className="h-20 w-auto mt-2 rounded border border-gray-300 dark:border-gray-600"
+            />
           )}
         </div>
 
         {/* Layout */}
         <div className="flex flex-col gap-1">
-          <label className="font-medium">Layout:</label>
+          <label className="font-semibold">Layout:</label>
           <select
             name="layout"
             value={formData.layout}
             onChange={handleChange}
             required
-            className="border rounded px-3 py-2 text-sm"
+            className="border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-sm bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
           >
             <option value="">Select layout</option>
             {layouts.map((l, i) => (
@@ -157,13 +152,13 @@ const PostForm = ({
 
         {/* Category */}
         <div className="flex flex-col gap-1">
-          <label className="font-medium">Category:</label>
+          <label className="font-semibold">Category:</label>
           <select
             name="category_id"
             value={formData.category_id || ""}
             onChange={handleChange}
             required
-            className="border rounded px-3 py-2 text-sm"
+            className="border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-sm bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
           >
             <option value="">Select category</option>
             {categories.map((c) => (
@@ -176,15 +171,19 @@ const PostForm = ({
 
         {/* Tags */}
         {tags.length > 0 && (
-          <div className="flex flex-col gap-1">
-            <label className="font-medium">Tags:</label>
-            <div className="grid grid-cols-2 gap-3">
+          <div className="flex flex-col gap-2">
+            <label className="font-semibold">Tags:</label>
+            <div className="grid grid-cols-2 gap-3 max-h-32 overflow-auto">
               {tags.map((tag) => (
-                <label key={tag.id} className="flex items-center gap-2">
+                <label
+                  key={tag.id}
+                  className="flex items-center gap-2 cursor-pointer select-none"
+                >
                   <input
                     type="checkbox"
                     checked={formData.tag_ids.includes(tag.id)}
                     onChange={() => handleTagToggle(tag.id)}
+                    className="cursor-pointer"
                   />
                   <span className="text-sm">{tag.name}</span>
                 </label>

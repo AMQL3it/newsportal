@@ -1,104 +1,63 @@
-import React from 'react';
-import Modal from '../../General/Modal';
+import Modal from "../../General/Modal";
 
 const EditForm = ({
-    title,
-    formData,
-    handleInputChange,
-    handleSubmit,
-    setIsModalOpen,
-    editingId
+  title,
+  formData,
+  handleInputChange,
+  handleSubmit,
+  setIsModalOpen,
+  editingId,
 }) => {
+  return (
+    <Modal
+      onClose={() => setIsModalOpen(false)}
+      onSubmit={handleSubmit}
+      status="form"
+      title={editingId ? `Edit ${title}` : `Add ${title}`}
+    >
+      <form
+        className="space-y-6 px-2 py-1 sm:px-4"
+        onSubmit={(e) => e.preventDefault()}
+      >
+        <div className="flex flex-col space-y-2">
+          <label
+            htmlFor="name"
+            className="text-sm font-medium text-gray-700 dark:text-gray-300"
+          >
+            Name:
+          </label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            value={formData.name}
+            onChange={handleInputChange}
+            placeholder="Enter tag name"
+            required
+            className="rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
 
-    return (
-        <Modal onClose={() => setIsModalOpen(false)} onSubmit={handleSubmit} status="form" title={editingId ? `Edit ${title}` : `Add ${title}`}>
-            <form style={styleObj.form}>
-                
-                <div style={styleObj.inputSection}>
-                <label>Name:</label>
-                <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    placeholder="Enter category name"
-                    required
-                    style={styleObj.input}
-                />
-                </div>
-
-                <div style={styleObj.inputSection}>
-                <label>Description:</label>
-                <textarea
-                    name="description"
-                    value={formData.description}
-                    onChange={handleInputChange}
-                    placeholder="Enter category description"
-                    rows="3"
-                    style={styleObj.textarea}
-                />
-                </div>
-            </form>
-        </Modal>
-    );
+        <div className="flex flex-col space-y-2">
+          <label
+            htmlFor="description"
+            className="text-sm font-medium text-gray-700 dark:text-gray-300"
+          >
+            Description:
+          </label>
+          <textarea
+            id="description"
+            name="description"
+            value={formData.description}
+            onChange={handleInputChange}
+            placeholder="Enter tag description"
+            rows="3"
+            className="rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"
+          />
+        </div>
+      </form>
+    </Modal>
+  );
 };
-
-const styleObj = {
-    form: {
-      padding: "15px",
-      display: "flex",
-      flexDirection: "column",
-      gap: "15px"
-    },
-    inputSection: {
-      display: "flex",
-      flexDirection: "column",
-      gap: "5px"
-    },
-    input: {
-      padding: "8px 12px",
-      border: "1px solid #ccc",
-      borderRadius: "4px",
-      fontSize: "14px"
-    },
-    textarea: {
-      padding: "8px 12px",
-      border: "1px solid #ccc",
-      borderRadius: "4px",
-      fontSize: "14px",
-      resize: "vertical"
-    },
-    select: {
-      padding: "8px 12px",
-      border: "1px solid #ccc",
-      borderRadius: "4px",
-      fontSize: "14px",
-      backgroundColor: "#fff",
-      width: "100%",
-      cursor: "pointer"
-    },
-    buttonSection: {
-      display: "flex",
-      justifyContent: "flex-end",
-      gap: "10px"
-    },
-    submitBtn: {
-      backgroundColor: "#007bff",
-      color: "#fff",
-      padding: "8px 16px",
-      borderRadius: "5px",
-      border: "none",
-      cursor: "pointer"
-    },
-    cancelBtn: {
-      backgroundColor: "gray",
-      color: "#fff",
-      padding: "8px 16px",
-      borderRadius: "5px",
-      border: "none",
-      cursor: "pointer"
-    }
-};
-  
 
 export default EditForm;

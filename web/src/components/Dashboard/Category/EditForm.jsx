@@ -15,9 +15,11 @@ const EditForm = ({
       status="form"
       title={editingId ? `Edit ${title}` : `Add ${title}`}
     >
-      <form onSubmit={handleSubmit} style={styleObj.form}>
-        <div style={styleObj.inputSection}>
-          <label>Name:</label>
+      <form onSubmit={handleSubmit} className="p-4 flex flex-col gap-4">
+        <div className="flex flex-col gap-1">
+          <label className="text-sm font-medium text-gray-700 dark:text-gray-200">
+            Name:
+          </label>
           <input
             type="text"
             name="name"
@@ -25,29 +27,33 @@ const EditForm = ({
             onChange={handleInputChange}
             placeholder="Enter category name"
             required
-            style={styleObj.input}
+            className="px-3 py-2 border border-gray-300 rounded-md text-sm dark:bg-gray-800 dark:border-gray-600 dark:text-white"
           />
         </div>
 
-        <div style={styleObj.inputSection}>
-          <label>Description:</label>
+        <div className="flex flex-col gap-1">
+          <label className="text-sm font-medium text-gray-700 dark:text-gray-200">
+            Description:
+          </label>
           <textarea
             name="description"
             value={formData.description}
             onChange={handleInputChange}
             placeholder="Enter category description"
             rows="3"
-            style={styleObj.textarea}
+            className="px-3 py-2 border border-gray-300 rounded-md text-sm resize-y dark:bg-gray-800 dark:border-gray-600 dark:text-white"
           />
         </div>
 
-        <div style={styleObj.inputSection}>
-          <label>Layout:</label>
+        <div className="flex flex-col gap-1">
+          <label className="text-sm font-medium text-gray-700 dark:text-gray-200">
+            Layout:
+          </label>
           <select
             name="layout"
             value={formData.layout}
             onChange={handleInputChange}
-            style={styleObj.select}
+            className="px-3 py-2 border border-gray-300 rounded-md text-sm bg-white dark:bg-gray-800 dark:border-gray-600 dark:text-white"
           >
             <option value="">Select layout</option>
             <option value="YouTubeDisplay">YouTubeDisplay</option>
@@ -58,63 +64,6 @@ const EditForm = ({
       </form>
     </Modal>
   );
-};
-
-const styleObj = {
-  form: {
-    padding: "15px",
-    display: "flex",
-    flexDirection: "column",
-    gap: "15px",
-  },
-  inputSection: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "5px",
-  },
-  input: {
-    padding: "8px 12px",
-    border: "1px solid #ccc",
-    borderRadius: "4px",
-    fontSize: "14px",
-  },
-  textarea: {
-    padding: "8px 12px",
-    border: "1px solid #ccc",
-    borderRadius: "4px",
-    fontSize: "14px",
-    resize: "vertical",
-  },
-  select: {
-    padding: "8px 12px",
-    border: "1px solid #ccc",
-    borderRadius: "4px",
-    fontSize: "14px",
-    backgroundColor: "#fff",
-    width: "100%",
-    cursor: "pointer",
-  },
-  buttonSection: {
-    display: "flex",
-    justifyContent: "flex-end",
-    gap: "10px",
-  },
-  submitBtn: {
-    backgroundColor: "#007bff",
-    color: "#fff",
-    padding: "8px 16px",
-    borderRadius: "5px",
-    border: "none",
-    cursor: "pointer",
-  },
-  cancelBtn: {
-    backgroundColor: "gray",
-    color: "#fff",
-    padding: "8px 16px",
-    borderRadius: "5px",
-    border: "none",
-    cursor: "pointer",
-  },
 };
 
 export default EditForm;

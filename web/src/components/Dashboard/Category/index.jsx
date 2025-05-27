@@ -1,16 +1,35 @@
 import { useEffect, useState } from "react";
-import { FaEdit, FaEye, FaTrashAlt } from "react-icons/fa";
+import {
+  FaBook,
+  FaCamera,
+  FaChartBar,
+  FaComments,
+  FaEdit,
+  FaEye,
+  FaNewspaper,
+  FaRocket,
+  FaTrashAlt,
+} from "react-icons/fa";
 import categoryService from "../../../services/categoryService";
 import SweetAlert from "../../../utils/SweetAlert";
 import AddButton from "../../General/AddButton";
 import Pagination from "../../General/Pagination";
 import TitleLine from "../../General/TitleLine";
-import styles from "./Category.module.css";
 import EditForm from "./EditForm";
 import ViewModal from "./ViewModal";
 
+// Icon mapping
+const iconMap = {
+  book: <FaBook title="Book" />,
+  news: <FaNewspaper title="News" />,
+  camera: <FaCamera title="Camera" />,
+  stats: <FaChartBar title="Stats" />,
+  comments: <FaComments title="Comments" />,
+  rocket: <FaRocket title="Rocket" />,
+};
+
 const Category = () => {
-  const [categories, setCategorys] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
@@ -20,11 +39,13 @@ const Category = () => {
     layout: "",
     icon: "",
   });
+
   const tableHead = [
     "ID",
     "Name",
     "Description",
     "Layout",
+    "Icon",
     "Response",
     "Activity",
   ];
@@ -37,7 +58,7 @@ const Category = () => {
     try {
       const result = await categoryService.getAll();
 
-      const formattedCategorys = result.data.map((categorie) => ({
+      const formattedCategories = result.data.map((categorie) => ({
         id: categorie.id,
         name: `${categorie.name} (${categorie.slug})`,
         description: categorie.description || "No description",
@@ -46,7 +67,7 @@ const Category = () => {
         response: categorie.is_active ? "Enable" : "Disable",
       }));
 
-      setCategorys(formattedCategorys);
+      setCategories(formattedCategories);
     } catch (error) {
       console.error("Error fetching categories:", error);
     }
@@ -59,18 +80,17 @@ const Category = () => {
   };
 
   const onEdit = (id) => {
-    const categorieToEdit = categories.find((categorie) => categorie.id === id);
-    if (categorieToEdit) {
+    const categoryToEdit = categories.find((categorie) => categorie.id === id);
+    if (categoryToEdit) {
       setFormData({
-        name: categorieToEdit.name.split(" (")[0], // remove slug part
+        name: categoryToEdit.name.split(" (")[0],
         description:
-          categorieToEdit.description !== "No description"
-            ? categorieToEdit.description
+          categoryToEdit.description !== "No description"
+            ? categoryToEdit.description
             : "",
         layout:
-          categorieToEdit.layout !== "default" ? categorieToEdit.layout : "",
-        icon: categorieToEdit.icon !== "default" ? categorieToEdit.icon : "",
-        tags: [],
+          categoryToEdit.layout !== "default" ? categoryToEdit.layout : "",
+        icon: categoryToEdit.icon !== "default" ? categoryToEdit.icon : "",
       });
       setEditingId(id);
       setIsModalOpen(true);
@@ -86,14 +106,14 @@ const Category = () => {
         getAllCategories();
         SweetAlert.successAlert("Category deleted successfully!");
       } catch (error) {
-        console.error("Error deleting categorie:", error);
-        SweetAlert.errorAlert("Failed to delete categorie!");
+        console.error("Error deleting category:", error);
+        SweetAlert.errorAlert("Failed to delete category!");
       }
     }
   };
 
   const [cid, setCid] = useState(null);
-  const onView = async (id) => {
+  const onView = (id) => {
     setCid(id);
     setIsViewModalOpen(true);
   };
@@ -107,14 +127,13 @@ const Category = () => {
     e.preventDefault();
 
     try {
-      const formDataCopy = { ...formData }; // formData কপি নিচ্ছি
+      const formDataCopy = { ...formData };
 
-      // ✅ name থেকে slug বানানো
       if (formDataCopy.name) {
         formDataCopy.slug = formDataCopy.name
           .toLowerCase()
-          .replace(/\s+/g, "_") // এক বা একাধিক space কে _ দিয়ে বদলাও
-          .replace(/[^\w_]+/g, ""); // অক্ষর আর _ ছাড়া সব রিমুভ করো
+          .replace(/\s+/g, "_")
+          .replace(/[^\w_]+/g, "");
       }
 
       if (editingId) {
@@ -128,12 +147,11 @@ const Category = () => {
       setIsModalOpen(false);
       getAllCategories();
     } catch (error) {
-      console.error("Error saving categorie:", error);
-      SweetAlert.errorAlert("Failed to save categorie!");
+      console.error("Error saving category:", error);
+      SweetAlert.errorAlert("Failed to save category!");
     }
   };
 
-  // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const displayPerPage = 5;
   const totalPages = Math.ceil(categories.length / displayPerPage);
@@ -151,58 +169,82 @@ const Category = () => {
 
   return (
     <>
-      <TitleLine title="Categorys">
+      <TitleLine title="Categories">
         <AddButton onClick={onAdd} />
       </TitleLine>
 
-      <table className={styles.table}>
-        <thead>
-          <tr>
-            {tableHead.map((head, index) => (
-              <th key={index}>{head}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {displayedCategories.length > 0 ? (
-            displayedCategories.map((row, index) => (
-              <tr key={index}>
-                <td>{row.id}</td>
-                <td>{row.name}</td>
-                <td>{row.description}</td>
-                <td>{row.layout}</td>
-                <td>{row.response}</td>
-                <td>
-                  <button
-                    className={styles.viewBtn}
-                    onClick={() => onView(row.id)}
-                  >
-                    <FaEye title="View" />
-                  </button>
-                  <button
-                    className={styles.editBtn}
-                    onClick={() => onEdit(row.id)}
-                  >
-                    <FaEdit title="Edit" />
-                  </button>
-                  <button
-                    className={styles.deleteBtn}
-                    onClick={() => onDelete(row.id)}
-                  >
-                    <FaTrashAlt title="Delete" />
-                  </button>
+      <div className="overflow-x-auto">
+        <table className="min-w-full bg-white dark:bg-gray-800 shadow rounded-lg">
+          <thead>
+            <tr className="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 text-left text-sm uppercase">
+              {tableHead.map((head, index) => (
+                <th key={index} className="px-4 py-3 border-b">
+                  {head}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {displayedCategories.length > 0 ? (
+              displayedCategories.map((row, index) => (
+                <tr
+                  key={index}
+                  className="border-b hover:bg-gray-50 dark:hover:bg-gray-700 transition"
+                >
+                  <td className="px-4 py-2">{row.id}</td>
+                  <td className="px-4 py-2">{row.name}</td>
+                  <td className="px-4 py-2">{row.description}</td>
+                  <td className="px-4 py-2">{row.layout}</td>
+                  <td className="px-4 py-2">{iconMap[row.icon] || row.icon}</td>
+                  <td className="px-4 py-2">
+                    <span
+                      className={`px-2 py-1 text-xs font-semibold rounded ${
+                        row.response === "Enable"
+                          ? "bg-green-100 text-green-800 dark:bg-green-700 dark:text-green-100"
+                          : "bg-red-100 text-red-800 dark:bg-red-700 dark:text-red-100"
+                      }`}
+                    >
+                      {row.response}
+                    </span>
+                  </td>
+                  <td className="px-4 py-2 flex gap-2">
+                    <button
+                      onClick={() => onView(row.id)}
+                      className="text-blue-500 hover:text-blue-700 dark:text-blue-300 dark:hover:text-blue-100"
+                      title="View"
+                    >
+                      <FaEye />
+                    </button>
+                    <button
+                      onClick={() => onEdit(row.id)}
+                      className="text-yellow-500 hover:text-yellow-600 dark:text-yellow-300 dark:hover:text-yellow-100"
+                      title="Edit"
+                    >
+                      <FaEdit />
+                    </button>
+                    <button
+                      onClick={() => onDelete(row.id)}
+                      className="text-red-500 hover:text-red-600 dark:text-red-300 dark:hover:text-red-100"
+                      title="Delete"
+                    >
+                      <FaTrashAlt />
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td
+                  colSpan={tableHead.length}
+                  className="text-center py-4 text-gray-500 dark:text-gray-300"
+                >
+                  No data found
                 </td>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan={tableHead.length} style={{ textAlign: "center" }}>
-                No data found
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            )}
+          </tbody>
+        </table>
+      </div>
 
       <Pagination
         currentPage={currentPage}
@@ -210,7 +252,6 @@ const Category = () => {
         onPageChange={handlePageChange}
       />
 
-      {/* Modal */}
       {isModalOpen && (
         <EditForm
           title="Category"
@@ -221,8 +262,6 @@ const Category = () => {
           editingId={editingId}
         />
       )}
-
-      {/* Modal */}
 
       {isViewModalOpen && (
         <ViewModal cid={cid} onClose={() => setIsViewModalOpen(false)} />

@@ -1,54 +1,32 @@
-import React from "react";
 import { Outlet } from "react-router-dom";
-import Sidebar from "../components/Dashboard/Sidebar";
 import background from "../assets/background.png";
+import Sidebar from "../components/Dashboard/Sidebar";
 
 const Dashboard = () => {
   return (
-    <div style={styles.container}>
+    <div
+      className="flex h-screen"
+      style={{
+        backgroundImage: `url(${background})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
       <Sidebar />
-      <div style={styles.body}>
-        {/* <div style={styles.header}>Header Section</div> */}
-        <div style={styles.content}>
-          {/* Your content goes here */}
+      <div className="flex flex-col flex-1">
+        {/* Optional Header */}
+        {/* 
+        <div className="h-[60px] bg-gradient-to-b from-gray-100 to-gray-400 flex items-center justify-center p-2">
+          Header Section
+        </div> 
+        */}
+        <div className="flex-1 overflow-y-auto bg-white/80 p-5 dark:bg-black/40">
           <Outlet />
-          {/* Add more content to see the scroll effect */}
         </div>
       </div>
     </div>
   );
-};
-
-const styles = {
-  container: {
-    display: "flex",
-    height: "100vh",
-    backgroundImage: `url(${background})`,
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    backgroundRepeat: "no-repeat",
-  },
-  body: {
-    flex: 1,
-    display: "flex",
-    flexDirection: "column",
-    // marginLeft: "200px", // Assuming sidebar width is 200px
-  },
-  header: {
-    height: "60px", // Fixed header height
-    background: "linear-gradient(to bottom,rgb(249, 252, 254),rgb(171, 171, 171))",
-    // color: "#fff",
-    padding: "10px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  content: {
-    flex: 1,
-    backgroundColor: "rgba(255, 255, 255, 0.8)",
-    overflowY: "auto", // Makes the content area scrollable
-    padding: "20px",
-  },
 };
 
 export default Dashboard;

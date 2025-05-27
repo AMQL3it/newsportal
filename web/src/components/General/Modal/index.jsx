@@ -16,7 +16,7 @@ const Modal = ({ onClose, children, title, onSubmit, status }) => {
         </div>
 
         {/* Content */}
-        <div className="mt-3 max-h-[60vh] overflow-y-auto text-gray-800 dark:text-gray-100">
+        <div className="mt-3 max-h-[60vh] overflow-y-auto custom-scrollbar text-gray-800 dark:text-gray-100">
           {children}
         </div>
 
