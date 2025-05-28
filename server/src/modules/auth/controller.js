@@ -1,4 +1,6 @@
 const authService = require("./service");
+const userService = require("../user/service");
+const loggin = require("../../utils/logger");
 
 const authController = {
   async login(req, res) {
@@ -47,6 +49,20 @@ const authController = {
       const token = req.headers.authorization?.split(" ")[1];
       const success = await authService.logout(token);
       res.status(200).json({ success });
+    } catch (err) {
+      res.status(400).json({ error: err.message });
+    }
+  },
+
+  async register(req, res) {
+    try {
+      const result = await userService.create(req.body);
+      loggin.info("New post created successfully.");
+      res.status(200).json({
+        success: result.success,
+        data: result,
+        message: result.message,
+      });
     } catch (err) {
       res.status(400).json({ error: err.message });
     }

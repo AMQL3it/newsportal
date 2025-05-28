@@ -14,8 +14,8 @@ router.get("/", userController.getAll);
 router.get("/:id", userController.getById);
 router.put(
   "/:id",
-  userValidator(true),
-  dataFilterHandler,
+  // userValidator(true),
+  // dataFilterHandler,
   userController.update
 );
 router.delete("/:id", userController.delete);

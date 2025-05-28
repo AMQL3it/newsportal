@@ -19,6 +19,14 @@ const authService = {
     return res.data;
   },
 
+  register: async (data, config = {}) => {
+    const res = await axios.post(`${BASE_URL}/auth/register`, data, {
+      ...getAuthHeaders(),
+      ...config,
+    });
+    return res.data;
+  },
+
   codeSending: async (data, config = {}) => {
     const res = await axios.post(`${BASE_URL}/auth/otp/send`, data, {
       ...getAuthHeaders(),
@@ -30,6 +38,18 @@ const authService = {
     const res = await axios.post(`${BASE_URL}/auth/otp/verify`, data, {
       ...getAuthHeaders(),
       ...config,
+    });
+    return res.data;
+  },
+
+  logout: async () => {
+    const token = localStorage.getItem("token");
+    // const payload = token.split(".")[1];
+    // const decoded = JSON.parse(atob(payload));
+    const res = await axios.post(`${BASE_URL}/auth/logout`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
     return res.data;
   },

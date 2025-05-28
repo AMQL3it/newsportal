@@ -2,12 +2,15 @@ import { FaRegCalendarCheck } from "react-icons/fa";
 import { FaRightToBracket, FaUserPlus } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/Tarunno.png";
+import useAuthUser from "../../hooks/useAuthUser";
+import authService from "../../services/authService";
 import { getBanglaDate } from "../../utils/getBanglaDate";
 import { getBanglaHijriDate } from "../../utils/getBanglaHijriDate";
 import ThemeToggle from "../ThemeToggle";
 
 const Header = () => {
   const today = new Date();
+  const user = useAuthUser();
 
   const engDay = today.toLocaleDateString("en-US", { weekday: "long" });
   const engDate = today.toLocaleDateString("en-GB", {
@@ -26,6 +29,16 @@ const Header = () => {
   const handleGoToLogin = () => navigate("/login");
   const handleGoToRegister = () => navigate("/register");
 
+  const handleLogout = async () => {
+    try {
+      await authService.logout();
+      localStorage.removeItem("token");
+      navigate("/login");
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  };
+
   return (
     <div className="flex flex-col w-full">
       {/* Top Bar: Date & Auth */}
@@ -41,21 +54,33 @@ const Header = () => {
 
         {/* Auth Links */}
         <div className="flex items-center gap-3 font-medium">
-          <div
-            className="flex items-center gap-1 cursor-pointer hover:underline"
-            onClick={handleGoToLogin}
-          >
-            <FaRightToBracket />
-            <span>Login</span>
-          </div>
-          <span>|</span>
-          <div
-            className="flex items-center gap-1 cursor-pointer hover:underline"
-            onClick={handleGoToRegister}
-          >
-            <FaUserPlus />
-            <span>Register</span>
-          </div>
+          {user ? (
+            <div
+              onClick={handleLogout}
+              className="flex items-center gap-2 cursor-pointer hover:underline"
+            >
+              <span>{user.name}</span>
+              <FaRightToBracket />
+            </div>
+          ) : (
+            <>
+              <div
+                className="flex items-center gap-1 cursor-pointer hover:underline"
+                onClick={handleGoToLogin}
+              >
+                <FaRightToBracket />
+                <span>Login</span>
+              </div>
+              <span>|</span>
+              <div
+                className="flex items-center gap-1 cursor-pointer hover:underline"
+                onClick={handleGoToRegister}
+              >
+                <FaUserPlus />
+                <span>Register</span>
+              </div>
+            </>
+          )}
 
           <div className="flex items-center gap-2 position-absolute">
             <ThemeToggle />

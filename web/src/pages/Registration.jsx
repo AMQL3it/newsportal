@@ -1,14 +1,17 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/registration.svg";
+import authService from "../services/authService";
+import SweetAlert from "../utils/SweetAlert";
 
 const Registration = () => {
   const [userInfo, setUserInfo] = useState({
-    username: "",
+    name: "",
     email: "",
     phone: "",
     password: "",
     confirmPassword: "",
+    role_id: 4,
   });
 
   const navigate = useNavigate();
@@ -19,9 +22,7 @@ const Registration = () => {
   };
 
   // BD phone number validation function
-  const isValidBDPhone = (phone) => {
-    return /^01[3-9]\d{8}$/.test(phone);
-  };
+  const isValidBDPhone = (phone) => /^(?:\+8801|01)[3-9]\d{8}$/.test(phone);
 
   const passwordsMatch =
     userInfo.password === userInfo.confirmPassword ||
@@ -48,7 +49,17 @@ const Registration = () => {
       return;
     }
 
-    console.log(userInfo);
+    try {
+      const response = await authService.register(userInfo);
+      console.log(response);
+
+      if (response.success) {
+        SweetAlert.successAlert("Registration successful!");
+        navigate("/login");
+      }
+    } catch (error) {
+      console.error("Error registering user:", error);
+    }
 
     // API call and logic here
   };
@@ -68,9 +79,9 @@ const Registration = () => {
             {/* Username */}
             <input
               type="text"
-              name="username"
+              name="name"
               placeholder="Username"
-              value={userInfo.username}
+              value={userInfo.name}
               onChange={handleChange}
               className="px-3 py-2 text-sm bg-[#1F1F1F] text-white border border-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
             />
@@ -155,6 +166,14 @@ const Registration = () => {
             >
               Sign Up
             </button>
+
+            {/* Login Link */}
+            <p className="text-sm text-gray-400">
+              Already have an account?{" "}
+              <Link to="/login" className="text-green-500 hover:underline">
+                Login
+              </Link>
+            </p>
           </form>
         </div>
       </div>

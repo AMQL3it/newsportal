@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/sign-in-animate.svg";
 import authService from "../services/authService";
 import SweetAlert from "../utils/SweetAlert";
@@ -83,6 +83,7 @@ const Login = () => {
         <img
           src={logo}
           alt="Login Illustration"
+          onClick={() => navigate("/")}
           className="w-40 m-4 mx-auto border border-gray-600 rounded shadow"
         />
         <div className="px-6 pb-6 pt-1">
@@ -141,6 +142,14 @@ const Login = () => {
             >
               Sign in
             </button>
+
+            {/* Forgot Password Link */}
+            <Link
+              to="/forgot-password"
+              className="text-sm text-gray-300 hover:text-gray-400"
+            >
+              Forgot Password?
+            </Link>
           </form>
         </div>
       </div>

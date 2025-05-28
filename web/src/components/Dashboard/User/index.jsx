@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import apiService from "../../../services/apiService";
-import tagService from "../../../services/tagService";
 import SweetAlert from "../../../utils/SweetAlert";
 import AddButton from "../../General/AddButton";
 import Pagination from "../../General/Pagination";
@@ -46,7 +45,7 @@ const User = () => {
       phone: "",
       password: "",
       confirmPassword: "",
-      role: "user",
+      role_id: 4,
     });
     setIsModalOpen(true);
   };
@@ -54,7 +53,15 @@ const User = () => {
   const onEdit = (id) => {
     const userToEdit = users.find((user) => user.id === id);
     if (userToEdit) {
-      setFormData(userToEdit);
+      setFormData({
+        ...userToEdit,
+        password: "",
+        confirmPassword: "",
+        role_id:
+          userToEdit.role_id ||
+          roles.find((r) => r.name === userToEdit.role?.name)?.id ||
+          4,
+      });
       setEditingId(id);
       setIsModalOpen(true);
     }
@@ -65,19 +72,30 @@ const User = () => {
 
     if (deleteConfirmed) {
       try {
-        await tagService.delete(id);
+        await apiService.delete(`users/${id}`);
         await getUsers();
-        SweetAlert.successAlert("Tag deleted successfully!");
+        SweetAlert.successAlert("User deleted successfully!");
       } catch (error) {
-        console.error("Error deleting tag:", error);
-        SweetAlert.errorAlert("Failed to delete tag!");
+        console.error("Error deleting user:", error);
+        SweetAlert.errorAlert("Failed to delete user!");
       }
     }
   };
 
+  const roles = [
+    { id: 1, name: "superadmin" },
+    { id: 2, name: "admin" },
+    { id: 3, name: "editor" },
+    { id: 4, name: "user" },
+  ];
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (name === "role_id") {
+      setFormData((prev) => ({ ...prev, role_id: parseInt(value) }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleModalClose = () => {
@@ -89,28 +107,41 @@ const User = () => {
       phone: "",
       password: "",
       confirmPassword: "",
-      role: "user",
+      role_id: 4,
     });
   };
 
   const printRole = (role) => {
-    if (role === "superadmin") {
-      return <span className="text-red-500 font-semibold ">Super Admin</span>;
-    } else if (role === "admin") {
-      return <span className="text-green-500 font-semibold ">Admin</span>;
-    } else if (role === "editor") {
-      return <span className="text-blue-500 font-semibold ">Editor</span>;
-    } else {
-      return <span className="text-gray-500 font-semibold ">User</span>;
-    }
+    const name = role?.name || roles.find((r) => r.id === role)?.name;
+    if (name === "superadmin")
+      return <span className="text-red-500 font-semibold">Super Admin</span>;
+    if (name === "admin")
+      return <span className="text-green-500 font-semibold">Admin</span>;
+    if (name === "editor")
+      return <span className="text-blue-500 font-semibold">Editor</span>;
+    return <span className="text-gray-500 font-semibold">User</span>;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    try {
+      if (editingId) {
+        // detele form password
+        delete formData.password;
+        delete formData.confirmPassword;
 
-    // console.log(userInfo);
-
-    // API call and logic here
+        await apiService.update(`users`, editingId, formData);
+        SweetAlert.successAlert("User updated successfully!");
+      } else {
+        await apiService.post("users", formData);
+        SweetAlert.successAlert("User added successfully!");
+      }
+      handleModalClose();
+      getUsers();
+    } catch (err) {
+      console.error(err);
+      SweetAlert.errorAlert("Something went wrong!");
+    }
   };
 
   // Pagination
@@ -157,7 +188,7 @@ const User = () => {
                   <td className="px-4 py-3">{user.name}</td>
                   <td className="px-4 py-3">{user.email}</td>
                   <td className="px-4 py-3">{user.phone}</td>
-                  <td className="px-4 py-3">{printRole(user.role?.name)}</td>
+                  <td className="px-4 py-3">{printRole(user.role)}</td>
                   <td className="px-4 py-3 flex gap-2">
                     <button
                       aria-label="Edit User"

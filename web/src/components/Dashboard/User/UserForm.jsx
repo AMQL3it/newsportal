@@ -10,6 +10,12 @@ const UserForm = ({
   editingId,
 }) => {
   // const navigate = useNavigate();
+  const roles = [
+    { id: 1, name: "superadmin" },
+    { id: 2, name: "admin" },
+    { id: 3, name: "editor" },
+    { id: 4, name: "user" },
+  ];
 
   // Validation
   const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -89,15 +95,19 @@ const UserForm = ({
 
           {/* Role */}
           <select
-            name="role"
-            value={formData.role?.name || "user"}
+            name="role_id"
+            value={formData.role_id || 4}
             onChange={handleInputChange}
             className="px-3 py-2 text-sm bg-[#1F1F1F] text-white border border-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
           >
-            <option value="user">User</option>
-            <option value="admin">Admin</option>
-            <option value="superadmin">Super Admin</option>
-            <option value="editor">Editor</option>
+            <option value="" disabled>
+              Select Role
+            </option>
+            {roles.map((role) => (
+              <option key={role.id} value={role.id}>
+                {role.name}
+              </option>
+            ))}
           </select>
 
           {/* Password - only in Add mode */}
