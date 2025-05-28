@@ -78,6 +78,13 @@ const userRepository = {
             { name: identifier },
           ],
         },
+        include: [
+          {
+            model: Role,
+            as: "role",
+            attributes: ["id", "name"],
+          },
+        ],
       });
     } catch (error) {
       throw new Error(`Repository Error (findByIdentifier): ${error.message}`);

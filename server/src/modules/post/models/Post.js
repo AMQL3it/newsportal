@@ -9,6 +9,8 @@ const Post = sequelize.define(
     author: { type: DataTypes.STRING, allowNull: false },
     content: { type: DataTypes.TEXT, allowNull: false },
     image: { type: DataTypes.STRING },
+    media: { type: DataTypes.STRING },
+    type: { type: DataTypes.ENUM("image", "video"), defaultValue: "image" },
     is_active: { type: DataTypes.BOOLEAN, defaultValue: true },
     seo_score: { type: DataTypes.INTEGER },
     readable_score: { type: DataTypes.INTEGER },

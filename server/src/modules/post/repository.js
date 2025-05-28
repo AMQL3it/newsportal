@@ -110,7 +110,16 @@ const postRepository = {
   // ✅ Get one Post by ID + Stats + Tags + Category
   async getById(id) {
     return await Post.findByPk(id, {
-      attributes: ["id", "title", "content", "image", "createdAt", "author"],
+      attributes: [
+        "id",
+        "title",
+        "type",
+        "media",
+        "content",
+        "image",
+        "createdAt",
+        "author",
+      ],
 
       include: [
         {

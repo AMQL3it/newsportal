@@ -1,6 +1,21 @@
 const authService = require("./service");
 
 const authController = {
+  async login(req, res) {
+    try {
+      const result = await authService.login(req);
+
+      res.status(200).json({
+        success: result.success,
+        data: result,
+        token: result.token,
+        message: result.message,
+      });
+    } catch (err) {
+      res.status(400).json({ error: err.message });
+    }
+  },
+
   async otpSend(req, res) {
     try {
       const result = await authService.sendLoginOTP(req);
