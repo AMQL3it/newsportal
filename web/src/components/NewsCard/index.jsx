@@ -32,6 +32,8 @@ const NewsCard = () => {
       const newsData = {
         id: result.data.id,
         title: result.data.title,
+        type: result.data.type,
+        media: result.data.media,
         content: result.data.content,
         image: result.data.image,
         createdAt: result.data.createdAt,
@@ -39,6 +41,8 @@ const NewsCard = () => {
         tags: result.data.tags,
         category: result.data.category.name,
       };
+
+      // console.log(newsData);
 
       setNews(newsData);
       setViews(result.data.state?.views || 0);
@@ -142,11 +146,25 @@ const NewsCard = () => {
 
   return (
     <div className="max-w-5xl mx-auto p-4 bg-gray-200 dark:bg-gray-900 shadow-md rounded-lg">
-      <img
+      {news.type === "video" ? (
+        <iframe
+          src={news.media}
+          className="mt-2 w-full h-64 rounded-md mb-4"
+          allowFullScreen
+          title="Video Preview"
+        ></iframe>
+      ) : (
+        <img
+          src={`http://localhost:5000/${news.image}`}
+          alt={news.title}
+          className="w-full h-64 object-cover rounded-md mb-4"
+        />
+      )}
+      {/* <img
         src={`http://localhost:5000/${news.image}`}
         alt={news.title}
         className="w-full h-64 object-cover rounded-md mb-4"
-      />
+      /> */}
 
       <h3 className="text-2xl font-bold mb-2 text-gray-900 dark:text-white">
         {news.title}

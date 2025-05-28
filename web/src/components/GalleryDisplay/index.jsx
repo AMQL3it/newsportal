@@ -46,11 +46,25 @@ const GalleryDisplay = ({ category, allposts }) => {
               className="relative rounded overflow-hidden shadow hover:shadow-md transition-all cursor-pointer"
               onClick={() => handleContinue(item.id, item.state?.views || 0)}
             >
-              <img
+              {/* <img
                 src={`http://localhost:5000/${item.image}`}
                 alt={item.title}
                 className="w-full h-full object-cover"
-              />
+              /> */}
+              {item.type === "video" ? (
+                <iframe
+                  src={item.media}
+                  className="h-64 w-full object-cover"
+                  allowFullScreen
+                  title="Video Preview"
+                ></iframe>
+              ) : (
+                <img
+                  src={`http://localhost:5000/${item.image}`}
+                  alt={item.title}
+                  className="h-full w-full object-cover"
+                />
+              )}
               <Overlay>
                 <div className="bg-white/80 dark:bg-black/60 p-2">
                   <NewsTag tags={item.tags.map((t) => t.name)} />

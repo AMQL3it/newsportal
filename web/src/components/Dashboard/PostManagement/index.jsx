@@ -15,10 +15,12 @@ const PostManagement = () => {
   const [formData, setFormData] = useState({
     title: "",
     author: "",
-    content: "",
+    type: "image",
+    media: "",
     image: "",
+    content: "",
     is_active: true,
-    layout: "",
+    // layout: "",
     category_id: "",
     tag_ids: [],
     folder: "posts",
@@ -47,10 +49,12 @@ const PostManagement = () => {
     setFormData({
       title: "",
       author: "",
-      content: "",
+      type: "image",
+      media: "",
       image: "",
+      content: "",
       is_active: true,
-      layout: "",
+      // layout: "",
       category_id: "",
       tag_ids: [],
       folder: "posts",
@@ -64,10 +68,12 @@ const PostManagement = () => {
       setFormData({
         title: post.title,
         author: post.author,
-        content: post.content,
+        type: post.type,
+        media: post.media,
         image: post.image,
+        content: post.content,
         is_active: post.is_active,
-        layout: post.layout,
+        // layout: post.layout,
         category_id: post.category_id,
         tag_ids: post.tags.map((t) => t.id) || [],
         folder: "posts",
@@ -98,14 +104,16 @@ const PostManagement = () => {
       const sendData = new FormData();
       sendData.append("title", formData.title);
       sendData.append("author", formData.author);
+      sendData.append("type", formData.type);
+      sendData.append("media", formData.media);
       sendData.append("content", formData.content);
       sendData.append("is_active", formData.is_active);
-      sendData.append("layout", formData.layout);
+      // sendData.append("layout", formData.layout);
       sendData.append("category_id", formData.category_id);
-      sendData.append("folder", formData.folder);
 
       if (formData.image instanceof File) {
         sendData.append("image", formData.image);
+        sendData.append("folder", formData.folder);
       }
 
       sendData.append("tag_ids", JSON.stringify(formData.tag_ids));
@@ -152,7 +160,8 @@ const PostManagement = () => {
               <th className="px-4 py-2 text-left">Author</th>
               <th className="px-4 py-2 text-left">Content</th>
               <th className="px-4 py-2 text-left">Image</th>
-              <th className="px-4 py-2 text-left">Active</th>
+              <th className="px-4 py-2 text-left">Type</th>
+              {/* <th className="px-4 py-2 text-left">Active</th> */}
               <th className="px-4 py-2 text-center">Actions</th>
             </tr>
           </thead>
@@ -187,7 +196,7 @@ const PostManagement = () => {
                       <span className="text-gray-500 italic">No Image</span>
                     )}
                   </td>
-                  <td className="px-4 py-2">
+                  {/* <td className="px-4 py-2">
                     <span
                       className={`px-2 py-1 text-xs font-medium rounded-full ${
                         p.is_active
@@ -197,7 +206,8 @@ const PostManagement = () => {
                     >
                       {p.is_active ? "Enabled" : "Disabled"}
                     </span>
-                  </td>
+                  </td> */}
+                  <td className="px-4 py-2">{p.type}</td>
                   <td className="">
                     <div className="flex items-center justify-center gap-2">
                       <button

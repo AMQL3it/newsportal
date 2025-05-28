@@ -13,13 +13,23 @@ const PostForm = ({
 }) => {
   const [categories, setCategories] = useState([]);
   const [tags, setTags] = useState([]);
-  const [preview, setPreview] = useState(null);
-  const layouts = ["Standard", "Featured", "Minimal"];
+  const [preview, setPreview] = useState(
+    formData.image == "" ? null : `http://localhost:5000/${formData.image}`
+  );
+  // const layouts = ["Standard", "Featured", "Minimal"];
+  const news_types = ["image", "video"];
   const [content, setContent] = useState("");
 
   useEffect(() => {
     loadCategories();
   }, []);
+
+  // useEffect(() => {
+  //   if (typeof formData.image === "string" && formData.image !== "") {
+  //     setPreview("http://localhost:5000/" + formData.image); // for edit mode
+  //   }
+  //   console.log(formData);
+  // }, [formData.image]);
 
   const loadCategories = async () => {
     try {
@@ -43,6 +53,11 @@ const PostForm = ({
       const selected = categories.find((c) => c.id === id);
       setTags(selected?.tags || []);
       setFormData({ ...formData, category_id: id, tag_ids: [] });
+    } else if (name === "media") {
+      setFormData({
+        ...formData,
+        [name]: isValidVideoLink(value) ? convertToEmbedLink(value) : value,
+      });
     } else {
       setFormData({ ...formData, [name]: value });
     }
@@ -68,6 +83,23 @@ const PostForm = ({
       : [...formData.tag_ids, tagId];
 
     setFormData({ ...formData, tag_ids: updated });
+  };
+
+  const isValidVideoLink = (url) => {
+    return /^https?:\/\/(www\.)?(youtube\.com|youtu\.be)\/.+$/.test(url);
+  };
+
+  const convertToEmbedLink = (url) => {
+    try {
+      const urlObj = new URL(url);
+      const videoId =
+        urlObj.searchParams.get("v") || urlObj.pathname.split("/").pop();
+      return `https://www.youtube.com/embed/${videoId}`;
+    } catch (e) {
+      console.log(e);
+
+      return "";
+    }
   };
 
   return (
@@ -104,35 +136,83 @@ const PostForm = ({
           />
         </div>
 
-        {/* Content */}
+        {/* News type */}
         <div className="flex flex-col gap-1">
-          <label className="font-semibold">Content:</label>
-          <RichTextEditor
-            value={formData.content || content}
-            onChange={handleContentChange}
-          />
+          <label className="font-semibold">News Type:</label>
+          <select
+            name="type"
+            value={formData.type}
+            onChange={handleChange}
+            required
+            className="border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-sm bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+          >
+            <option value="">Select layout</option>
+            {news_types.map((type, i) => (
+              <option key={i} value={type}>
+                {type.charAt(0).toUpperCase() + type.slice(1)}
+              </option>
+            ))}
+          </select>
         </div>
 
-        {/* Image */}
-        <div className="flex flex-col gap-1">
-          <label className="font-semibold">Cover Image:</label>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-            className="text-sm text-gray-700 dark:text-gray-300"
-          />
-          {preview && (
-            <img
-              src={preview}
-              alt="preview"
-              className="h-20 w-auto mt-2 rounded border border-gray-300 dark:border-gray-600"
+        {/* Media */}
+
+        {/* Media input (video or image) */}
+        {formData.type === "video" && (
+          <div className="flex flex-col gap-1 mt-4">
+            <label className="font-semibold">Video Link:</label>
+            <input
+              type="text"
+              name="media"
+              value={formData.media}
+              onChange={handleChange}
+              required
+              className="border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-sm bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+              placeholder="https://www.youtube.com/watch?v=..."
             />
-          )}
-        </div>
+            {isValidVideoLink(formData.media) && (
+              <iframe
+                // src={convertToEmbedLink(formData.media)}
+                src={formData.media}
+                className="mt-2 w-full h-56 rounded"
+                allowFullScreen
+                title="Video Preview"
+              ></iframe>
+            )}
+          </div>
+        )}
+
+        {formData.type === "image" && (
+          <div className="flex flex-col gap-1 mt-4">
+            <label className="font-semibold">Cover Image:</label>
+            <input
+              type="file"
+              name="image"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="text-sm text-gray-700 dark:text-gray-300"
+            />
+            {/* Show image name if preview is not from a File */}
+            {typeof formData.image === "string" && formData.image && (
+              <span className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                {/* Selected: {formData.image.split("/").pop()} */}
+                Selected: {formData.image}
+              </span>
+            )}
+
+            {/* Preview image */}
+            {preview && (
+              <img
+                src={preview}
+                alt="preview"
+                className="h-20 w-auto mt-2 rounded border border-gray-300 dark:border-gray-600"
+              />
+            )}
+          </div>
+        )}
 
         {/* Layout */}
-        <div className="flex flex-col gap-1">
+        {/* <div className="flex flex-col gap-1">
           <label className="font-semibold">Layout:</label>
           <select
             name="layout"
@@ -148,7 +228,7 @@ const PostForm = ({
               </option>
             ))}
           </select>
-        </div>
+        </div> */}
 
         {/* Category */}
         <div className="flex flex-col gap-1">
@@ -191,6 +271,15 @@ const PostForm = ({
             </div>
           </div>
         )}
+
+        {/* Content */}
+        <div className="flex flex-col gap-1">
+          <label className="font-semibold">Content:</label>
+          <RichTextEditor
+            value={formData.content || content}
+            onChange={handleContentChange}
+          />
+        </div>
       </form>
     </Modal>
   );

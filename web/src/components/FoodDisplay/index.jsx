@@ -49,11 +49,25 @@ const FoodDisplay = ({ category, allposts }) => {
           {/* Main Featured Post */}
           {activePost && (
             <div className="relative rounded overflow-hidden shadow hover:shadow-md transition-all">
-              <img
+              {/* <img
                 src={`http://localhost:5000/${activePost.image}`}
                 alt={activePost.title}
                 className="w-full h-full object-cover"
-              />
+              /> */}
+              {activePost.type === "video" ? (
+                <iframe
+                  src={activePost.media}
+                  className="h-64 w-full object-cover"
+                  allowFullScreen
+                  title="Video Preview"
+                ></iframe>
+              ) : (
+                <img
+                  src={`http://localhost:5000/${activePost.image}`}
+                  alt={activePost.title}
+                  className="h-full w-full object-cover"
+                />
+              )}
               <Overlay>
                 <div className="bg-white/80 dark:bg-black/60 p-2">
                   <NewsTag tags={activePost.tags.map((t) => t.name)} />
@@ -74,7 +88,7 @@ const FoodDisplay = ({ category, allposts }) => {
                   <div
                     className="prose max-w-none text-gray-800 dark:text-gray-200"
                     dangerouslySetInnerHTML={{
-                      __html: getPreviewText(activePost.content, 10),
+                      __html: getPreviewText(activePost.content, 30),
                     }}
                   />
                   {activePost.content?.split(" ").length > 30 && (
@@ -107,11 +121,25 @@ const FoodDisplay = ({ category, allposts }) => {
                   }}
                   className="flex flex-col cursor-pointer bg-white dark:bg-gray-800 rounded shadow overflow-hidden hover:shadow-md transition w-full sm:w-1/3"
                 >
-                  <img
+                  {post.type === "video" ? (
+                    <iframe
+                      src={post.media}
+                      className="h-36 w-full object-cover"
+                      allowFullScreen
+                      title="Video Preview"
+                    ></iframe>
+                  ) : (
+                    <img
+                      src={`http://localhost:5000/${post.image}`}
+                      alt={post.title}
+                      className="h-36 w-full object-cover"
+                    />
+                  )}
+                  {/* <img
                     src={`http://localhost:5000/${post.image}`}
                     alt={post.title}
                     className="h-36 w-full object-cover"
-                  />
+                  /> */}
                   <div className="p-2">
                     <h4 className="text-sm font-medium line-clamp-2 text-gray-900 dark:text-gray-100">
                       {post.title}

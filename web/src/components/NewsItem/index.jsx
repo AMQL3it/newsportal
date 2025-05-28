@@ -16,12 +16,26 @@ const NewsItem = ({ news }) => {
 
   return (
     <div className="flex flex-col gap-3 p-2 rounded-lg bg-gray-200 dark:bg-gray-900 shadow-md transition duration-300">
-      <img
+      {news.type === "video" ? (
+        <iframe
+          src={news.media}
+          className="mt-2 w-full h-52 md:h-64 rounded"
+          allowFullScreen
+          title="Video Preview"
+        ></iframe>
+      ) : (
+        <img
+          src={`http://localhost:5000/${news.image}`}
+          alt={news.title}
+          className="w-full h-52 md:h-64 object-cover rounded-lg"
+        />
+      )}
+      {/* <img
         src={`http://localhost:5000/${news.image}`}
         alt={news.title}
         onClick={() => handleContinue(news.state?.views || 0)}
         className="w-full h-52 md:h-64 object-cover rounded-lg cursor-pointer hover:opacity-90 transition"
-      />
+      /> */}
 
       <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white leading-snug">
         {news.title}

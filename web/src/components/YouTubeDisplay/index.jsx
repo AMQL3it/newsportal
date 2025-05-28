@@ -48,11 +48,25 @@ const YouTubeDisplay = ({ category, allposts }) => {
           <div className="md:w-2/3">
             {activePost && (
               <div className="flex flex-col gap-2">
-                <img
+                {activePost.type === "video" ? (
+                  <iframe
+                    src={activePost.media}
+                    className="h-64 w-full object-cover"
+                    allowFullScreen
+                    title="Video Preview"
+                  ></iframe>
+                ) : (
+                  <img
+                    src={`http://localhost:5000/${activePost.image}`}
+                    alt={activePost.title}
+                    className="h-64 w-full object-cover"
+                  />
+                )}
+                {/* <img
                   src={`http://localhost:5000/${activePost.image}`}
                   alt={activePost.title}
                   className="w-full h-64 object-cover rounded"
-                />
+                /> */}
                 <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
                   {activePost.title}
                 </h3>
@@ -118,11 +132,25 @@ const YouTubeDisplay = ({ category, allposts }) => {
                       : ""
                   }`}
                 >
-                  <img
+                  {post.type === "video" ? (
+                    <iframe
+                      src={post.media}
+                      className="w-24 h-16 object-cover"
+                      allowFullScreen
+                      title="Video Preview"
+                    ></iframe>
+                  ) : (
+                    <img
+                      src={`http://localhost:5000/${post.image}`}
+                      alt={post.title}
+                      className="w-24 h-16 object-cover"
+                    />
+                  )}
+                  {/* <img
                     src={`http://localhost:5000/${post.image}`}
                     alt={post.title}
                     className="w-24 h-16 object-cover rounded"
-                  />
+                  /> */}
                   <div className="flex-1">
                     <h4 className="text-sm font-medium line-clamp-2 text-gray-800 dark:text-gray-100">
                       {post.title}

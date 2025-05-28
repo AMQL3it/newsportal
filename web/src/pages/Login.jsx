@@ -38,25 +38,39 @@ const Login = () => {
     }
 
     try {
-      const response = await authService.codeSending({
+      const response = await authService.login({
         identifier: username,
         password,
       });
 
       if (response.success) {
-        navigate("/varification", { state: { identifier: username } });
-      } else {
-        // Handle specific error messages from backend
-        if (response.message.includes("username")) {
-          setErrors({ username: response.message, password: "" });
-        } else if (response.message.includes("password")) {
-          setErrors({ username: "", password: response.message });
+        localStorage.setItem("token", response.token);
+        const payload = response.token.split(".")[1];
+        const decoded = JSON.parse(atob(payload));
+
+        if (decoded.role === "user") {
+          navigate("/");
         } else {
-          SweetAlert.errorAlert(
-            response.message || "Login failed. Please try again."
-          );
+          navigate("/dashboard");
         }
+
+        // navigate("/dashboard");
       }
+
+      // if (response.success) {
+      //   navigate("/varification", { state: { identifier: username } });
+      // } else {
+      //   // Handle specific error messages from backend
+      //   if (response.message.includes("username")) {
+      //     setErrors({ username: response.message, password: "" });
+      //   } else if (response.message.includes("password")) {
+      //     setErrors({ username: "", password: response.message });
+      //   } else {
+      //     SweetAlert.errorAlert(
+      //       response.message || "Login failed. Please try again."
+      //     );
+      //   }
+      // }
     } catch (error) {
       console.error("Server error:", error);
       SweetAlert.errorAlert("Something went wrong. Please try again later.");

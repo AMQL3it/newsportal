@@ -70,19 +70,27 @@ const Footer = ({ navlist }) => {
         {/* Contact Us */}
         <div className="flex-1 min-w-[200px]">
           <h2 className="text-yellow-400 text-xl mb-4 font-semibold">
-            Contact Us
+            যোগাযোগ
           </h2>
-          <address className="not-italic leading-relaxed text-gray-300 text-sm">
-            31/2, AGB Colony, Motijheel, Dhaka - 1000 <br />
-            Email:{" "}
-            <a href="mailto:amql3it@gmail.com" className="hover:underline">
-              amql3it@gmail.com
-            </a>{" "}
-            <br />
-            Phone:{" "}
-            <a href="tel:+8801517094266" className="hover:underline">
-              +8801517094266
-            </a>
+          <address className="not-italic leading-relaxed text-gray-300 text-sm flex flex-col gap-2 ">
+            <span> ১৮৭/২, আরামবাগ, মতিঝিল, ঢাকা - ১০০০ </span>
+            <span>প্রকাশনায়ঃ সেবক ফাউন্ডেশন</span>
+            <span>
+              {" "}
+              Email:{" "}
+              <a
+                href="mailto:monthlytarunno2012@gmail.com"
+                className="hover:underline"
+              >
+                monthlytarunno2012@gmail.com
+              </a>
+            </span>
+            <span>
+              Phone:{" "}
+              <a href="tel:+8801606592273" className="hover:underline">
+                +8801606592273
+              </a>
+            </span>
           </address>
         </div>
       </div>

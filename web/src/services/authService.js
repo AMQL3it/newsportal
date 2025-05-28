@@ -9,6 +9,16 @@ const getAuthHeaders = () => ({
 const authService = {
   // codeSending: (data) => apiService.create("auth/otp/send", data),
   // codeVerify: (data) => apiService.create("auth/otp/verify", data),
+  login: async (data, config = {}) => {
+    const res = await axios.post(`${BASE_URL}/auth/login`, data, {
+      ...getAuthHeaders(),
+      ...config,
+    });
+    // console.log(res.data);
+
+    return res.data;
+  },
+
   codeSending: async (data, config = {}) => {
     const res = await axios.post(`${BASE_URL}/auth/otp/send`, data, {
       ...getAuthHeaders(),
